@@ -1,0 +1,16 @@
+[package]
+name = "class-hierarchy"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+moirai-crdt = { path = "/Users/ekkaiasmith/Desktop/moirai/moirai-crdt" }
+moirai-protocol = { path = "/Users/ekkaiasmith/Desktop/moirai/moirai-protocol" }
+moirai-macros = { path = "/Users/ekkaiasmith/Desktop/moirai/moirai-macros" }
+moirai-fuzz = { path = "/Users/ekkaiasmith/Desktop/moirai/moirai-fuzz" }
+petgraph = "0.8.3"
+rand = "0.10.0"
+
+[features]
+default = ["fuzz"]
+fuzz = []
