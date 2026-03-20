@@ -34,7 +34,7 @@ __classifiers::record!(
     __classifiers::VecLog < __classifiers::Counter < i32 > >, upper :
     __classifiers::VecLog < __classifiers::Counter < i32 > >, is_ordered :
     __classifiers::VecLog < __classifiers::EWFlag >, is_unique : __classifiers::VecLog <
-    __classifiers::Counter < i32 > >, }
+    __classifiers::EWFlag >, }
 );
 __classifiers::record!(
     Attribute { structural_feature_feat : StructuralFeatureFeatLog, }

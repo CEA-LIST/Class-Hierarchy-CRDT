@@ -1,7 +1,3 @@
-use moirai_protocol::state::sink::SinkEffect;
-
-use crate::references::{Instance, instance_from_path, instance_path};
-
 /// Auto-generated code by 🅰🆁🅰🅲🅷🅽🅴 - do not edit directly
 mod __package {
     pub use crate::classifiers::*;
@@ -18,6 +14,7 @@ mod __package {
     pub use moirai_protocol::state::sink::IsLogSink;
     pub use moirai_protocol::state::sink::ObjectPath;
     pub use moirai_protocol::state::sink::SinkCollector;
+    pub use moirai_protocol::state::sink::SinkEffect;
 }
 #[derive(Debug, Clone)]
 pub enum ClassHierarchy {
@@ -74,37 +71,26 @@ impl __package::IsLog for ClassHierarchyLog {
             ClassHierarchy::RemoveReference(o) => self.reference_manager_log.effect(
                 __package::Event::unfold(event.clone(), __package::ReferenceManager::RemoveArc(o)),
             ),
+            _ => {}
         }
-        println!("Applied event: {:?}", event.op());
         for sink in sink.into_sinks() {
+            println!("Sink: {} ({:?})", sink.path(), sink.effect());
             match sink.effect() {
-                SinkEffect::Create | SinkEffect::Update => {
-                    let vertex_ops = instance_from_path(&sink.path())
+                __package::SinkEffect::Create | __package::SinkEffect::Update => {
+                    let vertex_ops = __package::instance_from_path(&sink.path())
                         .map(|instance| __package::ReferenceManager::AddVertex { id: instance });
                     if let Some(o) = vertex_ops {
-                        println!("Adding vertex: {} ({:?})", sink.path(), sink.effect());
                         self.reference_manager_log
                             .effect(__package::Event::unfold(event.clone(), o));
                     }
                 }
-                SinkEffect::Delete => {
+                __package::SinkEffect::Delete => {
                     let graph = self.reference_manager_log.eval(__package::Read::new());
                     let removals = graph
                         .node_weights()
-                        .filter(|n| sink.path().is_prefix_of(instance_path(n)))
+                        .filter(|n| sink.path().is_prefix_of(__package::instance_path(n)))
                         .collect::<Vec<_>>();
-                    println!("Removing vertex:");
                     for removal in removals {
-                        match removal {
-                            Instance::ClassifierId(id) => {
-                                println!("      {} (ClassifierId)", id.0)
-                            }
-                            Instance::StructuralFeatureId(id) => {
-                                println!("      {} (StructuralFeatureId)", id.0)
-                            }
-                            Instance::ReferenceId(id) => println!("      {} (ReferenceId)", id.0),
-                            Instance::ClassId(id) => println!("      {} (ClassId)", id.0),
-                        }
                         let removal_event = __package::Event::unfold(
                             event.clone(),
                             __package::ReferenceManager::RemoveVertex {
@@ -116,7 +102,6 @@ impl __package::IsLog for ClassHierarchyLog {
                 }
             }
         }
-        println!("------------");
     }
     fn stabilize(&mut self, version: &__package::Version) {
         self.package_log.stabilize(version);

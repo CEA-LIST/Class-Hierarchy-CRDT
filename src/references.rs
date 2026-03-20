@@ -1,3 +1,5 @@
+use moirai_protocol::state::sink::PathSegment::ListElement;
+
 /// Auto-generated code by 🅰🆁🅰🅲🅷🅽🅴 - do not edit directly
 mod __references {
     pub use moirai_macros::typed_graph;
@@ -7,12 +9,6 @@ mod __references {
 pub fn instance_from_path(path: &__references::ObjectPath) -> Option<Instance> {
     let segs = path.segments();
     match segs {
-        [.., __references::Field("structural_feature_feat")] => Some(
-            Instance::StructuralFeatureId(StructuralFeatureId(path.clone())),
-        ),
-        [.., __references::Field("classifier_feat")] => {
-            Some(Instance::ClassifierId(ClassifierId(path.clone())))
-        }
         [
             ..,
             __references::Field("content"),
@@ -20,40 +16,67 @@ pub fn instance_from_path(path: &__references::ObjectPath) -> Option<Instance> {
             __references::Variant("classifier"),
             __references::Variant("class"),
         ] => Some(Instance::ClassId(ClassId(path.clone()))),
-        [.., __references::Variant("reference")] => {
-            Some(Instance::ReferenceId(ReferenceId(path.clone())))
-        }
+        [
+            ..,
+            __references::Field("content"),
+            __references::ListElement(_),
+            __references::Variant("classifier"),
+            __references::Variant("datatype"),
+        ] => Some(Instance::DataTypeId(DataTypeId(path.clone()))),
+        [
+            ..,
+            __references::Field("content"),
+            __references::ListElement(_),
+            __references::Variant("classifier"),
+            __references::Variant("class"),
+            __references::Field("features"),
+            __references::ListElement(_),
+            __references::Variant("attribute"),
+        ] => Some(Instance::AttributeId(AttributeId(path.clone()))),
+        [
+            ..,
+            __references::Field("content"),
+            __references::ListElement(_),
+            __references::Variant("classifier"),
+            __references::Variant("class"),
+            __references::Field("features"),
+            __references::ListElement(_),
+            __references::Variant("reference"),
+        ] => Some(Instance::ReferenceId(ReferenceId(path.clone()))),
         _ => None,
     }
 }
-
 pub fn instance_path(instance: &Instance) -> &__references::ObjectPath {
     match instance {
-        Instance::ClassifierId(id) => &id.0,
-        Instance::StructuralFeatureId(id) => &id.0,
+        Instance::AttributeId(id) => &id.0,
         Instance::ReferenceId(id) => &id.0,
         Instance::ClassId(id) => &id.0,
+        Instance::DataTypeId(id) => &id.0,
     }
 }
-
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
-pub struct ClassifierId(pub __references::ObjectPath);
-#[derive(Debug, Clone, PartialEq, Eq, Hash)]
-pub struct StructuralFeatureId(pub __references::ObjectPath);
+pub struct AttributeId(pub __references::ObjectPath);
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct ReferenceId(pub __references::ObjectPath);
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct ClassId(pub __references::ObjectPath);
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
-pub struct StructuralFeatureTypEdge;
+pub struct DataTypeId(pub __references::ObjectPath);
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub struct AttributeTypEdge;
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct ReferenceOppositeEdge;
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub struct ReferenceTypEdge;
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct ClassSupertypesEdge;
 __references::typed_graph! {
     graph : ReferenceManager, vertex : Instance, edge : Ref, arcs_type : Refs, vertices {
-    ClassifierId, StructuralFeatureId, ReferenceId, ClassId }, connections {
-    StructuralFeatureTyp : StructuralFeatureId -> ClassifierId(StructuralFeatureTypEdge)
-    [1, 1], ReferenceOpposite : ReferenceId -> ReferenceId(ReferenceOppositeEdge) [0, 1],
-    ClassSupertypes : ClassId -> ClassId(ClassSupertypesEdge) [0, *] }
+    AttributeId, ReferenceId, ClassId, DataTypeId }, connections { AttributeToClass :
+    AttributeId -> ClassId(AttributeTypEdge) [1, 1], AttributeToDataType : AttributeId ->
+    DataTypeId(AttributeTypEdge) [1, 1], ReferenceToReference : ReferenceId ->
+    ReferenceId(ReferenceOppositeEdge) [0, 1], ReferenceToClass : ReferenceId ->
+    ClassId(ReferenceTypEdge) [1, 1], ReferenceToDataType : ReferenceId ->
+    DataTypeId(ReferenceTypEdge) [1, 1], ClassToClass : ClassId ->
+    ClassId(ClassSupertypesEdge) [0, *] }
 }
