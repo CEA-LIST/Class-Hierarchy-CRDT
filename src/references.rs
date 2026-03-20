@@ -1,5 +1,3 @@
-use moirai_protocol::state::sink::PathSegment::ListElement;
-
 /// Auto-generated code by 🅰🆁🅰🅲🅷🅽🅴 - do not edit directly
 mod __references {
     pub use moirai_macros::typed_graph;
@@ -9,40 +7,16 @@ mod __references {
 pub fn instance_from_path(path: &__references::ObjectPath) -> Option<Instance> {
     let segs = path.segments();
     match segs {
-        [
-            ..,
-            __references::Field("content"),
-            __references::ListElement(_),
-            __references::Variant("classifier"),
-            __references::Variant("class"),
-        ] => Some(Instance::ClassId(ClassId(path.clone()))),
-        [
-            ..,
-            __references::Field("content"),
-            __references::ListElement(_),
-            __references::Variant("classifier"),
-            __references::Variant("datatype"),
-        ] => Some(Instance::DataTypeId(DataTypeId(path.clone()))),
-        [
-            ..,
-            __references::Field("content"),
-            __references::ListElement(_),
-            __references::Variant("classifier"),
-            __references::Variant("class"),
-            __references::Field("features"),
-            __references::ListElement(_),
-            __references::Variant("attribute"),
-        ] => Some(Instance::AttributeId(AttributeId(path.clone()))),
-        [
-            ..,
-            __references::Field("content"),
-            __references::ListElement(_),
-            __references::Variant("classifier"),
-            __references::Variant("class"),
-            __references::Field("features"),
-            __references::ListElement(_),
-            __references::Variant("reference"),
-        ] => Some(Instance::ReferenceId(ReferenceId(path.clone()))),
+        [.., __references::Variant("class")] => Some(Instance::ClassId(ClassId(path.clone()))),
+        [.., __references::Variant("attribute")] => {
+            Some(Instance::AttributeId(AttributeId(path.clone())))
+        }
+        [.., __references::Variant("reference")] => {
+            Some(Instance::ReferenceId(ReferenceId(path.clone())))
+        }
+        [.., __references::Variant("data_type")] => {
+            Some(Instance::DataTypeId(DataTypeId(path.clone())))
+        }
         _ => None,
     }
 }
@@ -54,14 +28,51 @@ pub fn instance_path(instance: &Instance) -> &__references::ObjectPath {
         Instance::DataTypeId(id) => &id.0,
     }
 }
-#[derive(Debug, Clone, PartialEq, Eq, Hash)]
-pub struct AttributeId(pub __references::ObjectPath);
-#[derive(Debug, Clone, PartialEq, Eq, Hash)]
-pub struct ReferenceId(pub __references::ObjectPath);
-#[derive(Debug, Clone, PartialEq, Eq, Hash)]
-pub struct ClassId(pub __references::ObjectPath);
-#[derive(Debug, Clone, PartialEq, Eq, Hash)]
-pub struct DataTypeId(pub __references::ObjectPath);
+pub fn deleted_prefix_instances(path: &__references::ObjectPath) -> Vec<Instance> {
+    let mut instances = Vec::new();
+    if let Some(instance) = instance_from_path(path) {
+        instances.push(instance);
+    }
+    match path.segments() {
+        [
+            ..,
+            __references::Field("content"),
+            __references::ListElement(_),
+        ] => {
+            instances.push(Instance::ClassId(ClassId(
+                path.clone().variant("classifier").variant("class"),
+            )));
+            instances.push(Instance::DataTypeId(DataTypeId(
+                path.clone().variant("classifier").variant("data_type"),
+            )));
+            instances.push(Instance::AttributeId(AttributeId(
+                path.clone()
+                    .variant("structuralfeature")
+                    .variant("attribute"),
+            )));
+            instances.push(Instance::ReferenceId(ReferenceId(
+                path.clone()
+                    .variant("structuralfeature")
+                    .variant("reference"),
+            )));
+        }
+        [
+            ..,
+            __references::Field("features"),
+            __references::ListElement(_),
+        ] => {
+            instances.push(Instance::AttributeId(AttributeId(
+                path.clone().variant("attribute"),
+            )));
+            instances.push(Instance::ReferenceId(ReferenceId(
+                path.clone().variant("reference"),
+            )));
+        }
+        _ => {}
+    }
+    instances.dedup();
+    instances
+}
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct AttributeTypEdge;
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]

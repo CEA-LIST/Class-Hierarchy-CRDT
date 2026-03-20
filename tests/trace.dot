@@ -1,0 +1,21 @@
+digraph {
+        0       [label="[Package(Content(Insert { pos: 0, value: Classifier(Class(Features(Insert { pos: 0, value: Attribute(StructuralFeatureFeat(Upper(\Inc(130404)))) }))) }))@(6:1)]"];
+        1       [label="[AddReference(AttributeToClass(Arc { source: AttributeId(ObjectPath { root: 'class_hierarchy', segments: [Field('package'), Field('\content'), ListElement(EventId { idx: ReplicaIdx(6), seq: 1, resolver: 0 => 2, 1 => 0, 2 => 1, 3 => 3, 4 => 4, 5 => 5, 6 => 6, 7 => \7 }), Variant('classifier'), Variant('class'), Field('features'), ListElement(EventId { idx: ReplicaIdx(6), seq: 1, resolver: 0 => \2, 1 => 0, 2 => 1, 3 => 3, 4 => 4, 5 => 5, 6 => 6, 7 => 7 }), Variant('attribute')] }), target: ClassId(ObjectPath { root: 'class_\hierarchy', segments: [Field('package'), Field('content'), ListElement(EventId { idx: ReplicaIdx(6), seq: 1, resolver: 0 => 2, 1 => \0, 2 => 1, 3 => 3, 4 => 4, 5 => 5, 6 => 6, 7 => 7 }), Variant('classifier'), Variant('class')] }), kind: AttributeTypEdge }))@(2:\1)]"];
+        0 -> 1;
+        2       [label="[Package(Content(Update { pos: 0, value: Classifier(Class(IsAbstract(Clear))) }))@(1:1)]"];
+        0 -> 2;
+        3       [label="[Package(Content(Insert { pos: 1, value: Classifier(Class(ClassifierFeat(ModelElementFeat(Name(Insert { content: '1', pos: 0 }))))) }))@(\0:1)]"];
+        0 -> 3;
+        5       [label="[Package(ModelElementFeat(Name(Insert { content: 'r', pos: 0 })))@(1:2)]"];
+        2 -> 5;
+        4       [label="[Package(ModelElementFeat(Name(Insert { content: 'y', pos: 0 })))@(6:2)]"];
+        3 -> 4;
+        8       [label="[AddReference(AttributeToClass(Arc { source: AttributeId(ObjectPath { root: 'class_hierarchy', segments: [Field('package'), Field('\content'), ListElement(EventId { idx: ReplicaIdx(6), seq: 1, resolver: 0 => 0, 1 => 1, 2 => 2, 3 => 3, 4 => 4, 5 => 5, 6 => 6, 7 => \7 }), Variant('classifier'), Variant('class'), Field('features'), ListElement(EventId { idx: ReplicaIdx(6), seq: 1, resolver: 0 => \0, 1 => 1, 2 => 2, 3 => 3, 4 => 4, 5 => 5, 6 => 6, 7 => 7 }), Variant('attribute')] }), target: ClassId(ObjectPath { root: 'class_\hierarchy', segments: [Field('package'), Field('content'), ListElement(EventId { idx: ReplicaIdx(0), seq: 1, resolver: 0 => 0, 1 => \1, 2 => 2, 3 => 3, 4 => 4, 5 => 5, 6 => 6, 7 => 7 }), Variant('classifier'), Variant('class')] }), kind: AttributeTypEdge }))@(0:\2)]"];
+        3 -> 8;
+        6       [label="[AddReference(AttributeToClass(Arc { source: AttributeId(ObjectPath { root: 'class_hierarchy', segments: [Field('package'), Field('\content'), ListElement(EventId { idx: ReplicaIdx(0), seq: 1, resolver: 0 => 6, 1 => 0, 2 => 1, 3 => 2, 4 => 3, 5 => 4, 6 => 5, 7 => \7 }), Variant('classifier'), Variant('class'), Field('features'), ListElement(EventId { idx: ReplicaIdx(0), seq: 1, resolver: 0 => \6, 1 => 0, 2 => 1, 3 => 2, 4 => 3, 5 => 4, 6 => 5, 7 => 7 }), Variant('attribute')] }), target: ClassId(ObjectPath { root: 'class_\hierarchy', segments: [Field('package'), Field('content'), ListElement(EventId { idx: ReplicaIdx(0), seq: 1, resolver: 0 => 6, 1 => \0, 2 => 1, 3 => 2, 4 => 3, 5 => 4, 6 => 5, 7 => 7 }), Variant('classifier'), Variant('class')] }), kind: AttributeTypEdge }))@(6:\3)]"];
+        4 -> 6;
+        7       [label="[Package(Content(Update { pos: 0, value: Classifier(Class(IsAbstract(Clear))) }))@(6:4)]"];
+        6 -> 7;
+        9       [label="[Package(ModelElementFeat(Name(Insert { content: 'A', pos: 0 })))@(7:1)]"];
+        8 -> 9;
+}

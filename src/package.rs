@@ -1,6 +1,7 @@
 /// Auto-generated code by 🅰🆁🅰🅲🅷🅽🅴 - do not edit directly
 mod __package {
     pub use crate::classifiers::*;
+    pub use crate::reference_manager_log::ReferenceManagerLog;
     pub use crate::references::*;
     pub use moirai_crdt::policy::LwwPolicy;
     pub use moirai_protocol::clock::version_vector::Version;
@@ -9,12 +10,14 @@ mod __package {
     pub use moirai_protocol::crdt::query::QueryOperation;
     pub use moirai_protocol::crdt::query::Read;
     pub use moirai_protocol::event::Event;
+    pub use moirai_protocol::event::id::EventId;
     pub use moirai_protocol::state::log::IsLog;
-    pub use moirai_protocol::state::po_log::VecLog;
     pub use moirai_protocol::state::sink::IsLogSink;
     pub use moirai_protocol::state::sink::ObjectPath;
+    pub use moirai_protocol::state::sink::PathSegment;
     pub use moirai_protocol::state::sink::SinkCollector;
     pub use moirai_protocol::state::sink::SinkEffect;
+    pub use moirai_protocol::utils::intern_str::Resolver;
 }
 #[derive(Debug, Clone)]
 pub enum ClassHierarchy {
@@ -30,18 +33,53 @@ pub struct ClassHierarchyValue {
 #[derive(Debug, Clone, Default)]
 pub struct ClassHierarchyLog {
     package_log: __package::PackageLog,
-    reference_manager_log: __package::VecLog<__package::ReferenceManager<__package::LwwPolicy>>,
+    reference_manager_log: __package::ReferenceManagerLog,
 }
 impl ClassHierarchyLog {
     pub fn package_log(&self) -> &__package::PackageLog {
         &self.package_log
     }
-    pub fn reference_manager_log(
-        &self,
-    ) -> &__package::VecLog<__package::ReferenceManager<__package::LwwPolicy>> {
+    pub fn reference_manager_log(&self) -> &__package::ReferenceManagerLog {
         &self.reference_manager_log
     }
 }
+
+fn path_uses_resolver(path: &__package::ObjectPath, resolver: &__package::Resolver) -> bool {
+    path.segments().iter().all(|segment| match segment {
+        __package::PathSegment::ListElement(id) => id.resolver() == resolver,
+        _ => true,
+    })
+}
+
+fn refs_use_resolver(refs: &__package::Refs, resolver: &__package::Resolver) -> bool {
+    match refs {
+        __package::Refs::AttributeToClass(arc) => {
+            path_uses_resolver(&arc.source.0, resolver)
+                && path_uses_resolver(&arc.target.0, resolver)
+        }
+        __package::Refs::AttributeToDataType(arc) => {
+            path_uses_resolver(&arc.source.0, resolver)
+                && path_uses_resolver(&arc.target.0, resolver)
+        }
+        __package::Refs::ReferenceToReference(arc) => {
+            path_uses_resolver(&arc.source.0, resolver)
+                && path_uses_resolver(&arc.target.0, resolver)
+        }
+        __package::Refs::ReferenceToClass(arc) => {
+            path_uses_resolver(&arc.source.0, resolver)
+                && path_uses_resolver(&arc.target.0, resolver)
+        }
+        __package::Refs::ReferenceToDataType(arc) => {
+            path_uses_resolver(&arc.source.0, resolver)
+                && path_uses_resolver(&arc.target.0, resolver)
+        }
+        __package::Refs::ClassToClass(arc) => {
+            path_uses_resolver(&arc.source.0, resolver)
+                && path_uses_resolver(&arc.target.0, resolver)
+        }
+    }
+}
+
 impl __package::IsLog for ClassHierarchyLog {
     type Value = ClassHierarchyValue;
     type Op = ClassHierarchy;
@@ -65,16 +103,28 @@ impl __package::IsLog for ClassHierarchyLog {
                 __package::ObjectPath::new("class_hierarchy").field("package"),
                 &mut sink,
             ),
-            ClassHierarchy::AddReference(o) => self.reference_manager_log.effect(
-                __package::Event::unfold(event.clone(), __package::ReferenceManager::AddArc(o)),
-            ),
-            ClassHierarchy::RemoveReference(o) => self.reference_manager_log.effect(
-                __package::Event::unfold(event.clone(), __package::ReferenceManager::RemoveArc(o)),
-            ),
-            _ => {}
+            ClassHierarchy::AddReference(o) => {
+                debug_assert!(
+                    refs_use_resolver(&o, event.id().resolver()),
+                    "AddReference payload contains EventId values that were not internalized to the local resolver"
+                );
+                self.reference_manager_log.effect(__package::Event::unfold(
+                    event.clone(),
+                    __package::ReferenceManager::AddArc(o),
+                ))
+            }
+            ClassHierarchy::RemoveReference(o) => {
+                debug_assert!(
+                    refs_use_resolver(&o, event.id().resolver()),
+                    "RemoveReference payload contains EventId values that were not internalized to the local resolver"
+                );
+                self.reference_manager_log.effect(__package::Event::unfold(
+                    event.clone(),
+                    __package::ReferenceManager::RemoveArc(o),
+                ))
+            }
         }
         for sink in sink.into_sinks() {
-            println!("Sink: {} ({:?})", sink.path(), sink.effect());
             match sink.effect() {
                 __package::SinkEffect::Create | __package::SinkEffect::Update => {
                     let vertex_ops = __package::instance_from_path(&sink.path())
@@ -85,20 +135,12 @@ impl __package::IsLog for ClassHierarchyLog {
                     }
                 }
                 __package::SinkEffect::Delete => {
-                    let graph = self.reference_manager_log.eval(__package::Read::new());
-                    let removals = graph
-                        .node_weights()
-                        .filter(|n| sink.path().is_prefix_of(__package::instance_path(n)))
-                        .collect::<Vec<_>>();
-                    for removal in removals {
-                        let removal_event = __package::Event::unfold(
-                            event.clone(),
-                            __package::ReferenceManager::RemoveVertex {
-                                id: removal.clone(),
-                            },
-                        );
-                        self.reference_manager_log.effect(removal_event);
-                    }
+                    self.reference_manager_log.effect(__package::Event::unfold(
+                        event.clone(),
+                        __package::ReferenceManager::DeleteSubtree {
+                            prefix: sink.path().clone(),
+                        },
+                    ));
                 }
             }
         }
