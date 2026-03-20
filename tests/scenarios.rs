@@ -4,33 +4,24 @@ use class_hierarchy::{
         Reference, StructuralFeature, StructuralFeatureFeat,
     },
     package::{ClassHierarchy, ClassHierarchyLog},
-    references::{
-        AttributeId, AttributeTypEdge, ClassId, Instance, Ref, ReferenceManager, Refs,
-        SchemaViolation,
-    },
+    references::{AttributeId, AttributeTypEdge, ClassId, Instance, Ref, Refs, SchemaViolation},
 };
 use moirai_crdt::{
     counter::resettable_counter::Counter,
     flag::ew_flag::EWFlag,
-    graph::uw_multidigraph::Content,
-    list::{
-        eg_walker::List,
-        nested_list::{NestedList, NestedListLog},
-    },
-    policy::LwwPolicy,
+    list::{eg_walker::List, nested_list::NestedList},
 };
 use moirai_macros::typed_graph::Arc;
 use moirai_protocol::{
     broadcast::tcsb::{IsTcsbTest, Tcsb},
     crdt::query::Read,
-    replica::{self, IsReplica, Replica, ReplicaIdx},
-    state::{po_log::VecLog, sink::ObjectPath},
+    replica::{IsReplica, Replica, ReplicaIdx},
+    state::sink::ObjectPath,
     utils::translate_ids::TranslateIds,
 };
 use petgraph::{Direction, Graph, graph::DiGraph, visit::EdgeRef};
 
 type ZooReplica = Replica<ClassHierarchyLog, Tcsb<ClassHierarchy>>;
-type RefReplica = Replica<VecLog<ReferenceManager<LwwPolicy>>, Tcsb<ReferenceManager<LwwPolicy>>>;
 
 struct Vf2GraphView<'a>(&'a DiGraph<Instance, class_hierarchy::references::Ref>);
 
@@ -92,28 +83,6 @@ fn zoo_twins() -> (ZooReplica, ZooReplica) {
         Replica::<ClassHierarchyLog, Tcsb<ClassHierarchy>>::new("a".to_string()),
         Replica::<ClassHierarchyLog, Tcsb<ClassHierarchy>>::new("b".to_string()),
     )
-}
-
-fn ref_twins() -> (RefReplica, RefReplica) {
-    (
-        Replica::<VecLog<ReferenceManager<LwwPolicy>>, Tcsb<ReferenceManager<LwwPolicy>>>::new(
-            "a".to_string(),
-        ),
-        Replica::<VecLog<ReferenceManager<LwwPolicy>>, Tcsb<ReferenceManager<LwwPolicy>>>::new(
-            "b".to_string(),
-        ),
-    )
-}
-
-fn assert_ref_convergence(replica_a: &RefReplica, replica_b: &RefReplica) {
-    assert_eq!(
-        replica_a.query(Read::new()).node_count(),
-        replica_b.query(Read::new()).node_count()
-    );
-    assert_eq!(
-        replica_a.query(Read::new()).edge_count(),
-        replica_b.query(Read::new()).edge_count()
-    );
 }
 
 fn dump_vertices(replica: &ZooReplica) -> Vec<String> {

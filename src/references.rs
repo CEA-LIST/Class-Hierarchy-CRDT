@@ -2,7 +2,7 @@
 mod __references {
     pub use moirai_macros::typed_graph;
     pub use moirai_protocol::state::sink::ObjectPath;
-    pub use moirai_protocol::state::sink::PathSegment::{Field, ListElement, MapEntry, Variant};
+    pub use moirai_protocol::state::sink::PathSegment::Variant;
 }
 pub fn instance_from_path(path: &__references::ObjectPath) -> Option<Instance> {
     let segs = path.segments();
@@ -27,51 +27,6 @@ pub fn instance_path(instance: &Instance) -> &__references::ObjectPath {
         Instance::ClassId(id) => &id.0,
         Instance::DataTypeId(id) => &id.0,
     }
-}
-pub fn deleted_prefix_instances(path: &__references::ObjectPath) -> Vec<Instance> {
-    let mut instances = Vec::new();
-    if let Some(instance) = instance_from_path(path) {
-        instances.push(instance);
-    }
-    match path.segments() {
-        [
-            ..,
-            __references::Field("content"),
-            __references::ListElement(_),
-        ] => {
-            instances.push(Instance::ClassId(ClassId(
-                path.clone().variant("classifier").variant("class"),
-            )));
-            instances.push(Instance::DataTypeId(DataTypeId(
-                path.clone().variant("classifier").variant("data_type"),
-            )));
-            instances.push(Instance::AttributeId(AttributeId(
-                path.clone()
-                    .variant("structuralfeature")
-                    .variant("attribute"),
-            )));
-            instances.push(Instance::ReferenceId(ReferenceId(
-                path.clone()
-                    .variant("structuralfeature")
-                    .variant("reference"),
-            )));
-        }
-        [
-            ..,
-            __references::Field("features"),
-            __references::ListElement(_),
-        ] => {
-            instances.push(Instance::AttributeId(AttributeId(
-                path.clone().variant("attribute"),
-            )));
-            instances.push(Instance::ReferenceId(ReferenceId(
-                path.clone().variant("reference"),
-            )));
-        }
-        _ => {}
-    }
-    instances.dedup();
-    instances
 }
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct AttributeTypEdge;
