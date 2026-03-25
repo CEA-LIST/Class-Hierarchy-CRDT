@@ -2,7 +2,7 @@
 mod __references {
     pub use moirai_macros::typed_graph;
     pub use moirai_protocol::state::sink::ObjectPath;
-    pub use moirai_protocol::state::sink::PathSegment::Variant;
+    pub use moirai_protocol::state::sink::PathSegment::{Field, ListElement, MapEntry, Variant};
 }
 pub fn instance_from_path(path: &__references::ObjectPath) -> Option<Instance> {
     let segs = path.segments();
@@ -37,12 +37,22 @@ pub struct ReferenceTypEdge;
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct ClassSupertypesEdge;
 __references::typed_graph! {
-    graph : ReferenceManager, vertex : Instance, edge : Ref, arcs_type : Refs, vertices {
-    AttributeId, ReferenceId, ClassId, DataTypeId }, connections { AttributeToClass :
-    AttributeId -> ClassId(AttributeTypEdge) [1, 1], AttributeToDataType : AttributeId ->
-    DataTypeId(AttributeTypEdge) [1, 1], ReferenceToReference : ReferenceId ->
-    ReferenceId(ReferenceOppositeEdge) [0, 1], ReferenceToClass : ReferenceId ->
-    ClassId(ReferenceTypEdge) [1, 1], ReferenceToDataType : ReferenceId ->
-    DataTypeId(ReferenceTypEdge) [1, 1], ClassToClass : ClassId ->
-    ClassId(ClassSupertypesEdge) [0, *] }
+    graph : ReferenceManager,
+    vertex : Instance,
+    edge : Ref,
+    arcs_type : Refs,
+    vertices {
+        AttributeId,
+        ReferenceId,
+        ClassId,
+        DataTypeId
+    },
+    connections {
+        AttributeToClass : AttributeId -> ClassId (AttributeTypEdge) [1, 1],
+        AttributeToDataType : AttributeId -> DataTypeId (AttributeTypEdge) [1, 1],
+        ReferenceToReference : ReferenceId -> ReferenceId (ReferenceOppositeEdge) [0, 1],
+        ReferenceToClass : ReferenceId -> ClassId (ReferenceTypEdge) [1, 1],
+        ReferenceToDataType : ReferenceId -> DataTypeId (ReferenceTypEdge) [1, 1],
+        ClassToClass : ClassId -> ClassId (ClassSupertypesEdge) [0, *]
+    }
 }

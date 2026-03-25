@@ -1,10 +1,3 @@
-use moirai_crdt::policy::FairPolicy;
-use moirai_protocol::{
-    replica::ReplicaIdx,
-    state::po_log::POLog,
-    utils::{intern_str::Interner, translate_ids::TranslateIds},
-};
-
 /// Auto-generated code by 🅰🆁🅰🅲🅷🅽🅴 - do not edit directly
 mod __package {
     pub use crate::classifiers::*;
@@ -16,16 +9,21 @@ mod __package {
     pub use moirai_protocol::crdt::query::QueryOperation;
     pub use moirai_protocol::crdt::query::Read;
     pub use moirai_protocol::event::Event;
+    pub use moirai_protocol::replica::ReplicaIdx;
     pub use moirai_protocol::state::log::IsLog;
+    pub use moirai_protocol::state::po_log::POLog;
+    pub use moirai_protocol::state::po_log::VecLog;
     pub use moirai_protocol::state::sink::IsLogSink;
     pub use moirai_protocol::state::sink::ObjectPath;
     pub use moirai_protocol::state::sink::SinkCollector;
     pub use moirai_protocol::state::sink::SinkEffect;
+    pub use moirai_protocol::utils::intern_str::Interner;
+    pub use moirai_protocol::utils::translate_ids::TranslateIds;
 }
-
-pub type ReferenceManagerLog =
-    POLog<__package::ReferenceManager<FairPolicy>, __package::ReferenceManagerState<FairPolicy>>;
-
+pub type ReferenceManagerLog = __package::POLog<
+    __package::ReferenceManager<__package::FairPolicy>,
+    __package::ReferenceManagerState<__package::FairPolicy>,
+>;
 #[derive(Debug, Clone)]
 pub enum ClassHierarchy {
     Package(__package::Package),
@@ -40,17 +38,18 @@ pub struct ClassHierarchyValue {
 #[derive(Debug, Clone, Default)]
 pub struct ClassHierarchyLog {
     package_log: __package::PackageLog,
-    reference_manager_log: ReferenceManagerLog,
+    reference_manager_log: __package::VecLog<__package::ReferenceManager<__package::FairPolicy>>,
 }
 impl ClassHierarchyLog {
     pub fn package_log(&self) -> &__package::PackageLog {
         &self.package_log
     }
-    pub fn reference_manager_log(&self) -> &ReferenceManagerLog {
+    pub fn reference_manager_log(
+        &self,
+    ) -> &__package::VecLog<__package::ReferenceManager<__package::FairPolicy>> {
         &self.reference_manager_log
     }
 }
-
 impl __package::IsLog for ClassHierarchyLog {
     type Value = ClassHierarchyValue;
     type Op = ClassHierarchy;
@@ -131,9 +130,8 @@ impl __package::EvalNested<__package::Read<<Self as __package::IsLog>::Value>>
         }
     }
 }
-
-impl TranslateIds for ClassHierarchy {
-    fn translate_ids(&self, from: ReplicaIdx, interner: &Interner) -> Self {
+impl __package::TranslateIds for ClassHierarchy {
+    fn translate_ids(&self, from: __package::ReplicaIdx, interner: &__package::Interner) -> Self {
         match self {
             ClassHierarchy::Package(op) => ClassHierarchy::Package(op.clone()),
             ClassHierarchy::AddReference(op) => {

@@ -95,6 +95,7 @@ fn dump_vertices(replica: &ZooReplica) -> Vec<String> {
             Instance::ReferenceId(id) => format!("ReferenceId({})", id.0),
             Instance::ClassId(id) => format!("ClassId({})", id.0),
             Instance::DataTypeId(id) => format!("DataTypeId({})", id.0),
+            _ => unreachable!(),
         })
         .collect::<Vec<_>>();
     vertices.sort();
@@ -107,6 +108,7 @@ fn format_instance(instance: &Instance) -> String {
         Instance::ReferenceId(id) => format!("ReferenceId({})", id.0),
         Instance::ClassId(id) => format!("ClassId({})", id.0),
         Instance::DataTypeId(id) => format!("DataTypeId({})", id.0),
+        _ => unreachable!(),
     }
 }
 
@@ -197,6 +199,45 @@ fn assert_all_zoo_converged(label: &str, replicas: &[ZooReplica]) {
     }
 }
 
+#[test]
+fn vertex_cascade_creation_deletion() {
+    let mut replica_a = Replica::<ClassHierarchyLog, Tcsb<ClassHierarchy>>::new("a".to_string());
+
+    replica_a
+        .send(ClassHierarchy::Package(Package::Content(
+            NestedList::Insert {
+                pos: 0,
+                value: Box::new(ModelElement::Classifier(Classifier::Class(
+                    Class::IsAbstract(EWFlag::Enable),
+                ))),
+            },
+        )))
+        .unwrap();
+    assert_eq!(replica_a.query(Read::new()).refs.node_count(), 1);
+    replica_a
+        .send(ClassHierarchy::Package(Package::Content(
+            NestedList::delete(0),
+        )))
+        .unwrap();
+
+    println!("{:#?}", replica_a.query(Read::new()).package);
+    println!(
+        "{:#?}",
+        replica_a
+            .query(Read::new())
+            .refs
+            .node_weights()
+            .map(|n| match n {
+                Instance::AttributeId(id) => format!("{} (AttributeId)", id.0),
+                Instance::ReferenceId(id) => format!("{} (ReferenceId)", id.0),
+                Instance::ClassId(id) => format!("{} (ClassId)", id.0),
+                Instance::DataTypeId(id) => format!("{} (DataTypeId)", id.0),
+            })
+            .collect::<Vec<_>>()
+            .join(",")
+    );
+    assert_eq!(replica_a.query(Read::new()).refs.node_count(), 0);
+}
 #[test]
 fn zoo() {
     let (mut replica_a, mut replica_b) = zoo_twins();
