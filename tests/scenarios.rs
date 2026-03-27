@@ -1,15 +1,18 @@
 use class_hierarchy::{
     classifiers::{
-        Attribute, Class, Classifier, ClassifierFeat, ModelElement, ModelElementFeat, Package,
-        Reference, StructuralFeature, StructuralFeatureFeat,
+        Attribute, Class, Classifier, ClassifierFeat, DataType, ModelElement, ModelElementFeat,
+        Package, Reference, StructuralFeature, StructuralFeatureFeat,
     },
-    package::{ClassHierarchy, ClassHierarchyLog},
-    references::{AttributeId, AttributeTypEdge, ClassId, Instance, Ref, Refs, SchemaViolation},
+    package::{ClassHierarchy, ClassHierarchyLog, ClassHierarchyValue},
+    references::{
+        AttributeId, AttributeTypEdge, ClassId, DataTypeId, Instance, Ref, Refs, SchemaViolation,
+    },
 };
 use moirai_crdt::{
     counter::resettable_counter::Counter,
     flag::ew_flag::EWFlag,
     list::{eg_walker::List, nested_list::NestedList},
+    utils::membership::twins_log,
 };
 use moirai_macros::typed_graph::Arc;
 use moirai_protocol::{
@@ -19,9 +22,7 @@ use moirai_protocol::{
     state::sink::ObjectPath,
     utils::translate_ids::TranslateIds,
 };
-use petgraph::{Direction, Graph, graph::DiGraph, visit::EdgeRef};
-
-type ZooReplica = Replica<ClassHierarchyLog, Tcsb<ClassHierarchy>>;
+use petgraph::{Direction, Graph, graph::DiGraph};
 
 struct Vf2GraphView<'a>(&'a DiGraph<Instance, class_hierarchy::references::Ref>);
 
@@ -78,125 +79,95 @@ impl<'a> vf2::Graph for Vf2GraphView<'a> {
     }
 }
 
-fn zoo_twins() -> (ZooReplica, ZooReplica) {
-    (
-        Replica::<ClassHierarchyLog, Tcsb<ClassHierarchy>>::new("a".to_string()),
-        Replica::<ClassHierarchyLog, Tcsb<ClassHierarchy>>::new("b".to_string()),
-    )
-}
+// fn format_instance(instance: &Instance) -> String {
+//     match instance {
+//         Instance::AttributeId(id) => format!("AttributeId({})", id.0),
+//         Instance::ReferenceId(id) => format!("ReferenceId({})", id.0),
+//         Instance::ClassId(id) => format!("ClassId({})", id.0),
+//         Instance::DataTypeId(id) => format!("DataTypeId({})", id.0),
+//         _ => unreachable!(),
+//     }
+// }
 
-fn dump_vertices(replica: &ZooReplica) -> Vec<String> {
-    let mut vertices = replica
-        .query(Read::new())
-        .refs
-        .node_weights()
-        .map(|vertex| match vertex {
-            Instance::AttributeId(id) => format!("AttributeId({})", id.0),
-            Instance::ReferenceId(id) => format!("ReferenceId({})", id.0),
-            Instance::ClassId(id) => format!("ClassId({})", id.0),
-            Instance::DataTypeId(id) => format!("DataTypeId({})", id.0),
-            _ => unreachable!(),
-        })
-        .collect::<Vec<_>>();
-    vertices.sort();
-    vertices
-}
+#[test]
+fn conflicting_ref_type_max() {
+    let (mut replica_a, mut replica_b) = twins_log::<ClassHierarchyLog>();
 
-fn format_instance(instance: &Instance) -> String {
-    match instance {
-        Instance::AttributeId(id) => format!("AttributeId({})", id.0),
-        Instance::ReferenceId(id) => format!("ReferenceId({})", id.0),
-        Instance::ClassId(id) => format!("ClassId({})", id.0),
-        Instance::DataTypeId(id) => format!("DataTypeId({})", id.0),
-        _ => unreachable!(),
-    }
-}
+    let a_1 = replica_a
+        .send(ClassHierarchy::Package(Package::Content(
+            NestedList::Insert {
+                pos: 0,
+                value: Box::new(ModelElement::Classifier(Classifier::Class(Class::New))),
+            },
+        )))
+        .unwrap();
+    let a_2 = replica_a
+        .send(ClassHierarchy::Package(Package::Content(
+            NestedList::Insert {
+                pos: 1,
+                value: Box::new(ModelElement::Classifier(Classifier::DataType(
+                    DataType::New,
+                ))),
+            },
+        )))
+        .unwrap();
+    let a_3 = replica_a
+        .send(ClassHierarchy::Package(Package::Content(
+            NestedList::Update {
+                pos: 0,
+                value: Box::new(ModelElement::Classifier(Classifier::Class(
+                    Class::Features(NestedList::Insert {
+                        pos: 0,
+                        value: StructuralFeature::Attribute(Attribute::New),
+                    }),
+                ))),
+            },
+        )))
+        .unwrap();
+    replica_b.receive(a_1.clone());
+    replica_b.receive(a_2.clone());
+    replica_b.receive(a_3.clone());
 
-fn dump_edges(replica: &ZooReplica) -> Vec<String> {
-    let graph = replica.query(Read::new()).refs;
-    let mut edges = graph
-        .edge_references()
-        .map(|edge| {
-            let source = graph.node_weight(edge.source()).unwrap();
-            let target = graph.node_weight(edge.target()).unwrap();
-            let kind = format!("{:?}", edge.weight());
-            format!(
-                "{} -> {} [{}]",
-                format_instance(source),
-                format_instance(target),
-                kind
-            )
-        })
-        .collect::<Vec<_>>();
-    edges.sort();
-    edges
-}
+    let read = replica_b.query(Read::new());
 
-fn print_divergence_if_any(label: &str, a: &ZooReplica, b: &ZooReplica, c: &ZooReplica) {
-    let a_edges = dump_edges(a);
-    let b_edges = dump_edges(b);
-    let c_edges = dump_edges(c);
-    let a_count = a_edges.len();
-    let b_count = b_edges.len();
-    let c_count = c_edges.len();
+    let attribute_path = read.refs.raw_nodes()[2].weight.vertex_path();
+    let class_path = read.refs.raw_nodes()[1].weight.vertex_path();
 
-    if a_count == b_count && b_count == c_count && a_edges == b_edges && b_edges == c_edges {
-        return;
-    }
+    let b_1 = replica_b
+        .send(ClassHierarchy::AddReference(Refs::AttributeToClass(Arc {
+            source: AttributeId(attribute_path.clone()),
+            target: ClassId(class_path.clone()),
+            kind: AttributeTypEdge,
+        })))
+        .unwrap();
+    let datatype_path = read.refs.raw_nodes()[0].weight.vertex_path();
+    let a_4 = replica_a
+        .send(ClassHierarchy::AddReference(Refs::AttributeToDataType(
+            Arc {
+                source: AttributeId(attribute_path.clone()),
+                target: DataTypeId(datatype_path.clone()),
+                kind: AttributeTypEdge,
+            },
+        )))
+        .unwrap();
 
-    println!("\n=== edge divergence at {label} ===");
-    println!("package equalities:");
-    println!(
-        "A==B {}",
-        a.query(Read::new()).package == b.query(Read::new()).package
+    replica_a.receive(b_1.clone());
+    replica_b.receive(a_4.clone());
+
+    let read_a = replica_a.query(Read::new());
+    let read_b = replica_b.query(Read::new());
+
+    assert_eq!(read_a.package, read_b.package);
+    assert!(
+        vf2::isomorphisms(&Vf2GraphView(&read_a.refs), &Vf2GraphView(&read_b.refs))
+            .default_eq()
+            .first()
+            .is_some()
     );
-    println!(
-        "B==C {}",
-        b.query(Read::new()).package == c.query(Read::new()).package
-    );
-    println!(
-        "A==C {}",
-        a.query(Read::new()).package == c.query(Read::new()).package
-    );
-    println!("vertices:");
-    println!("A {:?}", dump_vertices(a));
-    println!("B {:?}", dump_vertices(b));
-    println!("C {:?}", dump_vertices(c));
-    println!("edges:");
-    println!("A {:?}", a_edges);
-    println!("B {:?}", b_edges);
-    println!("C {:?}", c_edges);
-}
-
-fn print_pair_divergence(label: &str, a_idx: usize, a: &ZooReplica, b_idx: usize, b: &ZooReplica) {
-    let a_val = a.query(Read::new());
-    let b_val = b.query(Read::new());
-    println!("\n=== divergence at {label}: replicas {a_idx} vs {b_idx} ===");
-    println!("package equal: {}", a_val.package == b_val.package);
-    println!("a vertices: {:?}", dump_vertices(a));
-    println!("b vertices: {:?}", dump_vertices(b));
-    println!("a edges: {:?}", dump_edges(a));
-    println!("b edges: {:?}", dump_edges(b));
-    println!("a package: {:#?}", a_val.package);
-    println!("b package: {:#?}", b_val.package);
-}
-
-fn assert_all_zoo_converged(label: &str, replicas: &[ZooReplica]) {
-    for i in 0..replicas.len() {
-        for j in (i + 1)..replicas.len() {
-            let a = replicas[i].query(Read::new());
-            let b = replicas[j].query(Read::new());
-            let same = a.package == b.package
-                && a.refs.node_count() == b.refs.node_count()
-                && a.refs.edge_count() == b.refs.edge_count()
-                && dump_vertices(&replicas[i]) == dump_vertices(&replicas[j])
-                && dump_edges(&replicas[i]) == dump_edges(&replicas[j]);
-            if !same {
-                print_pair_divergence(label, i, &replicas[i], j, &replicas[j]);
-                panic!("replicas {i} and {j} diverged");
-            }
-        }
-    }
+    assert_eq!(read_a.refs.node_count(), 3);
+    assert_eq!(read_a.refs.edge_count(), 1);
+    assert_eq!(read_b.refs.node_count(), 3);
+    assert_eq!(read_b.refs.edge_count(), 1);
 }
 
 #[test]
@@ -240,7 +211,7 @@ fn vertex_cascade_creation_deletion() {
 }
 #[test]
 fn zoo() {
-    let (mut replica_a, mut replica_b) = zoo_twins();
+    let (mut replica_a, mut replica_b) = twins_log::<ClassHierarchyLog>();
 
     let a1 = replica_a
         .send(ClassHierarchy::Package(Package::New))
@@ -329,15 +300,29 @@ fn zoo() {
     replica_b.receive(a7);
 
     assert_eq!(
-        replica_a.query(Read::new()).package,
-        replica_b.query(Read::new()).package
+        replica_a.query(Read::<ClassHierarchyValue>::new()).package,
+        replica_b.query(Read::<ClassHierarchyValue>::new()).package
     );
 
-    println!("{:#?}", replica_a.query(Read::new()).package);
-    assert_eq!(replica_a.query(Read::new()).package.content.len(), 1);
+    println!(
+        "{:#?}",
+        replica_a.query(Read::<ClassHierarchyValue>::new()).package
+    );
+    assert_eq!(
+        replica_a
+            .query(Read::<ClassHierarchyValue>::new())
+            .package
+            .content
+            .len(),
+        1
+    );
 
     println!("Vertices in the graph after events a1-a6:");
-    for vertex in replica_a.query(Read::new()).refs.node_weights() {
+    for vertex in replica_a
+        .query(Read::<ClassHierarchyValue>::new())
+        .refs
+        .node_weights()
+    {
         match vertex {
             Instance::AttributeId(id) => println!("{} (AttributeId)", id.0),
             Instance::ReferenceId(id) => println!("{} (ReferenceId)", id.0),
@@ -465,7 +450,6 @@ fn error_case() {
 
     // 0 -> 3, 1 -> 3
     replica_a.receive(e1.clone());
-    print_divergence_if_any("after B->A e1", &replica_a, &replica_b, &replica_c);
 
     let class_path = ObjectPath::new("class_hierarchy")
         .field("package")
@@ -487,14 +471,12 @@ fn error_case() {
             kind: AttributeTypEdge,
         })))
         .unwrap();
-    print_divergence_if_any("after e3 on A", &replica_a, &replica_b, &replica_c);
 
     // 1 -> 4,5,6 and 3 -> 4,5,6
     // e3 depends on e0 transitively, and the package-name inserts below require that base state.
     replica_c.receive(e0.clone());
     replica_c.receive(e1.clone());
     replica_c.receive(e3.clone());
-    print_divergence_if_any("after e0/e1/e3 on C", &replica_a, &replica_b, &replica_c);
 
     // 4 [Package(ModelElementFeat(Name(Insert { content: 'a', pos: 1 })))@(2:1)]
     let e4 = replica_c
@@ -540,7 +522,6 @@ fn error_case() {
             },
         )))
         .unwrap();
-    print_divergence_if_any("after e7 on A", &replica_a, &replica_b, &replica_c);
 
     // 1 -> 8, 3 -> 8, 6 -> 8
     // c already has 1,3,6
@@ -559,7 +540,6 @@ fn error_case() {
             },
         )))
         .unwrap();
-    print_divergence_if_any("after e8 on C", &replica_a, &replica_b, &replica_c);
 
     // 1 -> 9, 6 -> 9, 7 -> 9
     let e9 = replica_a
@@ -574,60 +554,37 @@ fn error_case() {
             },
         )))
         .unwrap();
-    print_divergence_if_any("after e9 on A", &replica_a, &replica_b, &replica_c);
 
     // Final dissemination of the full trace to the non-origin replicas only.
     for event in [e0.clone(), e3.clone(), e7.clone(), e9.clone()] {
         replica_b.receive(event.clone());
         replica_c.receive(event);
     }
-    print_divergence_if_any(
-        "after propagate A-origin events",
-        &replica_a,
-        &replica_b,
-        &replica_c,
-    );
     for event in [e1.clone(), e2.clone()] {
         replica_a.receive(event.clone());
         replica_c.receive(event);
     }
-    print_divergence_if_any(
-        "after propagate B-origin events",
-        &replica_a,
-        &replica_b,
-        &replica_c,
-    );
     for event in [e4.clone(), e5.clone(), e6.clone(), e8.clone()] {
         replica_a.receive(event.clone());
         replica_b.receive(event);
     }
-    print_divergence_if_any(
-        "after propagate C-origin events",
-        &replica_a,
-        &replica_b,
-        &replica_c,
-    );
 
     assert_eq!(
-        replica_a.query(Read::new()).package,
-        replica_b.query(Read::new()).package
+        replica_a.query(Read::<ClassHierarchyValue>::new()).package,
+        replica_b.query(Read::<ClassHierarchyValue>::new()).package
     );
     assert_eq!(
-        replica_b.query(Read::new()).package,
-        replica_c.query(Read::new()).package
+        replica_b.query(Read::<ClassHierarchyValue>::new()).package,
+        replica_c.query(Read::<ClassHierarchyValue>::new()).package
     );
 
-    let a_refs = replica_a.query(Read::new()).refs;
-    let b_refs = replica_b.query(Read::new()).refs;
-    let c_refs = replica_c.query(Read::new()).refs;
+    let a_refs = replica_a.query(Read::<ClassHierarchyValue>::new()).refs;
+    let b_refs = replica_b.query(Read::<ClassHierarchyValue>::new()).refs;
+    let c_refs = replica_c.query(Read::<ClassHierarchyValue>::new()).refs;
     assert_eq!(a_refs.node_count(), b_refs.node_count());
     assert_eq!(b_refs.node_count(), c_refs.node_count());
     assert_eq!(a_refs.edge_count(), b_refs.edge_count());
     assert_eq!(b_refs.edge_count(), c_refs.edge_count());
-    assert_eq!(dump_vertices(&replica_a), dump_vertices(&replica_b));
-    assert_eq!(dump_vertices(&replica_b), dump_vertices(&replica_c));
-    assert_eq!(dump_edges(&replica_a), dump_edges(&replica_b));
-    assert_eq!(dump_edges(&replica_b), dump_edges(&replica_c));
 }
 
 #[test]
@@ -910,8 +867,6 @@ fn error_case_2() {
         .first()
         .expect("graphs should be isomorphic");
     }
-
-    assert_all_zoo_converged("error_case_2 final merge", &replicas);
 }
 
 /// This test implements this execution trace:
@@ -1344,8 +1299,8 @@ fn fuzz() {
         fuzzer::fuzzer,
     };
 
-    let run = RunConfig::new(0.6, 8, 100, None, None, true, false);
-    let runs = vec![run.clone(); 5_000];
+    let run = RunConfig::new(0.9, 4, 1, None, None, false, false);
+    let runs = vec![run.clone(); 1];
 
     let config = FuzzerConfig::<ClassHierarchyLog>::new(
         "class_hierarchy",

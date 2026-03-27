@@ -37,6 +37,7 @@ fn generate_boxed_model_list(
     log: &NestedListLog<Box<ModelElementLog>>,
     rng: &mut impl Rng,
 ) -> NestedList<Box<ModelElement>> {
+    #[derive(Clone, Copy)]
     enum Choice {
         Insert,
         Update,
@@ -48,9 +49,7 @@ fn generate_boxed_model_list(
         Choice::Insert
     } else {
         [Choice::Insert, Choice::Update, Choice::Delete]
-            .into_iter()
-            .choose(rng)
-            .unwrap()
+            [WeightedIndex::new([1, 6, 2]).unwrap().sample(rng)]
     };
 
     let op = match choice {
@@ -84,6 +83,7 @@ fn generate_structural_feature_list(
     log: &NestedListLog<StructuralFeatureLog>,
     rng: &mut impl Rng,
 ) -> NestedList<StructuralFeature> {
+    #[derive(Clone, Copy)]
     enum Choice {
         Insert,
         Update,
@@ -95,9 +95,7 @@ fn generate_structural_feature_list(
         Choice::Insert
     } else {
         [Choice::Insert, Choice::Update, Choice::Delete]
-            .into_iter()
-            .choose(rng)
-            .unwrap()
+            [WeightedIndex::new([1, 6, 2]).unwrap().sample(rng)]
     };
 
     let op = match choice {
@@ -184,11 +182,20 @@ impl OpGeneratorNested for PackageLog {
             Content,
         }
 
-        match [Choice::ModelElementFeat, Choice::Content]
-            .into_iter()
-            .choose(rng)
-            .unwrap()
+        let choice = if self
+            .content()
+            .positions()
+            .execute_query(Read::new())
+            .is_empty()
         {
+            [Choice::ModelElementFeat, Choice::Content]
+                [WeightedIndex::new([1, 4]).unwrap().sample(rng)]
+        } else {
+            [Choice::ModelElementFeat, Choice::Content]
+                [WeightedIndex::new([3, 2]).unwrap().sample(rng)]
+        };
+
+        match choice {
             Choice::ModelElementFeat => {
                 Package::ModelElementFeat(self.model_element_feat().generate(rng))
             }
@@ -200,11 +207,15 @@ impl OpGeneratorNested for PackageLog {
 impl OpGeneratorNested for ModelElementLog {
     fn generate(&self, rng: &mut impl Rng) -> Self::Op {
         match &self.child {
-            ModelElementContainer::Unset => match [0_u8, 1, 2].into_iter().choose(rng).unwrap() {
-                0 => ModelElement::Classifier(ClassifierLog::default().generate(rng)),
-                1 => ModelElement::Package(PackageLog::default().generate(rng)),
-                _ => ModelElement::StructuralFeature(StructuralFeatureLog::default().generate(rng)),
-            },
+            ModelElementContainer::Unset => {
+                match [0_u8, 1, 2][WeightedIndex::new([6, 1, 3]).unwrap().sample(rng)] {
+                    0 => ModelElement::Classifier(ClassifierLog::default().generate(rng)),
+                    1 => ModelElement::Package(PackageLog::default().generate(rng)),
+                    _ => ModelElement::StructuralFeature(
+                        StructuralFeatureLog::default().generate(rng),
+                    ),
+                }
+            }
             ModelElementContainer::Value(child) => match child.as_ref() {
                 ModelElementChild::Classifier(log) => ModelElement::Classifier(log.generate(rng)),
                 ModelElementChild::Package(log) => ModelElement::Package(log.generate(rng)),
@@ -271,7 +282,7 @@ impl OpGeneratorNested for StructuralFeatureLog {
     fn generate(&self, rng: &mut impl Rng) -> Self::Op {
         match &self.child {
             StructuralFeatureContainer::Unset => {
-                if rng.random_bool(0.5) {
+                if rng.random_bool(0.65) {
                     StructuralFeature::Attribute(AttributeLog::default().generate(rng))
                 } else {
                     StructuralFeature::Reference(ReferenceLog::default().generate(rng))
@@ -371,9 +382,7 @@ impl OpGeneratorNested for ClassLog {
         }
 
         match [Choice::ClassifierFeat, Choice::IsAbstract, Choice::Features]
-            .into_iter()
-            .choose(rng)
-            .unwrap()
+            [WeightedIndex::new([3, 3, 1]).unwrap().sample(rng)]
         {
             Choice::ClassifierFeat => Class::ClassifierFeat(self.classifier_feat().generate(rng)),
             Choice::IsAbstract => Class::IsAbstract(self.is_abstract().generate(rng)),
