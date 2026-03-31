@@ -41,7 +41,8 @@ __references::typed_graph! {
         graph = ReferenceManager,
         vertex_kind = Instance,
         edge_kind = Ref,
-        arc_kind = Refs, },
+        arc_kind = Refs,
+    },
     vertices {
         AttributeId,
         ReferenceId,
@@ -49,10 +50,10 @@ __references::typed_graph! {
         DataTypeId
     },
     edges {
-        AttributeTypEdge [1, 1],
-        ReferenceOppositeEdge [0, 1],
-        ReferenceTypEdge [1, 1],
-        ClassSupertypesEdge [0, *]
+        AttributeTypEdge[1, 1],
+        ReferenceOppositeEdge[0, 1],
+        ReferenceTypEdge[1, 1],
+        ClassSupertypesEdge[0, *]
     },
     arcs {
         AttributeToClass : AttributeId -> ClassId (AttributeTypEdge),
