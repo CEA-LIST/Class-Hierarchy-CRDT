@@ -7,7 +7,7 @@ fn fuzz() {
         fuzzer::fuzzer,
     };
 
-    let run = RunConfig::new(0.4, 4, 4, None, None, false, false);
+    let run = RunConfig::new(0.4, 2, 3, None, None, true, false);
     let runs = vec![run.clone(); 10_000];
 
     let config = FuzzerConfig::<ClassHierarchyLog>::new(

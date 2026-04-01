@@ -20,10 +20,10 @@ use crate::{
 };
 
 fn generate_boxed_model_element_kind(
-    log: &Box<ModelElementKindLog>,
+    log: &ModelElementKindLog,
     rng: &mut impl Rng,
 ) -> Box<ModelElementKind> {
-    Box::new((**log).generate(rng))
+    Box::new((*log).generate(rng))
 }
 
 fn generate_structural_feature_kind(
@@ -55,21 +55,20 @@ fn generate_boxed_model_list(
     let op = match choice {
         Choice::Insert => {
             let pos = rng.random_range(0..=positions.len());
-            let value =
-                generate_boxed_model_element_kind(&Box::<ModelElementKindLog>::default(), rng);
-            NestedList::Insert { pos, value }
+            let op = generate_boxed_model_element_kind(&Box::<ModelElementKindLog>::default(), rng);
+            NestedList::Insert { pos, op }
         }
         Choice::Update => {
             let pos = rng.random_range(0..positions.len());
             let target_id = &positions[pos];
-            let value = log
+            let op = log
                 .children()
-                .get(target_id)
+                .get_child(target_id)
                 .map(|child| generate_boxed_model_element_kind(child, rng))
                 .unwrap_or_else(|| {
                     generate_boxed_model_element_kind(&Box::<ModelElementKindLog>::default(), rng)
                 });
-            NestedList::Update { pos, value }
+            NestedList::Update { pos, op }
         }
         Choice::Delete => NestedList::Delete {
             pos: rng.random_range(0..positions.len()),
@@ -102,20 +101,20 @@ fn generate_structural_feature_list(
     let op = match choice {
         Choice::Insert => {
             let pos = rng.random_range(0..=positions.len());
-            let value = generate_structural_feature_kind(&StructuralFeatureKindLog::default(), rng);
-            NestedList::Insert { pos, value }
+            let op = generate_structural_feature_kind(&StructuralFeatureKindLog::default(), rng);
+            NestedList::Insert { pos, op }
         }
         Choice::Update => {
             let pos = rng.random_range(0..positions.len());
             let target_id = &positions[pos];
-            let value = log
+            let op = log
                 .children()
-                .get(target_id)
+                .get_child(target_id)
                 .map(|child| generate_structural_feature_kind(child, rng))
                 .unwrap_or_else(|| {
                     generate_structural_feature_kind(&StructuralFeatureKindLog::default(), rng)
                 });
-            NestedList::Update { pos, value }
+            NestedList::Update { pos, op }
         }
         Choice::Delete => NestedList::Delete {
             pos: rng.random_range(0..positions.len()),

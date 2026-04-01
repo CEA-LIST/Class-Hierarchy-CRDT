@@ -27,7 +27,7 @@ fn conflicting_ref_type_max() {
         .send(ClassHierarchy::Package(Package::Content(
             NestedList::Insert {
                 pos: 0,
-                value: Box::new(ModelElementKind::Classifier(ClassifierKind::Class(
+                op: Box::new(ModelElementKind::Classifier(ClassifierKind::Class(
                     Class::New,
                 ))),
             },
@@ -37,7 +37,7 @@ fn conflicting_ref_type_max() {
         .send(ClassHierarchy::Package(Package::Content(
             NestedList::Insert {
                 pos: 1,
-                value: Box::new(ModelElementKind::Classifier(ClassifierKind::DataType(
+                op: Box::new(ModelElementKind::Classifier(ClassifierKind::DataType(
                     DataType::New,
                 ))),
             },
@@ -47,10 +47,10 @@ fn conflicting_ref_type_max() {
         .send(ClassHierarchy::Package(Package::Content(
             NestedList::Update {
                 pos: 0,
-                value: Box::new(ModelElementKind::Classifier(ClassifierKind::Class(
+                op: Box::new(ModelElementKind::Classifier(ClassifierKind::Class(
                     Class::Features(NestedList::Insert {
                         pos: 0,
-                        value: StructuralFeatureKind::Attribute(Attribute::New),
+                        op: StructuralFeatureKind::Attribute(Attribute::New),
                     }),
                 ))),
             },
@@ -110,7 +110,7 @@ fn vertex_cascade_creation_deletion() {
         .send(ClassHierarchy::Package(Package::Content(
             NestedList::Insert {
                 pos: 0,
-                value: Box::new(ModelElementKind::Classifier(ClassifierKind::Class(
+                op: Box::new(ModelElementKind::Classifier(ClassifierKind::Class(
                     Class::IsAbstract(EWFlag::Enable),
                 ))),
             },
@@ -138,7 +138,7 @@ fn simple_class_hierarchy() {
         .send(ClassHierarchy::Package(Package::Content(
             NestedList::Insert {
                 pos: 0,
-                value: Box::new(ModelElementKind::Classifier(ClassifierKind::Class(
+                op: Box::new(ModelElementKind::Classifier(ClassifierKind::Class(
                     Class::ClassifierSuper(Classifier::ModelElementSuper(ModelElement::Name(
                         List::Insert {
                             content: 'Z',
@@ -153,7 +153,7 @@ fn simple_class_hierarchy() {
         .send(ClassHierarchy::Package(Package::Content(
             NestedList::Insert {
                 pos: 1,
-                value: Box::new(ModelElementKind::Classifier(ClassifierKind::Class(
+                op: Box::new(ModelElementKind::Classifier(ClassifierKind::Class(
                     Class::New,
                 ))),
             },
@@ -163,7 +163,7 @@ fn simple_class_hierarchy() {
         .send(ClassHierarchy::Package(Package::Content(
             NestedList::Update {
                 pos: 1,
-                value: Box::new(ModelElementKind::Classifier(ClassifierKind::Class(
+                op: Box::new(ModelElementKind::Classifier(ClassifierKind::Class(
                     Class::IsAbstract(EWFlag::Enable),
                 ))),
             },
@@ -173,10 +173,10 @@ fn simple_class_hierarchy() {
         .send(ClassHierarchy::Package(Package::Content(
             NestedList::Update {
                 pos: 1,
-                value: Box::new(ModelElementKind::Classifier(ClassifierKind::Class(
+                op: Box::new(ModelElementKind::Classifier(ClassifierKind::Class(
                     Class::Features(NestedList::Insert {
                         pos: 0,
-                        value: StructuralFeatureKind::Attribute(Attribute::New),
+                        op: StructuralFeatureKind::Attribute(Attribute::New),
                     }),
                 ))),
             },
@@ -198,10 +198,10 @@ fn simple_class_hierarchy() {
         .send(ClassHierarchy::Package(Package::Content(
             NestedList::Update {
                 pos: 0,
-                value: Box::new(ModelElementKind::Classifier(ClassifierKind::Class(
+                op: Box::new(ModelElementKind::Classifier(ClassifierKind::Class(
                     Class::Features(NestedList::Insert {
                         pos: 0,
-                        value: StructuralFeatureKind::Attribute(Attribute::StructuralFeatureSuper(
+                        op: StructuralFeatureKind::Attribute(Attribute::StructuralFeatureSuper(
                             StructuralFeature::IsOrdered(EWFlag::Enable),
                         )),
                     }),

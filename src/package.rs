@@ -83,7 +83,7 @@ impl __package::IsLog for ClassHierarchyLog {
         for sink in sink.into_sinks() {
             match sink.effect() {
                 __package::SinkEffect::Create | __package::SinkEffect::Update => {
-                    let vertex_ops = __package::instance_from_path(&sink.path())
+                    let vertex_ops = __package::instance_from_path(sink.path())
                         .map(|instance| __package::ReferenceManager::AddVertex { id: instance });
                     if let Some(o) = vertex_ops {
                         self.reference_manager_log
@@ -111,7 +111,7 @@ impl __package::IsLog for ClassHierarchyLog {
             .redundant_by_parent(version, conservative);
     }
     fn is_default(&self) -> bool {
-        true && self.package_log.is_default()
+        self.package_log.is_default()
     }
 }
 impl __package::EvalNested<__package::Read<<Self as __package::IsLog>::Value>>

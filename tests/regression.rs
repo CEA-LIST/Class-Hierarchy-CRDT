@@ -11,6 +11,7 @@ use moirai_crdt::{
     counter::resettable_counter::Counter,
     flag::ew_flag::EWFlag,
     list::{eg_walker::List, nested_list::NestedList},
+    utils::membership::twins_log,
 };
 use moirai_macros::typed_graph::Arc;
 use moirai_protocol::{
@@ -25,19 +26,19 @@ use petgraph::Graph;
 /// This test reproduce this execution trace:
 /// digraph {
 ///     0 [ label="[Package(ModelElement(Name(Insert { content: 'i', pos: 0 })))@(0:1)]"]
-///     1 [ label="[Package(Content(Insert { pos: 0, value: ClassifierKind(Class(Features(Insert { pos: 0, value: Attribute(StructuralFeature(Lower(Reset))) }))) }))@(1:1)]"]
+///     1 [ label="[Package(Content(Insert { pos: 0, op: ClassifierKind(Class(Features(Insert { pos: 0, op: Attribute(StructuralFeature(Lower(Reset))) }))) }))@(1:1)]"]
 ///     2 [ label="[Package(Content(Delete { pos: 0 }))@(1:2)]"]
 ///     3 [ label="[AddReference(AttributeToClass(Arc { source: AttributeId(ObjectPath { root: 'class_hierarchy', segments: [Field('package'), Field('content'), ListElement(EventId { idx: ReplicaIdx(1), seq: 1, resolver: 0 => 0, 1 => 1, 2 => 2 }), Variant('classifier'), Variant('class'), Field('features'), ListElement(EventId { idx: ReplicaIdx(1), seq: 1, resolver: 0 => 0, 1 => 1, 2 => 2 }), Variant('attribute')] }), target: ClassId(ObjectPath { root: 'class_hierarchy', segments: [Field('package'), Field('content'), ListElement(EventId { idx: ReplicaIdx(1), seq: 1, resolver: 0 => 0, 1 => 1, 2 => 2 }), Variant('classifier'), Variant('class')] }), kind: AttributeTypEdge }))@(0:2)]"]
 ///     4 [ label="[Package(ModelElement(Name(Insert { content: 'a', pos: 1 })))@(2:1)]"]
 ///     5 [ label="[Package(ModelElement(Name(Insert { content: 'P', pos: 2 })))@(2:2)]"]
 ///     6 [ label="[Package(ModelElement(Name(Insert { content: 'h', pos: 2 })))@(2:3)]"]
-///     7 [ label="[Package(Content(Update { pos: 0, value: ClassifierKind(Class(Features(Delete { pos: 0 }))) }))@(0:3)]"]
-///     8 [ label="[Package(Content(Update { pos: 0, value: ClassifierKind(Class(Features(Update { pos: 0, value: Attribute(StructuralFeature(IsUnique(Enable))) }))) }))@(2:4)]"]
-///     9 [ label="[Package(Content(Insert { pos: 1, value: StructuralFeatureKind(Attribute(StructuralFeature(IsUnique(Clear)))) }))@(0:4)]"]
+///     7 [ label="[Package(Content(Update { pos: 0, op: ClassifierKind(Class(Features(Delete { pos: 0 }))) }))@(0:3)]"]
+///     8 [ label="[Package(Content(Update { pos: 0, op: ClassifierKind(Class(Features(Update { pos: 0, op: Attribute(StructuralFeature(IsUnique(Enable))) }))) }))@(2:4)]"]
+///     9 [ label="[Package(Content(Insert { pos: 1, op: StructuralFeatureKind(Attribute(StructuralFeature(IsUnique(Clear)))) }))@(0:4)]"]
 ///     0 -> 1 [ ]  1 -> 2 [ ]  0 -> 2 [ ]  0 -> 3 [ ]  1 -> 3 [ ]  3 -> 4 [ ]  1 -> 4 [ ]  4 -> 5 [ ]  3 -> 5 [ ]  1 -> 5 [ ]  5 -> 6 [ ]  3 -> 6 [ ] 	1 ->	6 [ ]	3 ->	7 [ ]	1 ->	7 [ ]	6 ->	7 [ ]	6 ->	8 [ ]	3 ->	8 [ ]	1 ->	8 [ ]	7 ->	9 [ ]	1 ->	9 [ ]	6 ->	9 [ ]
 /// }
 #[test]
-fn error_case() {
+fn case_1() {
     let mut replica_a = Replica::<ClassHierarchyLog, Tcsb<ClassHierarchy>>::new("a".to_string());
     let mut replica_b = Replica::<ClassHierarchyLog, Tcsb<ClassHierarchy>>::new("b".to_string());
     let mut replica_c = Replica::<ClassHierarchyLog, Tcsb<ClassHierarchy>>::new("c".to_string());
@@ -57,10 +58,10 @@ fn error_case() {
         .send(ClassHierarchy::Package(Package::Content(
             NestedList::Insert {
                 pos: 0,
-                value: Box::new(ModelElementKind::Classifier(ClassifierKind::Class(
+                op: Box::new(ModelElementKind::Classifier(ClassifierKind::Class(
                     Class::Features(NestedList::Insert {
                         pos: 0,
-                        value: StructuralFeatureKind::Attribute(Attribute::StructuralFeatureSuper(
+                        op: StructuralFeatureKind::Attribute(Attribute::StructuralFeatureSuper(
                             StructuralFeature::Lower(
                                 moirai_crdt::counter::resettable_counter::Counter::Reset,
                             ),
@@ -136,7 +137,7 @@ fn error_case() {
         .send(ClassHierarchy::Package(Package::Content(
             NestedList::Update {
                 pos: 0,
-                value: Box::new(ModelElementKind::Classifier(ClassifierKind::Class(
+                op: Box::new(ModelElementKind::Classifier(ClassifierKind::Class(
                     Class::Features(NestedList::Delete { pos: 0 }),
                 ))),
             },
@@ -147,10 +148,10 @@ fn error_case() {
         .send(ClassHierarchy::Package(Package::Content(
             NestedList::Update {
                 pos: 0,
-                value: Box::new(ModelElementKind::Classifier(ClassifierKind::Class(
+                op: Box::new(ModelElementKind::Classifier(ClassifierKind::Class(
                     Class::Features(NestedList::Update {
                         pos: 0,
-                        value: StructuralFeatureKind::Attribute(Attribute::StructuralFeatureSuper(
+                        op: StructuralFeatureKind::Attribute(Attribute::StructuralFeatureSuper(
                             StructuralFeature::IsUnique(EWFlag::Enable),
                         )),
                     }),
@@ -163,7 +164,7 @@ fn error_case() {
         .send(ClassHierarchy::Package(Package::Content(
             NestedList::Insert {
                 pos: 1,
-                value: Box::new(ModelElementKind::StructuralFeature(
+                op: Box::new(ModelElementKind::StructuralFeature(
                     StructuralFeatureKind::Attribute(Attribute::StructuralFeatureSuper(
                         StructuralFeature::IsUnique(EWFlag::Clear),
                     )),
@@ -204,7 +205,7 @@ fn error_case() {
 }
 
 #[test]
-fn error_case_2() {
+fn case_2() {
     let mut replicas = (0..8)
         .map(|i| Replica::<ClassHierarchyLog, Tcsb<ClassHierarchy>>::new(i.to_string()))
         .collect::<Vec<_>>();
@@ -231,7 +232,7 @@ fn error_case_2() {
         .send(ClassHierarchy::Package(Package::Content(
             NestedList::Insert {
                 pos: 0,
-                value: Box::new(ModelElementKind::StructuralFeature(
+                op: Box::new(ModelElementKind::StructuralFeature(
                     StructuralFeatureKind::Reference(Reference::StructuralFeatureSuper(
                         StructuralFeature::IsOrdered(EWFlag::Enable),
                     )),
@@ -244,7 +245,7 @@ fn error_case_2() {
         .send(ClassHierarchy::Package(Package::Content(
             NestedList::Insert {
                 pos: 1,
-                value: Box::new(ModelElementKind::StructuralFeature(
+                op: Box::new(ModelElementKind::StructuralFeature(
                     StructuralFeatureKind::Reference(Reference::StructuralFeatureSuper(
                         StructuralFeature::Upper(
                             moirai_crdt::counter::resettable_counter::Counter::Dec(239_778),
@@ -270,13 +271,13 @@ fn error_case_2() {
         .send(ClassHierarchy::Package(Package::Content(
             NestedList::Insert {
                 pos: 0,
-                value: Box::new(ModelElementKind::Package(Package::Content(
+                op: Box::new(ModelElementKind::Package(Package::Content(
                     NestedList::Insert {
                         pos: 0,
-                        value: Box::new(ModelElementKind::Classifier(ClassifierKind::Class(
+                        op: Box::new(ModelElementKind::Classifier(ClassifierKind::Class(
                             Class::Features(NestedList::Insert {
                                 pos: 0,
-                                value: StructuralFeatureKind::Attribute(
+                                op: StructuralFeatureKind::Attribute(
                                     Attribute::StructuralFeatureSuper(
                                         StructuralFeature::IsOrdered(EWFlag::Disable),
                                     ),
@@ -384,13 +385,13 @@ fn error_case_2() {
         .send(ClassHierarchy::Package(Package::Content(
             NestedList::Update {
                 pos: 0,
-                value: Box::new(ModelElementKind::Package(Package::Content(
+                op: Box::new(ModelElementKind::Package(Package::Content(
                     NestedList::Update {
                         pos: 0,
-                        value: Box::new(ModelElementKind::Classifier(ClassifierKind::Class(
+                        op: Box::new(ModelElementKind::Classifier(ClassifierKind::Class(
                             Class::Features(NestedList::Update {
                                 pos: 0,
-                                value: StructuralFeatureKind::Attribute(
+                                op: StructuralFeatureKind::Attribute(
                                     Attribute::StructuralFeatureSuper(
                                         StructuralFeature::ModelElementSuper(ModelElement::Name(
                                             List::Insert {
@@ -487,12 +488,12 @@ fn error_case_2() {
 
 /// This test implements this execution trace:
 // digraph {
-//         0       [label="[Package(Content(Insert { pos: 0, value: ClassifierKind(Class(Features(Insert { pos: 0, value: Attribute(StructuralFeature(Upper(\Inc(130404)))) }))) }))@(6:1)]"];
+//         0       [label="[Package(Content(Insert { pos: 0, op: ClassifierKind(Class(Features(Insert { pos: 0, op: Attribute(StructuralFeature(Upper(\Inc(130404)))) }))) }))@(6:1)]"];
 //         1       [label="[AddReference(AttributeToClass(Arc { source: AttributeId(ObjectPath { root: 'class_hierarchy', segments: [Field('package'), Field('\content'), ListElement(EventId { idx: ReplicaIdx(6), seq: 1, resolver: 0 => 2, 1 => 0, 2 => 1, 3 => 3, 4 => 4, 5 => 5, 6 => 6, 7 => \7 }), Variant('classifier'), Variant('class'), Field('features'), ListElement(EventId { idx: ReplicaIdx(6), seq: 1, resolver: 0 => \2, 1 => 0, 2 => 1, 3 => 3, 4 => 4, 5 => 5, 6 => 6, 7 => 7 }), Variant('attribute')] }), target: ClassId(ObjectPath { root: 'class_\hierarchy', segments: [Field('package'), Field('content'), ListElement(EventId { idx: ReplicaIdx(6), seq: 1, resolver: 0 => 2, 1 => \0, 2 => 1, 3 => 3, 4 => 4, 5 => 5, 6 => 6, 7 => 7 }), Variant('classifier'), Variant('class')] }), kind: AttributeTypEdge }))@(2:\1)]"];
 //         0 -> 1;
-//         2       [label="[Package(Content(Update { pos: 0, value: ClassifierKind(Class(IsAbstract(Clear))) }))@(1:1)]"];
+//         2       [label="[Package(Content(Update { pos: 0, op: ClassifierKind(Class(IsAbstract(Clear))) }))@(1:1)]"];
 //         0 -> 2;
-//         3       [label="[Package(Content(Insert { pos: 1, value: ClassifierKind(Class(Classifier(ModelElement(Name(Insert { content: '1', pos: 0 }))))) }))@(\0:1)]"];
+//         3       [label="[Package(Content(Insert { pos: 1, op: ClassifierKind(Class(Classifier(ModelElement(Name(Insert { content: '1', pos: 0 }))))) }))@(\0:1)]"];
 //         0 -> 3;
 //         5       [label="[Package(ModelElement(Name(Insert { content: 'r', pos: 0 })))@(1:2)]"];
 //         2 -> 5;
@@ -502,7 +503,7 @@ fn error_case_2() {
 //         3 -> 8;
 //         6       [label="[AddReference(AttributeToClass(Arc { source: AttributeId(ObjectPath { root: 'class_hierarchy', segments: [Field('package'), Field('\content'), ListElement(EventId { idx: ReplicaIdx(0), seq: 1, resolver: 0 => 6, 1 => 0, 2 => 1, 3 => 2, 4 => 3, 5 => 4, 6 => 5, 7 => \7 }), Variant('classifier'), Variant('class'), Field('features'), ListElement(EventId { idx: ReplicaIdx(0), seq: 1, resolver: 0 => \6, 1 => 0, 2 => 1, 3 => 2, 4 => 3, 5 => 4, 6 => 5, 7 => 7 }), Variant('attribute')] }), target: ClassId(ObjectPath { root: 'class_\hierarchy', segments: [Field('package'), Field('content'), ListElement(EventId { idx: ReplicaIdx(0), seq: 1, resolver: 0 => 6, 1 => \0, 2 => 1, 3 => 2, 4 => 3, 5 => 4, 6 => 5, 7 => 7 }), Variant('classifier'), Variant('class')] }), kind: AttributeTypEdge }))@(6:\3)]"];
 //         4 -> 6;
-//         7       [label="[Package(Content(Update { pos: 0, value: ClassifierKind(Class(IsAbstract(Clear))) }))@(6:4)]"];
+//         7       [label="[Package(Content(Update { pos: 0, op: ClassifierKind(Class(IsAbstract(Clear))) }))@(6:4)]"];
 //         6 -> 7;
 //         9       [label="[Package(ModelElement(Name(Insert { content: 'A', pos: 0 })))@(7:1)]"];
 //         8 -> 9;
@@ -546,10 +547,10 @@ fn divergent_refs() {
         .send(ClassHierarchy::Package(Package::Content(
             NestedList::Insert {
                 pos: 0,
-                value: Box::new(ModelElementKind::Classifier(ClassifierKind::Class(
+                op: Box::new(ModelElementKind::Classifier(ClassifierKind::Class(
                     Class::Features(NestedList::Insert {
                         pos: 0,
-                        value: StructuralFeatureKind::Attribute(Attribute::StructuralFeatureSuper(
+                        op: StructuralFeatureKind::Attribute(Attribute::StructuralFeatureSuper(
                             StructuralFeature::Upper(Counter::Inc(1)),
                         )),
                     }),
@@ -592,7 +593,7 @@ fn divergent_refs() {
         .send(ClassHierarchy::Package(Package::Content(
             NestedList::Update {
                 pos: 0,
-                value: Box::new(ModelElementKind::Classifier(ClassifierKind::Class(
+                op: Box::new(ModelElementKind::Classifier(ClassifierKind::Class(
                     Class::IsAbstract(EWFlag::Clear),
                 ))),
             },
@@ -605,7 +606,7 @@ fn divergent_refs() {
         .send(ClassHierarchy::Package(Package::Content(
             NestedList::Insert {
                 pos: 1,
-                value: Box::new(ModelElementKind::Classifier(ClassifierKind::Class(
+                op: Box::new(ModelElementKind::Classifier(ClassifierKind::Class(
                     Class::ClassifierSuper(Classifier::ModelElementSuper(ModelElement::Name(
                         List::Insert {
                             content: '1',
@@ -697,7 +698,7 @@ fn divergent_refs() {
         .send(ClassHierarchy::Package(Package::Content(
             NestedList::Update {
                 pos: 0,
-                value: Box::new(ModelElementKind::Classifier(ClassifierKind::Class(
+                op: Box::new(ModelElementKind::Classifier(ClassifierKind::Class(
                     Class::IsAbstract(EWFlag::Clear),
                 ))),
             },
@@ -906,4 +907,64 @@ fn divergent_refs() {
     assert!(is_valid(&replica_5.query(Read::new()).refs));
     assert!(is_valid(&replica_6.query(Read::new()).refs));
     assert!(is_valid(&replica_7.query(Read::new()).refs));
+}
+
+#[test]
+fn union_error() {
+    let (mut replica_a, mut replica_b) = twins_log::<ClassHierarchyLog>();
+
+    let a1 = replica_a
+        .send(ClassHierarchy::Package(Package::Content(
+            NestedList::Insert {
+                pos: 0,
+                op: Box::new(ModelElementKind::Package(Package::ModelElementSuper(
+                    ModelElement::Name(List::Insert {
+                        content: 'c',
+                        pos: 0,
+                    }),
+                ))),
+            },
+        )))
+        .unwrap();
+    replica_b.receive(a1);
+
+    let a2 = replica_a
+        .send(ClassHierarchy::Package(Package::Content(
+            NestedList::Delete { pos: 0 },
+        )))
+        .unwrap();
+    let b1 = replica_b
+        .send(ClassHierarchy::Package(Package::Content(
+            NestedList::Update {
+                pos: 0,
+                op: Box::new(ModelElementKind::Package(Package::Content(
+                    NestedList::Insert {
+                        pos: 0,
+                        op: Box::new(ModelElementKind::StructuralFeature(
+                            StructuralFeatureKind::Attribute(Attribute::StructuralFeatureSuper(
+                                StructuralFeature::IsOrdered(EWFlag::Clear),
+                            )),
+                        )),
+                    },
+                ))),
+            },
+        )))
+        .unwrap();
+
+    replica_a.receive(b1);
+    replica_b.receive(a2);
+
+    println!(
+        "A: {:#?}",
+        replica_a.query(Read::<ClassHierarchyValue>::new()).package
+    );
+    println!(
+        "B: {:#?}",
+        replica_b.query(Read::<ClassHierarchyValue>::new()).package
+    );
+
+    assert_eq!(
+        replica_a.query(Read::<ClassHierarchyValue>::new()).package,
+        replica_b.query(Read::<ClassHierarchyValue>::new()).package
+    );
 }
