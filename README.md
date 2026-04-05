@@ -34,7 +34,7 @@ Arachne generated the `classifier.rs`, `references.rs`, `package.rs`, and `lib.r
 
 ## Running the project
 
-Rust must be installed on your machine: <https://rust-lang.org/tools/install>.
+Rust must be installed on your machine: <https://rust-lang.org/tools/install>. You must have this project, `PureOpLib`, and `Arachne` in the same root folder. You can change the path of these dependencies in `Cargo.toml`. Replace `XXXX-1` by the name of `PureOpLib`.
 
 Running all the tests:
 
