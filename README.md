@@ -18,6 +18,7 @@ Arachne generated the `classifier.rs`, `references.rs`, `package.rs`, and `lib.r
 
 ```sh
 .
+├── bench-results/json # Fuzzer execution results
 ├── src/
 │   ├── utils/ # Fuzzer implementation, helper functions...
 │   ├── classifiers.rs # Automatically generated
@@ -45,5 +46,5 @@ RUST_LOG=debug cargo test
 Running the fuzzer:
 
 ```sh
-RUST_LOG=debug cargo test --release fuzz
+RUST_LOG=debug cargo test --release -- --ignored --no-capture fuzz
 ```
