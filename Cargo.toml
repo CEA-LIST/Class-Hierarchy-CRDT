@@ -4,14 +4,15 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-moirai-crdt = { path = "../moirai/moirai-crdt" }
-moirai-protocol = { path = "../moirai/moirai-protocol" }
-moirai-macros = { path = "../moirai/moirai-macros" }
-moirai-fuzz = { path = "../moirai/moirai-fuzz" }
+moirai-crdt = { path = "/Users/ekkaiasmith/Desktop/moirai/moirai-crdt" }
+moirai-protocol = { path = "/Users/ekkaiasmith/Desktop/moirai/moirai-protocol" }
+moirai-macros = { path = "/Users/ekkaiasmith/Desktop/moirai/moirai-macros" }
+moirai-fuzz = { path = "/Users/ekkaiasmith/Desktop/moirai/moirai-fuzz" }
 petgraph = "0.8.3"
 rand = "0.10.0"
 vf2 = { version = "1.0.1", features = ["petgraph"] }
 
 [features]
-default = ["fuzz"]
+default = ["fuzz", "sink"]
 fuzz = []
+sink = ["moirai-protocol/sink","moirai-fuzz/sink","moirai-macros/sink","moirai-crdt/sink"]

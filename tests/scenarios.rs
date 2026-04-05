@@ -149,6 +149,7 @@ fn simple_class_hierarchy() {
             },
         )))
         .unwrap();
+    assert_eq!(replica_a.query(Read::new()).refs.node_count(), 1);
     let a3 = replica_a
         .send(ClassHierarchy::Package(Package::Content(
             NestedList::Insert {

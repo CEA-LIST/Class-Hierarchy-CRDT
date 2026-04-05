@@ -17,9 +17,9 @@ use moirai_macros::typed_graph::Arc;
 use moirai_protocol::{
     broadcast::tcsb::{IsTcsbTest, Tcsb},
     crdt::query::Read,
-    replica::{IsReplica, Replica, ReplicaIdx},
-    state::sink::ObjectPath,
-    utils::translate_ids::TranslateIds,
+    replica::{IsReplica, Replica},
+    state::object_path::ObjectPath,
+    utils::intern_str::InternalizeOp,
 };
 use petgraph::Graph;
 
@@ -38,7 +38,7 @@ use petgraph::Graph;
 ///     0 -> 1 [ ]  1 -> 2 [ ]  0 -> 2 [ ]  0 -> 3 [ ]  1 -> 3 [ ]  3 -> 4 [ ]  1 -> 4 [ ]  4 -> 5 [ ]  3 -> 5 [ ]  1 -> 5 [ ]  5 -> 6 [ ]  3 -> 6 [ ] 	1 ->	6 [ ]	3 ->	7 [ ]	1 ->	7 [ ]	6 ->	7 [ ]	6 ->	8 [ ]	3 ->	8 [ ]	1 ->	8 [ ]	7 ->	9 [ ]	1 ->	9 [ ]	6 ->	9 [ ]
 /// }
 #[test]
-fn case_1() {
+fn regression_1() {
     let mut replica_a = Replica::<ClassHierarchyLog, Tcsb<ClassHierarchy>>::new("a".to_string());
     let mut replica_b = Replica::<ClassHierarchyLog, Tcsb<ClassHierarchy>>::new("b".to_string());
     let mut replica_c = Replica::<ClassHierarchyLog, Tcsb<ClassHierarchy>>::new("c".to_string());
@@ -205,7 +205,7 @@ fn case_1() {
 }
 
 #[test]
-fn case_2() {
+fn regression_2() {
     let mut replicas = (0..8)
         .map(|i| Replica::<ClassHierarchyLog, Tcsb<ClassHierarchy>>::new(i.to_string()))
         .collect::<Vec<_>>();
@@ -563,7 +563,8 @@ fn divergent_refs() {
     let translated_id = e6_1
         .event()
         .id()
-        .translate_ids(ReplicaIdx(6), replica_2.tcsb().interner());
+        .clone()
+        .internalize(replica_2.tcsb().interner());
     let attribute_id_path = ObjectPath::new("class_hierarchy")
         .field("package")
         .field("content")
@@ -641,11 +642,13 @@ fn divergent_refs() {
     let translated_e0_1_id = e0_1
         .event()
         .id()
-        .translate_ids(ReplicaIdx(6), replica_6.tcsb().interner());
+        .clone()
+        .internalize(replica_6.tcsb().interner());
     let translated_e6_1_id = e6_1
         .event()
         .id()
-        .translate_ids(ReplicaIdx(0), replica_0.tcsb().interner());
+        .clone()
+        .internalize(replica_0.tcsb().interner());
     assert!(translated_e6_1_id.origin_id() == "6");
     assert!(translated_e0_1_id.origin_id() == "0");
 
@@ -954,17 +957,184 @@ fn union_error() {
     replica_a.receive(b1);
     replica_b.receive(a2);
 
-    println!(
-        "A: {:#?}",
-        replica_a.query(Read::<ClassHierarchyValue>::new()).package
-    );
-    println!(
-        "B: {:#?}",
-        replica_b.query(Read::<ClassHierarchyValue>::new()).package
-    );
-
     assert_eq!(
         replica_a.query(Read::<ClassHierarchyValue>::new()).package,
         replica_b.query(Read::<ClassHierarchyValue>::new()).package
+    );
+}
+
+/// digraph {  0 [ label="[Package(Content(Insert { pos: 0, op: StructuralFeature(Reference(IsContainer(Enable))) }))@(1:1)]"]  1 [ label="[Package(Content(Delete { pos: 0 }))@(0:1)]"]  2 [ label="[Package(Content(Update { pos: 0, op: StructuralFeature(Reference(IsContainer(Clear))) }))@(1:2)]"]  0 -> 1 [ ]  0 -> 2 [ ]}
+#[test]
+fn list_error() {
+    let (mut replica_a, mut replica_b) = twins_log::<ClassHierarchyLog>();
+
+    let b1 = replica_b
+        .send(ClassHierarchy::Package(Package::Content(
+            NestedList::Insert {
+                pos: 0,
+                op: Box::new(ModelElementKind::StructuralFeature(
+                    StructuralFeatureKind::Reference(Reference::IsContainer(EWFlag::Enable)),
+                )),
+            },
+        )))
+        .unwrap();
+    replica_a.receive(b1);
+
+    let a1 = replica_a
+        .send(ClassHierarchy::Package(Package::Content(
+            NestedList::Delete { pos: 0 },
+        )))
+        .unwrap();
+
+    let b2 = replica_b
+        .send(ClassHierarchy::Package(Package::Content(
+            NestedList::Update {
+                pos: 0,
+                op: Box::new(ModelElementKind::StructuralFeature(
+                    StructuralFeatureKind::Reference(Reference::IsContainer(EWFlag::Clear)),
+                )),
+            },
+        )))
+        .unwrap();
+
+    replica_a.receive(b2);
+    replica_b.receive(a1);
+
+    let state_a = replica_a.query(Read::new());
+    let state_b = replica_b.query(Read::new());
+
+    let is_isomorph = vf2::isomorphisms(&Vf2GraphView(&state_a.refs), &Vf2GraphView(&state_b.refs))
+        .default_eq()
+        .first()
+        .is_some();
+
+    assert_eq!(state_a.package, state_b.package);
+    assert!(is_isomorph);
+}
+
+#[test]
+fn create_class_vertex() {
+    let (mut replica_a, _) = twins_log::<ClassHierarchyLog>();
+
+    let _ = replica_a
+        .send(ClassHierarchy::Package(Package::Content(
+            NestedList::Insert {
+                pos: 0,
+                op: Box::new(ModelElementKind::Classifier(ClassifierKind::Class(
+                    Class::New,
+                ))),
+            },
+        )))
+        .unwrap();
+
+    assert_eq!(
+        1,
+        replica_a
+            .query(Read::<ClassHierarchyValue>::new())
+            .refs
+            .node_count()
+    );
+}
+
+#[test]
+fn create_attribute_vertex() {
+    let (mut replica_a, _) = twins_log::<ClassHierarchyLog>();
+
+    let _ = replica_a
+        .send(ClassHierarchy::Package(Package::Content(
+            NestedList::Insert {
+                pos: 0,
+                op: Box::new(ModelElementKind::StructuralFeature(
+                    StructuralFeatureKind::Attribute(Attribute::New),
+                )),
+            },
+        )))
+        .unwrap();
+
+    assert_eq!(
+        1,
+        replica_a
+            .query(Read::<ClassHierarchyValue>::new())
+            .refs
+            .node_count()
+    );
+}
+
+#[test]
+fn create_class_and_attribute_vertex() {
+    let (mut replica_a, mut replica_b) = twins_log::<ClassHierarchyLog>();
+
+    let a1 = replica_a
+        .send(ClassHierarchy::Package(Package::Content(
+            NestedList::Insert {
+                pos: 0,
+                op: Box::new(ModelElementKind::Classifier(ClassifierKind::Class(
+                    Class::Features(NestedList::Insert {
+                        pos: 0,
+                        op: StructuralFeatureKind::Attribute(Attribute::New),
+                    }),
+                ))),
+            },
+        )))
+        .unwrap();
+
+    replica_b.receive(a1);
+
+    assert_eq!(
+        2,
+        replica_a
+            .query(Read::<ClassHierarchyValue>::new())
+            .refs
+            .node_count()
+    );
+    assert_eq!(
+        2,
+        replica_b
+            .query(Read::<ClassHierarchyValue>::new())
+            .refs
+            .node_count()
+    );
+
+    let b1 = replica_b
+        .send(ClassHierarchy::Package(Package::Content(
+            NestedList::Delete { pos: 0 },
+        )))
+        .unwrap();
+
+    assert_eq!(
+        0,
+        replica_b
+            .query(Read::<ClassHierarchyValue>::new())
+            .refs
+            .node_count()
+    );
+
+    let a2 = replica_a
+        .send(ClassHierarchy::Package(Package::Content(
+            NestedList::Update {
+                pos: 0,
+                op: Box::new(ModelElementKind::Classifier(ClassifierKind::Class(
+                    Class::IsAbstract(EWFlag::Clear),
+                ))),
+            },
+        )))
+        .unwrap();
+
+    replica_a.receive(b1);
+    replica_b.receive(a2);
+
+    assert_eq!(
+        1,
+        replica_b
+            .query(Read::<ClassHierarchyValue>::new())
+            .refs
+            .node_count()
+    );
+    assert_eq!(
+        1,
+        replica_a
+            .query(Read::<ClassHierarchyValue>::new())
+            .refs
+            .node_count()
     );
 }

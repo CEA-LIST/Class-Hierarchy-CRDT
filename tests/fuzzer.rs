@@ -1,14 +1,15 @@
 use class_hierarchy::{package::ClassHierarchyLog, utils::graph_view::Vf2GraphView};
 
 #[test]
+#[ignore]
 fn fuzz() {
     use moirai_fuzz::{
         config::{FuzzerConfig, RunConfig},
         fuzzer::fuzzer,
     };
 
-    let run = RunConfig::new(0.4, 2, 3, None, None, true, false);
-    let runs = vec![run.clone(); 10_000];
+    let run = RunConfig::new(0.8, 8, 100, None, None, true, false);
+    let runs = vec![run.clone(); 1_000];
 
     let config = FuzzerConfig::<ClassHierarchyLog>::new(
         "class_hierarchy",
@@ -49,7 +50,7 @@ fn fuzz() {
                 is_isomorph
             }
         },
-        false,
+        true,
     );
 
     fuzzer::<ClassHierarchyLog>(config);

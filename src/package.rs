@@ -9,16 +9,15 @@ mod __package {
     pub use moirai_protocol::crdt::query::QueryOperation;
     pub use moirai_protocol::crdt::query::Read;
     pub use moirai_protocol::event::Event;
-    pub use moirai_protocol::replica::ReplicaIdx;
     pub use moirai_protocol::state::log::IsLog;
+    pub use moirai_protocol::state::object_path::ObjectPath;
     pub use moirai_protocol::state::po_log::POLog;
     pub use moirai_protocol::state::po_log::VecLog;
-    pub use moirai_protocol::state::sink::IsLogSink;
-    pub use moirai_protocol::state::sink::ObjectPath;
     pub use moirai_protocol::state::sink::SinkCollector;
     pub use moirai_protocol::state::sink::SinkEffect;
+    pub use moirai_protocol::state::sink::SinkOwnership;
+    pub use moirai_protocol::utils::intern_str::InternalizeOp;
     pub use moirai_protocol::utils::intern_str::Interner;
-    pub use moirai_protocol::utils::translate_ids::TranslateIds;
 }
 pub type ReferenceManagerLog = __package::POLog<
     __package::ReferenceManager<__package::FairPolicy>,
@@ -64,20 +63,33 @@ impl __package::IsLog for ClassHierarchyLog {
                 .is_enabled(&__package::ReferenceManager::RemoveArc(o.clone())),
         }
     }
-    fn effect(&mut self, event: __package::Event<Self::Op>) {
+    fn effect(
+        &mut self,
+        event: __package::Event<Self::Op>,
+        _path: __package::ObjectPath,
+        _sink: &mut __package::SinkCollector,
+        _ownership: __package::SinkOwnership,
+    ) {
         let mut sink = __package::SinkCollector::new();
         match event.op().clone() {
-            ClassHierarchy::Package(o) => __package::IsLogSink::effect_with_sink(
+            ClassHierarchy::Package(o) => __package::IsLog::effect(
                 &mut self.package_log,
                 __package::Event::unfold(event.clone(), o),
                 __package::ObjectPath::new("class_hierarchy").field("package"),
                 &mut sink,
+                __package::SinkOwnership::Owned,
             ),
             ClassHierarchy::AddReference(o) => self.reference_manager_log.effect(
                 __package::Event::unfold(event.clone(), __package::ReferenceManager::AddArc(o)),
+                __package::ObjectPath::new("class_hierarchy"),
+                &mut __package::SinkCollector::new(),
+                __package::SinkOwnership::Owned,
             ),
             ClassHierarchy::RemoveReference(o) => self.reference_manager_log.effect(
                 __package::Event::unfold(event.clone(), __package::ReferenceManager::RemoveArc(o)),
+                __package::ObjectPath::new("class_hierarchy"),
+                &mut __package::SinkCollector::new(),
+                __package::SinkOwnership::Owned,
             ),
         }
         for sink in sink.into_sinks() {
@@ -86,17 +98,26 @@ impl __package::IsLog for ClassHierarchyLog {
                     let vertex_ops = __package::instance_from_path(sink.path())
                         .map(|instance| __package::ReferenceManager::AddVertex { id: instance });
                     if let Some(o) = vertex_ops {
-                        self.reference_manager_log
-                            .effect(__package::Event::unfold(event.clone(), o));
+                        self.reference_manager_log.effect(
+                            __package::Event::unfold(event.clone(), o),
+                            __package::ObjectPath::new("class_hierarchy"),
+                            &mut __package::SinkCollector::new(),
+                            __package::SinkOwnership::Owned,
+                        );
                     }
                 }
                 __package::SinkEffect::Delete => {
-                    self.reference_manager_log.effect(__package::Event::unfold(
-                        event.clone(),
-                        __package::ReferenceManager::DeleteSubtree {
-                            prefix: sink.path().clone(),
-                        },
-                    ));
+                    self.reference_manager_log.effect(
+                        __package::Event::unfold(
+                            event.clone(),
+                            __package::ReferenceManager::DeleteSubtree {
+                                prefix: sink.path().clone(),
+                            },
+                        ),
+                        __package::ObjectPath::new("class_hierarchy"),
+                        &mut __package::SinkCollector::new(),
+                        __package::SinkOwnership::Owned,
+                    );
                 }
             }
         }
@@ -111,7 +132,7 @@ impl __package::IsLog for ClassHierarchyLog {
             .redundant_by_parent(version, conservative);
     }
     fn is_default(&self) -> bool {
-        self.package_log.is_default()
+        true && self.package_log.is_default()
     }
 }
 impl __package::EvalNested<__package::Read<<Self as __package::IsLog>::Value>>
@@ -130,15 +151,15 @@ impl __package::EvalNested<__package::Read<<Self as __package::IsLog>::Value>>
         }
     }
 }
-impl __package::TranslateIds for ClassHierarchy {
-    fn translate_ids(&self, from: __package::ReplicaIdx, interner: &__package::Interner) -> Self {
+impl __package::InternalizeOp for ClassHierarchy {
+    fn internalize(self, interner: &__package::Interner) -> Self {
         match self {
             ClassHierarchy::Package(op) => ClassHierarchy::Package(op.clone()),
             ClassHierarchy::AddReference(op) => {
-                ClassHierarchy::AddReference(op.translate_ids(from, interner))
+                ClassHierarchy::AddReference(op.internalize(interner))
             }
             ClassHierarchy::RemoveReference(op) => {
-                ClassHierarchy::RemoveReference(op.translate_ids(from, interner))
+                ClassHierarchy::RemoveReference(op.internalize(interner))
             }
         }
     }
