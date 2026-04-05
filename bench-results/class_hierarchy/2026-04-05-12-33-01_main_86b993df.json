@@ -1,0 +1,4419 @@
+{
+  "name": "class_hierarchy",
+  "timestamp": "2026-04-05T12:33:01.068548+02:00",
+  "git_commit": "86b993df27b55128518df0e4f1ef2d2ea142559c",
+  "git_branch": "main",
+  "final_merge": true,
+  "summary": {
+    "total_runs": 100,
+    "avg_runs_per_replica_throughput_ops_per_sec": 0.0,
+    "min_runs_per_replica_throughput_ops_per_sec": 0.0,
+    "max_runs_per_replica_throughput_ops_per_sec": 0.0,
+    "avg_time_per_op_ms": 0.0,
+    "avg_final_size": 2.0,
+    "max_final_width": 2,
+    "max_final_height": 4
+  },
+  "runs": [
+    {
+      "run_number": 1,
+      "parameters": {
+        "num_replicas": 8,
+        "num_operations": 1000,
+        "churn_rate": 0.6,
+        "disable_stability": false,
+        "reachability": null
+      },
+      "results": {
+        "final_state": "ClassHierarchyValue { package: PackageValue { model_element_super: ModelElementValue { name: ['e', ' ... } }",
+        "avg_time_per_op_ms": 0.19212500000000002,
+        "avg_throughput_ops_per_sec": 5212.225309527595,
+        "total_deliver_ms_per_replica": [
+          191,
+          185,
+          177,
+          205,
+          203,
+          178,
+          186,
+          212
+        ],
+        "total_effect_ms_per_replica": [
+          132,
+          123,
+          123,
+          132,
+          130,
+          123,
+          129,
+          142
+        ],
+        "avg_effect_ms": 129.25,
+        "execution_graph_dot": null,
+        "inter_replica_concurrency_ratio": null,
+        "used_seed": "0x430AF22F3B68D797D646DC005220AEB1C9BF490C4AE6F74B846235CB9A1FA99C",
+        "final_metrics": {
+          "size": 2,
+          "width": 2,
+          "height": 4
+        }
+      }
+    },
+    {
+      "run_number": 2,
+      "parameters": {
+        "num_replicas": 8,
+        "num_operations": 1000,
+        "churn_rate": 0.6,
+        "disable_stability": false,
+        "reachability": null
+      },
+      "results": {
+        "final_state": "ClassHierarchyValue { package: PackageValue { model_element_super: ModelElementValue { name: ['F', ' ... } }",
+        "avg_time_per_op_ms": 0.23075,
+        "avg_throughput_ops_per_sec": 4339.9307311226075,
+        "total_deliver_ms_per_replica": [
+          257,
+          223,
+          224,
+          215,
+          247,
+          235,
+          212,
+          233
+        ],
+        "total_effect_ms_per_replica": [
+          146,
+          142,
+          140,
+          145,
+          155,
+          145,
+          141,
+          146
+        ],
+        "avg_effect_ms": 145.0,
+        "execution_graph_dot": null,
+        "inter_replica_concurrency_ratio": null,
+        "used_seed": "0x59415C8DC60630A799744B16CFA6C10A3D90B48C466E4FF689CCBBE84513D7E0",
+        "final_metrics": {
+          "size": 2,
+          "width": 2,
+          "height": 4
+        }
+      }
+    },
+    {
+      "run_number": 3,
+      "parameters": {
+        "num_replicas": 8,
+        "num_operations": 1000,
+        "churn_rate": 0.6,
+        "disable_stability": false,
+        "reachability": null
+      },
+      "results": {
+        "final_state": "ClassHierarchyValue { package: PackageValue { model_element_super: ModelElementValue { name: ['6', ' ... } }",
+        "avg_time_per_op_ms": 0.1375,
+        "avg_throughput_ops_per_sec": 7272.075115760816,
+        "total_deliver_ms_per_replica": [
+          150,
+          143,
+          137,
+          136,
+          129,
+          129,
+          135,
+          141
+        ],
+        "total_effect_ms_per_replica": [
+          84,
+          83,
+          82,
+          84,
+          83,
+          85,
+          83,
+          82
+        ],
+        "avg_effect_ms": 83.25,
+        "execution_graph_dot": null,
+        "inter_replica_concurrency_ratio": null,
+        "used_seed": "0xA651980572F5FC86D4CB73C8B527155BD0F14A376943150BF2133269ABB9C4E7",
+        "final_metrics": {
+          "size": 2,
+          "width": 2,
+          "height": 4
+        }
+      }
+    },
+    {
+      "run_number": 4,
+      "parameters": {
+        "num_replicas": 8,
+        "num_operations": 1000,
+        "churn_rate": 0.6,
+        "disable_stability": false,
+        "reachability": null
+      },
+      "results": {
+        "final_state": "ClassHierarchyValue { package: PackageValue { model_element_super: ModelElementValue { name: ['x', ' ... } }",
+        "avg_time_per_op_ms": 0.14100000000000001,
+        "avg_throughput_ops_per_sec": 7132.728428411769,
+        "total_deliver_ms_per_replica": [
+          132,
+          146,
+          151,
+          114,
+          142,
+          151,
+          137,
+          155
+        ],
+        "total_effect_ms_per_replica": [
+          85,
+          85,
+          83,
+          80,
+          89,
+          96,
+          85,
+          81
+        ],
+        "avg_effect_ms": 85.5,
+        "execution_graph_dot": null,
+        "inter_replica_concurrency_ratio": null,
+        "used_seed": "0x374D661FF2229E3F95B804E57C3986B62889D4A7EC9242D87AAEF563263964F0",
+        "final_metrics": {
+          "size": 2,
+          "width": 2,
+          "height": 4
+        }
+      }
+    },
+    {
+      "run_number": 5,
+      "parameters": {
+        "num_replicas": 8,
+        "num_operations": 1000,
+        "churn_rate": 0.6,
+        "disable_stability": false,
+        "reachability": null
+      },
+      "results": {
+        "final_state": "ClassHierarchyValue { package: PackageValue { model_element_super: ModelElementValue { name: ['I', ' ... } }",
+        "avg_time_per_op_ms": 0.158625,
+        "avg_throughput_ops_per_sec": 6338.946839875152,
+        "total_deliver_ms_per_replica": [
+          146,
+          143,
+          148,
+          157,
+          154,
+          195,
+          162,
+          164
+        ],
+        "total_effect_ms_per_replica": [
+          92,
+          99,
+          101,
+          101,
+          103,
+          121,
+          108,
+          106
+        ],
+        "avg_effect_ms": 103.875,
+        "execution_graph_dot": null,
+        "inter_replica_concurrency_ratio": null,
+        "used_seed": "0x05058BAB0347649B82F57C29B0742C3F87F8AFA1AE27F5430CEA2965D67B4615",
+        "final_metrics": {
+          "size": 2,
+          "width": 2,
+          "height": 4
+        }
+      }
+    },
+    {
+      "run_number": 6,
+      "parameters": {
+        "num_replicas": 8,
+        "num_operations": 1000,
+        "churn_rate": 0.6,
+        "disable_stability": false,
+        "reachability": null
+      },
+      "results": {
+        "final_state": "ClassHierarchyValue { package: PackageValue { model_element_super: ModelElementValue { name: ['k', ' ... } }",
+        "avg_time_per_op_ms": 0.153,
+        "avg_throughput_ops_per_sec": 6520.804854902741,
+        "total_deliver_ms_per_replica": [
+          155,
+          144,
+          148,
+          155,
+          152,
+          152,
+          161,
+          157
+        ],
+        "total_effect_ms_per_replica": [
+          96,
+          96,
+          92,
+          97,
+          100,
+          91,
+          98,
+          96
+        ],
+        "avg_effect_ms": 95.75,
+        "execution_graph_dot": null,
+        "inter_replica_concurrency_ratio": null,
+        "used_seed": "0x26338EA6437E8342E06713386DA1E9D1550F9C2DF1530969B95795C614F14525",
+        "final_metrics": {
+          "size": 2,
+          "width": 2,
+          "height": 4
+        }
+      }
+    },
+    {
+      "run_number": 7,
+      "parameters": {
+        "num_replicas": 8,
+        "num_operations": 1000,
+        "churn_rate": 0.6,
+        "disable_stability": false,
+        "reachability": null
+      },
+      "results": {
+        "final_state": "ClassHierarchyValue { package: PackageValue { model_element_super: ModelElementValue { name: ['x', ' ... } }",
+        "avg_time_per_op_ms": 0.18649999999999997,
+        "avg_throughput_ops_per_sec": 5358.298874825151,
+        "total_deliver_ms_per_replica": [
+          181,
+          184,
+          202,
+          199,
+          180,
+          181,
+          192,
+          173
+        ],
+        "total_effect_ms_per_replica": [
+          130,
+          124,
+          130,
+          134,
+          121,
+          128,
+          122,
+          122
+        ],
+        "avg_effect_ms": 126.375,
+        "execution_graph_dot": null,
+        "inter_replica_concurrency_ratio": null,
+        "used_seed": "0xC99C07C277F0D6918E86DDB4D47EF769A1961D6B0814BE45A1F13B67B3FD880B",
+        "final_metrics": {
+          "size": 2,
+          "width": 2,
+          "height": 4
+        }
+      }
+    },
+    {
+      "run_number": 8,
+      "parameters": {
+        "num_replicas": 8,
+        "num_operations": 1000,
+        "churn_rate": 0.6,
+        "disable_stability": false,
+        "reachability": null
+      },
+      "results": {
+        "final_state": "ClassHierarchyValue { package: PackageValue { model_element_super: ModelElementValue { name: ['A', ' ... } }",
+        "avg_time_per_op_ms": 0.16525,
+        "avg_throughput_ops_per_sec": 6061.425140718164,
+        "total_deliver_ms_per_replica": [
+          164,
+          187,
+          155,
+          178,
+          166,
+          156,
+          147,
+          169
+        ],
+        "total_effect_ms_per_replica": [
+          111,
+          136,
+          107,
+          122,
+          118,
+          108,
+          110,
+          111
+        ],
+        "avg_effect_ms": 115.375,
+        "execution_graph_dot": null,
+        "inter_replica_concurrency_ratio": null,
+        "used_seed": "0x058E2550F806418F6856617A3178CFB656E872B159EFE46BCD4162E6F3FFAACE",
+        "final_metrics": {
+          "size": 2,
+          "width": 2,
+          "height": 4
+        }
+      }
+    },
+    {
+      "run_number": 9,
+      "parameters": {
+        "num_replicas": 8,
+        "num_operations": 1000,
+        "churn_rate": 0.6,
+        "disable_stability": false,
+        "reachability": null
+      },
+      "results": {
+        "final_state": "ClassHierarchyValue { package: PackageValue { model_element_super: ModelElementValue { name: ['6', ' ... } }",
+        "avg_time_per_op_ms": 0.14875,
+        "avg_throughput_ops_per_sec": 6749.094358820254,
+        "total_deliver_ms_per_replica": [
+          158,
+          154,
+          136,
+          138,
+          172,
+          130,
+          146,
+          156
+        ],
+        "total_effect_ms_per_replica": [
+          103,
+          95,
+          96,
+          92,
+          102,
+          95,
+          107,
+          102
+        ],
+        "avg_effect_ms": 99.0,
+        "execution_graph_dot": null,
+        "inter_replica_concurrency_ratio": null,
+        "used_seed": "0xA66E96B2760F617BF73019BDDEDCAEB2246923274286E6F19EB2975630448F2A",
+        "final_metrics": {
+          "size": 2,
+          "width": 2,
+          "height": 4
+        }
+      }
+    },
+    {
+      "run_number": 10,
+      "parameters": {
+        "num_replicas": 8,
+        "num_operations": 1000,
+        "churn_rate": 0.6,
+        "disable_stability": false,
+        "reachability": null
+      },
+      "results": {
+        "final_state": "ClassHierarchyValue { package: PackageValue { model_element_super: ModelElementValue { name: ['R', ' ... } }",
+        "avg_time_per_op_ms": 0.189875,
+        "avg_throughput_ops_per_sec": 5270.125230154986,
+        "total_deliver_ms_per_replica": [
+          190,
+          187,
+          186,
+          169,
+          210,
+          182,
+          206,
+          189
+        ],
+        "total_effect_ms_per_replica": [
+          124,
+          126,
+          126,
+          126,
+          124,
+          125,
+          124,
+          124
+        ],
+        "avg_effect_ms": 124.875,
+        "execution_graph_dot": null,
+        "inter_replica_concurrency_ratio": null,
+        "used_seed": "0xB655435A3C1E22C2B784FA65C95A057774B1F3DF1CF6DBCDA05BCCF2FEE8984D",
+        "final_metrics": {
+          "size": 2,
+          "width": 2,
+          "height": 4
+        }
+      }
+    },
+    {
+      "run_number": 11,
+      "parameters": {
+        "num_replicas": 8,
+        "num_operations": 1000,
+        "churn_rate": 0.6,
+        "disable_stability": false,
+        "reachability": null
+      },
+      "results": {
+        "final_state": "ClassHierarchyValue { package: PackageValue { model_element_super: ModelElementValue { name: ['g', ' ... } }",
+        "avg_time_per_op_ms": 0.17975,
+        "avg_throughput_ops_per_sec": 5597.943786664231,
+        "total_deliver_ms_per_replica": [
+          165,
+          158,
+          175,
+          178,
+          218,
+          185,
+          175,
+          184
+        ],
+        "total_effect_ms_per_replica": [
+          117,
+          109,
+          116,
+          119,
+          128,
+          121,
+          121,
+          122
+        ],
+        "avg_effect_ms": 119.125,
+        "execution_graph_dot": null,
+        "inter_replica_concurrency_ratio": null,
+        "used_seed": "0x25C15DD12CEB313D2A73A566C2BBD293484912FFB617DEC71635509AA562151A",
+        "final_metrics": {
+          "size": 2,
+          "width": 2,
+          "height": 4
+        }
+      }
+    },
+    {
+      "run_number": 12,
+      "parameters": {
+        "num_replicas": 8,
+        "num_operations": 1000,
+        "churn_rate": 0.6,
+        "disable_stability": false,
+        "reachability": null
+      },
+      "results": {
+        "final_state": "ClassHierarchyValue { package: PackageValue { model_element_super: ModelElementValue { name: ['a', ' ... } }",
+        "avg_time_per_op_ms": 0.17675000000000002,
+        "avg_throughput_ops_per_sec": 5681.031623526851,
+        "total_deliver_ms_per_replica": [
+          167,
+          183,
+          163,
+          188,
+          154,
+          202,
+          168,
+          189
+        ],
+        "total_effect_ms_per_replica": [
+          122,
+          122,
+          117,
+          140,
+          118,
+          140,
+          121,
+          124
+        ],
+        "avg_effect_ms": 125.5,
+        "execution_graph_dot": null,
+        "inter_replica_concurrency_ratio": null,
+        "used_seed": "0xF82C5C7E0DD110109779136FE55485DD6EF68D8330EC26E51B68EB09EB27418D",
+        "final_metrics": {
+          "size": 2,
+          "width": 2,
+          "height": 4
+        }
+      }
+    },
+    {
+      "run_number": 13,
+      "parameters": {
+        "num_replicas": 8,
+        "num_operations": 1000,
+        "churn_rate": 0.6,
+        "disable_stability": false,
+        "reachability": null
+      },
+      "results": {
+        "final_state": "ClassHierarchyValue { package: PackageValue { model_element_super: ModelElementValue { name: ['T', ' ... } }",
+        "avg_time_per_op_ms": 0.137125,
+        "avg_throughput_ops_per_sec": 7305.80901979963,
+        "total_deliver_ms_per_replica": [
+          150,
+          138,
+          125,
+          133,
+          125,
+          146,
+          135,
+          145
+        ],
+        "total_effect_ms_per_replica": [
+          85,
+          82,
+          84,
+          83,
+          80,
+          90,
+          90,
+          84
+        ],
+        "avg_effect_ms": 84.75,
+        "execution_graph_dot": null,
+        "inter_replica_concurrency_ratio": null,
+        "used_seed": "0x6220E8B9AE5BFED383F7FC3E3946B371764FCC2BED1A6BC064AFAA5AD364B0A3",
+        "final_metrics": {
+          "size": 2,
+          "width": 2,
+          "height": 4
+        }
+      }
+    },
+    {
+      "run_number": 14,
+      "parameters": {
+        "num_replicas": 8,
+        "num_operations": 1000,
+        "churn_rate": 0.6,
+        "disable_stability": false,
+        "reachability": null
+      },
+      "results": {
+        "final_state": "ClassHierarchyValue { package: PackageValue { model_element_super: ModelElementValue { name: ['s', ' ... } }",
+        "avg_time_per_op_ms": 0.234625,
+        "avg_throughput_ops_per_sec": 4258.573260174435,
+        "total_deliver_ms_per_replica": [
+          245,
+          234,
+          216,
+          241,
+          230,
+          242,
+          230,
+          239
+        ],
+        "total_effect_ms_per_replica": [
+          164,
+          170,
+          150,
+          159,
+          160,
+          169,
+          155,
+          158
+        ],
+        "avg_effect_ms": 160.625,
+        "execution_graph_dot": null,
+        "inter_replica_concurrency_ratio": null,
+        "used_seed": "0xFBE81F3B069A21A95EF5C1EB18F1AF564DEC4A258ACE9C6E304C9E18C32CDEAF",
+        "final_metrics": {
+          "size": 2,
+          "width": 2,
+          "height": 4
+        }
+      }
+    },
+    {
+      "run_number": 15,
+      "parameters": {
+        "num_replicas": 8,
+        "num_operations": 1000,
+        "churn_rate": 0.6,
+        "disable_stability": false,
+        "reachability": null
+      },
+      "results": {
+        "final_state": "ClassHierarchyValue { package: PackageValue { model_element_super: ModelElementValue { name: ['b', ' ... } }",
+        "avg_time_per_op_ms": 0.12175,
+        "avg_throughput_ops_per_sec": 8244.949531714505,
+        "total_deliver_ms_per_replica": [
+          116,
+          120,
+          126,
+          115,
+          141,
+          110,
+          111,
+          135
+        ],
+        "total_effect_ms_per_replica": [
+          66,
+          66,
+          66,
+          66,
+          67,
+          66,
+          65,
+          68
+        ],
+        "avg_effect_ms": 66.25,
+        "execution_graph_dot": null,
+        "inter_replica_concurrency_ratio": null,
+        "used_seed": "0xFD822A418532EA7AAEF8AC46A5844ECB8B1DF3132EAEFFDCD4664CC5395C4D2D",
+        "final_metrics": {
+          "size": 2,
+          "width": 2,
+          "height": 4
+        }
+      }
+    },
+    {
+      "run_number": 16,
+      "parameters": {
+        "num_replicas": 8,
+        "num_operations": 1000,
+        "churn_rate": 0.6,
+        "disable_stability": false,
+        "reachability": null
+      },
+      "results": {
+        "final_state": "ClassHierarchyValue { package: PackageValue { model_element_super: ModelElementValue { name: ['g', ' ... } }",
+        "avg_time_per_op_ms": 0.1625,
+        "avg_throughput_ops_per_sec": 6148.612338844001,
+        "total_deliver_ms_per_replica": [
+          154,
+          170,
+          156,
+          155,
+          174,
+          170,
+          160,
+          161
+        ],
+        "total_effect_ms_per_replica": [
+          90,
+          96,
+          99,
+          93,
+          96,
+          102,
+          102,
+          97
+        ],
+        "avg_effect_ms": 96.875,
+        "execution_graph_dot": null,
+        "inter_replica_concurrency_ratio": null,
+        "used_seed": "0xACE433D08137518536E68D385917A03801295A990D201DE7A821EF7C62147676",
+        "final_metrics": {
+          "size": 2,
+          "width": 2,
+          "height": 4
+        }
+      }
+    },
+    {
+      "run_number": 17,
+      "parameters": {
+        "num_replicas": 8,
+        "num_operations": 1000,
+        "churn_rate": 0.6,
+        "disable_stability": false,
+        "reachability": null
+      },
+      "results": {
+        "final_state": "ClassHierarchyValue { package: PackageValue { model_element_super: ModelElementValue { name: ['n', ' ... } }",
+        "avg_time_per_op_ms": 0.218125,
+        "avg_throughput_ops_per_sec": 4618.2617000594955,
+        "total_deliver_ms_per_replica": [
+          248,
+          252,
+          217,
+          194,
+          228,
+          189,
+          214,
+          203
+        ],
+        "total_effect_ms_per_replica": [
+          163,
+          154,
+          146,
+          145,
+          145,
+          132,
+          150,
+          146
+        ],
+        "avg_effect_ms": 147.625,
+        "execution_graph_dot": null,
+        "inter_replica_concurrency_ratio": null,
+        "used_seed": "0xE3450299AD3B1FDF70A243AF683B7995F2C23321A1F5680D2189C9FE67CC5CA4",
+        "final_metrics": {
+          "size": 2,
+          "width": 2,
+          "height": 4
+        }
+      }
+    },
+    {
+      "run_number": 18,
+      "parameters": {
+        "num_replicas": 8,
+        "num_operations": 1000,
+        "churn_rate": 0.6,
+        "disable_stability": false,
+        "reachability": null
+      },
+      "results": {
+        "final_state": "ClassHierarchyValue { package: PackageValue { model_element_super: ModelElementValue { name: ['b', ' ... } }",
+        "avg_time_per_op_ms": 0.14550000000000002,
+        "avg_throughput_ops_per_sec": 6890.769332872598,
+        "total_deliver_ms_per_replica": [
+          155,
+          135,
+          144,
+          124,
+          149,
+          153,
+          150,
+          154
+        ],
+        "total_effect_ms_per_replica": [
+          90,
+          89,
+          90,
+          88,
+          90,
+          92,
+          97,
+          97
+        ],
+        "avg_effect_ms": 91.625,
+        "execution_graph_dot": null,
+        "inter_replica_concurrency_ratio": null,
+        "used_seed": "0x005A261DA168DD384C1C9B27431E6DFA8C2F5C75671D9911231B6CA01516BC2E",
+        "final_metrics": {
+          "size": 2,
+          "width": 2,
+          "height": 4
+        }
+      }
+    },
+    {
+      "run_number": 19,
+      "parameters": {
+        "num_replicas": 8,
+        "num_operations": 1000,
+        "churn_rate": 0.6,
+        "disable_stability": false,
+        "reachability": null
+      },
+      "results": {
+        "final_state": "ClassHierarchyValue { package: PackageValue { model_element_super: ModelElementValue { name: ['u', ' ... } }",
+        "avg_time_per_op_ms": 0.149625,
+        "avg_throughput_ops_per_sec": 6680.261215505198,
+        "total_deliver_ms_per_replica": [
+          155,
+          148,
+          159,
+          157,
+          160,
+          136,
+          146,
+          136
+        ],
+        "total_effect_ms_per_replica": [
+          101,
+          102,
+          100,
+          101,
+          103,
+          100,
+          96,
+          97
+        ],
+        "avg_effect_ms": 100.0,
+        "execution_graph_dot": null,
+        "inter_replica_concurrency_ratio": null,
+        "used_seed": "0x64FD7011204DA9F2DFA1AF69F5352C823480E6939FA9910A15B31714F38720F2",
+        "final_metrics": {
+          "size": 2,
+          "width": 2,
+          "height": 4
+        }
+      }
+    },
+    {
+      "run_number": 20,
+      "parameters": {
+        "num_replicas": 8,
+        "num_operations": 1000,
+        "churn_rate": 0.6,
+        "disable_stability": false,
+        "reachability": null
+      },
+      "results": {
+        "final_state": "ClassHierarchyValue { package: PackageValue { model_element_super: ModelElementValue { name: ['g', ' ... } }",
+        "avg_time_per_op_ms": 0.15575,
+        "avg_throughput_ops_per_sec": 6417.582513678809,
+        "total_deliver_ms_per_replica": [
+          160,
+          148,
+          147,
+          167,
+          153,
+          165,
+          165,
+          141
+        ],
+        "total_effect_ms_per_replica": [
+          101,
+          102,
+          98,
+          107,
+          100,
+          102,
+          104,
+          99
+        ],
+        "avg_effect_ms": 101.625,
+        "execution_graph_dot": null,
+        "inter_replica_concurrency_ratio": null,
+        "used_seed": "0xE3EBA4E647D67270D8ED949600B9277108850B3CDCCD39BCBB14F6603965A5CF",
+        "final_metrics": {
+          "size": 2,
+          "width": 2,
+          "height": 4
+        }
+      }
+    },
+    {
+      "run_number": 21,
+      "parameters": {
+        "num_replicas": 8,
+        "num_operations": 1000,
+        "churn_rate": 0.6,
+        "disable_stability": false,
+        "reachability": null
+      },
+      "results": {
+        "final_state": "ClassHierarchyValue { package: PackageValue { model_element_super: ModelElementValue { name: ['Y', ' ... } }",
+        "avg_time_per_op_ms": 0.265875,
+        "avg_throughput_ops_per_sec": 3762.9453690034275,
+        "total_deliver_ms_per_replica": [
+          258,
+          286,
+          267,
+          285,
+          253,
+          263,
+          257,
+          258
+        ],
+        "total_effect_ms_per_replica": [
+          176,
+          189,
+          183,
+          185,
+          187,
+          183,
+          187,
+          183
+        ],
+        "avg_effect_ms": 184.125,
+        "execution_graph_dot": null,
+        "inter_replica_concurrency_ratio": null,
+        "used_seed": "0x5A8F54B747110818DA7D4C98CEC94C872AD0A0D626795E2A210EB8843FB4D9BE",
+        "final_metrics": {
+          "size": 2,
+          "width": 2,
+          "height": 4
+        }
+      }
+    },
+    {
+      "run_number": 22,
+      "parameters": {
+        "num_replicas": 8,
+        "num_operations": 1000,
+        "churn_rate": 0.6,
+        "disable_stability": false,
+        "reachability": null
+      },
+      "results": {
+        "final_state": "ClassHierarchyValue { package: PackageValue { model_element_super: ModelElementValue { name: ['k', ' ... } }",
+        "avg_time_per_op_ms": 0.16887500000000003,
+        "avg_throughput_ops_per_sec": 5910.586932042361,
+        "total_deliver_ms_per_replica": [
+          170,
+          169,
+          166,
+          166,
+          187,
+          160,
+          170,
+          163
+        ],
+        "total_effect_ms_per_replica": [
+          109,
+          112,
+          110,
+          111,
+          119,
+          108,
+          108,
+          108
+        ],
+        "avg_effect_ms": 110.625,
+        "execution_graph_dot": null,
+        "inter_replica_concurrency_ratio": null,
+        "used_seed": "0x54B94FB3D9E2BA889BAB08E2C4760ACB66EB9C1924950BFF5496B295C3BADE4C",
+        "final_metrics": {
+          "size": 2,
+          "width": 2,
+          "height": 4
+        }
+      }
+    },
+    {
+      "run_number": 23,
+      "parameters": {
+        "num_replicas": 8,
+        "num_operations": 1000,
+        "churn_rate": 0.6,
+        "disable_stability": false,
+        "reachability": null
+      },
+      "results": {
+        "final_state": "ClassHierarchyValue { package: PackageValue { model_element_super: ModelElementValue { name: ['K', ' ... } }",
+        "avg_time_per_op_ms": 0.23700000000000002,
+        "avg_throughput_ops_per_sec": 4220.2298147597385,
+        "total_deliver_ms_per_replica": [
+          255,
+          224,
+          237,
+          233,
+          221,
+          251,
+          248,
+          227
+        ],
+        "total_effect_ms_per_replica": [
+          165,
+          148,
+          157,
+          149,
+          150,
+          155,
+          161,
+          144
+        ],
+        "avg_effect_ms": 153.625,
+        "execution_graph_dot": null,
+        "inter_replica_concurrency_ratio": null,
+        "used_seed": "0xC540F8665F9E4A86B65BBAF920D4CDFD5C01C98608E0C1D80CAE05F4123D82D7",
+        "final_metrics": {
+          "size": 2,
+          "width": 2,
+          "height": 4
+        }
+      }
+    },
+    {
+      "run_number": 24,
+      "parameters": {
+        "num_replicas": 8,
+        "num_operations": 1000,
+        "churn_rate": 0.6,
+        "disable_stability": false,
+        "reachability": null
+      },
+      "results": {
+        "final_state": "ClassHierarchyValue { package: PackageValue { model_element_super: ModelElementValue { name: ['9', ' ... } }",
+        "avg_time_per_op_ms": 0.251625,
+        "avg_throughput_ops_per_sec": 3999.8432012244098,
+        "total_deliver_ms_per_replica": [
+          273,
+          215,
+          214,
+          266,
+          272,
+          263,
+          244,
+          266
+        ],
+        "total_effect_ms_per_replica": [
+          166,
+          148,
+          151,
+          168,
+          176,
+          171,
+          157,
+          163
+        ],
+        "avg_effect_ms": 162.5,
+        "execution_graph_dot": null,
+        "inter_replica_concurrency_ratio": null,
+        "used_seed": "0x3425BC990E03439EB48B0891475EAFAC31F9B71AC204BFA04561A0D4A61C9708",
+        "final_metrics": {
+          "size": 2,
+          "width": 2,
+          "height": 4
+        }
+      }
+    },
+    {
+      "run_number": 25,
+      "parameters": {
+        "num_replicas": 8,
+        "num_operations": 1000,
+        "churn_rate": 0.6,
+        "disable_stability": false,
+        "reachability": null
+      },
+      "results": {
+        "final_state": "ClassHierarchyValue { package: PackageValue { model_element_super: ModelElementValue { name: ['f', ' ... } }",
+        "avg_time_per_op_ms": 0.15999999999999998,
+        "avg_throughput_ops_per_sec": 6284.260743141365,
+        "total_deliver_ms_per_replica": [
+          149,
+          177,
+          173,
+          147,
+          172,
+          144,
+          142,
+          176
+        ],
+        "total_effect_ms_per_replica": [
+          98,
+          106,
+          105,
+          96,
+          108,
+          100,
+          100,
+          101
+        ],
+        "avg_effect_ms": 101.75,
+        "execution_graph_dot": null,
+        "inter_replica_concurrency_ratio": null,
+        "used_seed": "0x3F664CC187ECAB7074213B3BD5D2FE05E678D89D2B3EF4C5E661C024127521C6",
+        "final_metrics": {
+          "size": 2,
+          "width": 2,
+          "height": 4
+        }
+      }
+    },
+    {
+      "run_number": 26,
+      "parameters": {
+        "num_replicas": 8,
+        "num_operations": 1000,
+        "churn_rate": 0.6,
+        "disable_stability": false,
+        "reachability": null
+      },
+      "results": {
+        "final_state": "ClassHierarchyValue { package: PackageValue { model_element_super: ModelElementValue { name: ['n', ' ... } }",
+        "avg_time_per_op_ms": 0.1395,
+        "avg_throughput_ops_per_sec": 7161.7971719597845,
+        "total_deliver_ms_per_replica": [
+          144,
+          133,
+          148,
+          127,
+          135,
+          146,
+          147,
+          136
+        ],
+        "total_effect_ms_per_replica": [
+          92,
+          82,
+          93,
+          86,
+          87,
+          88,
+          86,
+          85
+        ],
+        "avg_effect_ms": 87.375,
+        "execution_graph_dot": null,
+        "inter_replica_concurrency_ratio": null,
+        "used_seed": "0xF23A6C96D205F893850AF35006A2E999D06B8A3AC4DB9F92DB2CA0A9C6661490",
+        "final_metrics": {
+          "size": 2,
+          "width": 2,
+          "height": 4
+        }
+      }
+    },
+    {
+      "run_number": 27,
+      "parameters": {
+        "num_replicas": 8,
+        "num_operations": 1000,
+        "churn_rate": 0.6,
+        "disable_stability": false,
+        "reachability": null
+      },
+      "results": {
+        "final_state": "ClassHierarchyValue { package: PackageValue { model_element_super: ModelElementValue { name: ['w', ' ... } }",
+        "avg_time_per_op_ms": 0.15775,
+        "avg_throughput_ops_per_sec": 6360.906361229903,
+        "total_deliver_ms_per_replica": [
+          152,
+          163,
+          171,
+          158,
+          182,
+          148,
+          145,
+          143
+        ],
+        "total_effect_ms_per_replica": [
+          96,
+          101,
+          114,
+          104,
+          104,
+          104,
+          109,
+          102
+        ],
+        "avg_effect_ms": 104.25,
+        "execution_graph_dot": null,
+        "inter_replica_concurrency_ratio": null,
+        "used_seed": "0x0EAAEDE36254F69A287BBACF90362D1B80A8D5B163964A7A3A6B5D08D0E4E5D9",
+        "final_metrics": {
+          "size": 2,
+          "width": 2,
+          "height": 4
+        }
+      }
+    },
+    {
+      "run_number": 28,
+      "parameters": {
+        "num_replicas": 8,
+        "num_operations": 1000,
+        "churn_rate": 0.6,
+        "disable_stability": false,
+        "reachability": null
+      },
+      "results": {
+        "final_state": "ClassHierarchyValue { package: PackageValue { model_element_super: ModelElementValue { name: ['Y', ' ... } }",
+        "avg_time_per_op_ms": 0.13587500000000002,
+        "avg_throughput_ops_per_sec": 7384.391964456645,
+        "total_deliver_ms_per_replica": [
+          147,
+          146,
+          150,
+          117,
+          128,
+          139,
+          129,
+          131
+        ],
+        "total_effect_ms_per_replica": [
+          81,
+          78,
+          99,
+          75,
+          73,
+          78,
+          72,
+          81
+        ],
+        "avg_effect_ms": 79.625,
+        "execution_graph_dot": null,
+        "inter_replica_concurrency_ratio": null,
+        "used_seed": "0x2F97F11871CB78F7F047731607C17B04D105C65E56732F66281F96B5657A0B1D",
+        "final_metrics": {
+          "size": 2,
+          "width": 2,
+          "height": 4
+        }
+      }
+    },
+    {
+      "run_number": 29,
+      "parameters": {
+        "num_replicas": 8,
+        "num_operations": 1000,
+        "churn_rate": 0.6,
+        "disable_stability": false,
+        "reachability": null
+      },
+      "results": {
+        "final_state": "ClassHierarchyValue { package: PackageValue { model_element_super: ModelElementValue { name: ['k', ' ... } }",
+        "avg_time_per_op_ms": 0.1595,
+        "avg_throughput_ops_per_sec": 6257.661469031932,
+        "total_deliver_ms_per_replica": [
+          155,
+          157,
+          166,
+          156,
+          161,
+          156,
+          174,
+          151
+        ],
+        "total_effect_ms_per_replica": [
+          102,
+          102,
+          101,
+          103,
+          103,
+          97,
+          110,
+          99
+        ],
+        "avg_effect_ms": 102.125,
+        "execution_graph_dot": null,
+        "inter_replica_concurrency_ratio": null,
+        "used_seed": "0x6D6006BF192DB2FC0BE1F15CE8D908ED8BCF2F2FD7D3DB8AEB3BFAA0F405EED6",
+        "final_metrics": {
+          "size": 2,
+          "width": 2,
+          "height": 4
+        }
+      }
+    },
+    {
+      "run_number": 30,
+      "parameters": {
+        "num_replicas": 8,
+        "num_operations": 1000,
+        "churn_rate": 0.6,
+        "disable_stability": false,
+        "reachability": null
+      },
+      "results": {
+        "final_state": "ClassHierarchyValue { package: PackageValue { model_element_super: ModelElementValue { name: ['s', ' ... } }",
+        "avg_time_per_op_ms": 0.296875,
+        "avg_throughput_ops_per_sec": 3371.709802994562,
+        "total_deliver_ms_per_replica": [
+          317,
+          292,
+          284,
+          312,
+          283,
+          313,
+          274,
+          300
+        ],
+        "total_effect_ms_per_replica": [
+          213,
+          209,
+          204,
+          219,
+          203,
+          216,
+          207,
+          212
+        ],
+        "avg_effect_ms": 210.375,
+        "execution_graph_dot": null,
+        "inter_replica_concurrency_ratio": null,
+        "used_seed": "0xF82F739B06337B5A8F95F9004717F0BE6F4D7D5FE1A6DA8660BF18286FA9BF47",
+        "final_metrics": {
+          "size": 2,
+          "width": 2,
+          "height": 4
+        }
+      }
+    },
+    {
+      "run_number": 31,
+      "parameters": {
+        "num_replicas": 8,
+        "num_operations": 1000,
+        "churn_rate": 0.6,
+        "disable_stability": false,
+        "reachability": null
+      },
+      "results": {
+        "final_state": "ClassHierarchyValue { package: PackageValue { model_element_super: ModelElementValue { name: ['s', ' ... } }",
+        "avg_time_per_op_ms": 0.19987500000000002,
+        "avg_throughput_ops_per_sec": 5020.248031886583,
+        "total_deliver_ms_per_replica": [
+          196,
+          208,
+          237,
+          204,
+          181,
+          195,
+          189,
+          189
+        ],
+        "total_effect_ms_per_replica": [
+          134,
+          135,
+          148,
+          136,
+          136,
+          143,
+          119,
+          140
+        ],
+        "avg_effect_ms": 136.375,
+        "execution_graph_dot": null,
+        "inter_replica_concurrency_ratio": null,
+        "used_seed": "0xFD6724BDB067CC43C6A95149B449587EC492DE18D3BF6CDA0D0452572ADF9C05",
+        "final_metrics": {
+          "size": 2,
+          "width": 2,
+          "height": 4
+        }
+      }
+    },
+    {
+      "run_number": 32,
+      "parameters": {
+        "num_replicas": 8,
+        "num_operations": 1000,
+        "churn_rate": 0.6,
+        "disable_stability": false,
+        "reachability": null
+      },
+      "results": {
+        "final_state": "ClassHierarchyValue { package: PackageValue { model_element_super: ModelElementValue { name: ['K', ' ... } }",
+        "avg_time_per_op_ms": 0.264625,
+        "avg_throughput_ops_per_sec": 3789.691490505488,
+        "total_deliver_ms_per_replica": [
+          254,
+          274,
+          256,
+          269,
+          234,
+          252,
+          305,
+          273
+        ],
+        "total_effect_ms_per_replica": [
+          188,
+          201,
+          186,
+          198,
+          182,
+          188,
+          212,
+          187
+        ],
+        "avg_effect_ms": 192.75,
+        "execution_graph_dot": null,
+        "inter_replica_concurrency_ratio": null,
+        "used_seed": "0x62CECFCE47952C2F803FA3958042E5F9C7E1CFFF8BE9CF6C2386B5DE23078FAD",
+        "final_metrics": {
+          "size": 2,
+          "width": 2,
+          "height": 4
+        }
+      }
+    },
+    {
+      "run_number": 33,
+      "parameters": {
+        "num_replicas": 8,
+        "num_operations": 1000,
+        "churn_rate": 0.6,
+        "disable_stability": false,
+        "reachability": null
+      },
+      "results": {
+        "final_state": "ClassHierarchyValue { package: PackageValue { model_element_super: ModelElementValue { name: ['K', ' ... } }",
+        "avg_time_per_op_ms": 0.156875,
+        "avg_throughput_ops_per_sec": 6386.2861120909365,
+        "total_deliver_ms_per_replica": [
+          171,
+          153,
+          165,
+          162,
+          164,
+          148,
+          134,
+          158
+        ],
+        "total_effect_ms_per_replica": [
+          103,
+          98,
+          112,
+          104,
+          102,
+          95,
+          94,
+          106
+        ],
+        "avg_effect_ms": 101.75,
+        "execution_graph_dot": null,
+        "inter_replica_concurrency_ratio": null,
+        "used_seed": "0x68CAE445BDA6860C69C3C3EA46207CC5CCE95C9F9B61D3595AA72516FC9340C4",
+        "final_metrics": {
+          "size": 2,
+          "width": 2,
+          "height": 4
+        }
+      }
+    },
+    {
+      "run_number": 34,
+      "parameters": {
+        "num_replicas": 8,
+        "num_operations": 1000,
+        "churn_rate": 0.6,
+        "disable_stability": false,
+        "reachability": null
+      },
+      "results": {
+        "final_state": "ClassHierarchyValue { package: PackageValue { model_element_super: ModelElementValue { name: ['5', ' ... } }",
+        "avg_time_per_op_ms": 0.191625,
+        "avg_throughput_ops_per_sec": 5219.458153635007,
+        "total_deliver_ms_per_replica": [
+          192,
+          208,
+          180,
+          175,
+          192,
+          196,
+          195,
+          195
+        ],
+        "total_effect_ms_per_replica": [
+          126,
+          150,
+          127,
+          118,
+          124,
+          137,
+          134,
+          134
+        ],
+        "avg_effect_ms": 131.25,
+        "execution_graph_dot": null,
+        "inter_replica_concurrency_ratio": null,
+        "used_seed": "0x04FB1F893B7D2D21A202BB56CFA775680D1652AF2F8F725834A9065CDBAD70B8",
+        "final_metrics": {
+          "size": 2,
+          "width": 2,
+          "height": 4
+        }
+      }
+    },
+    {
+      "run_number": 35,
+      "parameters": {
+        "num_replicas": 8,
+        "num_operations": 1000,
+        "churn_rate": 0.6,
+        "disable_stability": false,
+        "reachability": null
+      },
+      "results": {
+        "final_state": "ClassHierarchyValue { package: PackageValue { model_element_super: ModelElementValue { name: ['l', ' ... } }",
+        "avg_time_per_op_ms": 0.159875,
+        "avg_throughput_ops_per_sec": 6277.980105750671,
+        "total_deliver_ms_per_replica": [
+          154,
+          156,
+          137,
+          158,
+          161,
+          171,
+          187,
+          155
+        ],
+        "total_effect_ms_per_replica": [
+          93,
+          89,
+          78,
+          96,
+          95,
+          97,
+          96,
+          88
+        ],
+        "avg_effect_ms": 91.5,
+        "execution_graph_dot": null,
+        "inter_replica_concurrency_ratio": null,
+        "used_seed": "0x1B81B22A9BD40B89CFBDA2F164A5DE1002FBA41C5F547E3CF787C935FF865339",
+        "final_metrics": {
+          "size": 2,
+          "width": 2,
+          "height": 4
+        }
+      }
+    },
+    {
+      "run_number": 36,
+      "parameters": {
+        "num_replicas": 8,
+        "num_operations": 1000,
+        "churn_rate": 0.6,
+        "disable_stability": false,
+        "reachability": null
+      },
+      "results": {
+        "final_state": "ClassHierarchyValue { package: PackageValue { model_element_super: ModelElementValue { name: ['i', ' ... } }",
+        "avg_time_per_op_ms": 0.14875,
+        "avg_throughput_ops_per_sec": 6727.185900724041,
+        "total_deliver_ms_per_replica": [
+          145,
+          163,
+          145,
+          142,
+          144,
+          163,
+          151,
+          137
+        ],
+        "total_effect_ms_per_replica": [
+          97,
+          98,
+          91,
+          91,
+          91,
+          95,
+          97,
+          88
+        ],
+        "avg_effect_ms": 93.5,
+        "execution_graph_dot": null,
+        "inter_replica_concurrency_ratio": null,
+        "used_seed": "0x125262926ACBA438B14E5534F6A071653735717FB3B5E669C77044DEF69A76E5",
+        "final_metrics": {
+          "size": 2,
+          "width": 2,
+          "height": 4
+        }
+      }
+    },
+    {
+      "run_number": 37,
+      "parameters": {
+        "num_replicas": 8,
+        "num_operations": 1000,
+        "churn_rate": 0.6,
+        "disable_stability": false,
+        "reachability": null
+      },
+      "results": {
+        "final_state": "ClassHierarchyValue { package: PackageValue { model_element_super: ModelElementValue { name: ['J', ' ... } }",
+        "avg_time_per_op_ms": 0.178,
+        "avg_throughput_ops_per_sec": 5601.4495402489765,
+        "total_deliver_ms_per_replica": [
+          177,
+          182,
+          179,
+          186,
+          168,
+          180,
+          179,
+          173
+        ],
+        "total_effect_ms_per_replica": [
+          119,
+          123,
+          126,
+          133,
+          122,
+          128,
+          123,
+          124
+        ],
+        "avg_effect_ms": 124.75,
+        "execution_graph_dot": null,
+        "inter_replica_concurrency_ratio": null,
+        "used_seed": "0xDC88BC963B39ECEFBA5DABFCDD25846F9E84DE553EBF960E4DC08E3725F07835",
+        "final_metrics": {
+          "size": 2,
+          "width": 2,
+          "height": 4
+        }
+      }
+    },
+    {
+      "run_number": 38,
+      "parameters": {
+        "num_replicas": 8,
+        "num_operations": 1000,
+        "churn_rate": 0.6,
+        "disable_stability": false,
+        "reachability": null
+      },
+      "results": {
+        "final_state": "ClassHierarchyValue { package: PackageValue { model_element_super: ModelElementValue { name: ['9', ' ... } }",
+        "avg_time_per_op_ms": 0.13725,
+        "avg_throughput_ops_per_sec": 7298.624434136337,
+        "total_deliver_ms_per_replica": [
+          123,
+          141,
+          136,
+          139,
+          141,
+          163,
+          130,
+          125
+        ],
+        "total_effect_ms_per_replica": [
+          85,
+          97,
+          93,
+          92,
+          85,
+          94,
+          89,
+          81
+        ],
+        "avg_effect_ms": 89.5,
+        "execution_graph_dot": null,
+        "inter_replica_concurrency_ratio": null,
+        "used_seed": "0x2FA882A71833A1821C916F9FFF62D1D7FF74DFB020E64604ADF293918B47E2AD",
+        "final_metrics": {
+          "size": 2,
+          "width": 2,
+          "height": 4
+        }
+      }
+    },
+    {
+      "run_number": 39,
+      "parameters": {
+        "num_replicas": 8,
+        "num_operations": 1000,
+        "churn_rate": 0.6,
+        "disable_stability": false,
+        "reachability": null
+      },
+      "results": {
+        "final_state": "ClassHierarchyValue { package: PackageValue { model_element_super: ModelElementValue { name: ['c', ' ... } }",
+        "avg_time_per_op_ms": 0.16712500000000002,
+        "avg_throughput_ops_per_sec": 5983.102235543057,
+        "total_deliver_ms_per_replica": [
+          167,
+          161,
+          157,
+          170,
+          171,
+          153,
+          185,
+          173
+        ],
+        "total_effect_ms_per_replica": [
+          111,
+          113,
+          108,
+          113,
+          116,
+          106,
+          117,
+          116
+        ],
+        "avg_effect_ms": 112.5,
+        "execution_graph_dot": null,
+        "inter_replica_concurrency_ratio": null,
+        "used_seed": "0xE9FAE3B8935A537CF5B66030A836A461E33FD447AC77A770A087EE162542ECCC",
+        "final_metrics": {
+          "size": 2,
+          "width": 2,
+          "height": 4
+        }
+      }
+    },
+    {
+      "run_number": 40,
+      "parameters": {
+        "num_replicas": 8,
+        "num_operations": 1000,
+        "churn_rate": 0.6,
+        "disable_stability": false,
+        "reachability": null
+      },
+      "results": {
+        "final_state": "ClassHierarchyValue { package: PackageValue { model_element_super: ModelElementValue { name: ['B', ' ... } }",
+        "avg_time_per_op_ms": 0.18387499999999998,
+        "avg_throughput_ops_per_sec": 5437.448287746173,
+        "total_deliver_ms_per_replica": [
+          203,
+          179,
+          188,
+          181,
+          180,
+          177,
+          180,
+          183
+        ],
+        "total_effect_ms_per_replica": [
+          114,
+          104,
+          111,
+          110,
+          113,
+          105,
+          110,
+          107
+        ],
+        "avg_effect_ms": 109.25,
+        "execution_graph_dot": null,
+        "inter_replica_concurrency_ratio": null,
+        "used_seed": "0x2F16EEC6559B8B02BE924178843260ADF125C497C505706360480E191DB9291D",
+        "final_metrics": {
+          "size": 2,
+          "width": 2,
+          "height": 4
+        }
+      }
+    },
+    {
+      "run_number": 41,
+      "parameters": {
+        "num_replicas": 8,
+        "num_operations": 1000,
+        "churn_rate": 0.6,
+        "disable_stability": false,
+        "reachability": null
+      },
+      "results": {
+        "final_state": "ClassHierarchyValue { package: PackageValue { model_element_super: ModelElementValue { name: ['t', ' ... } }",
+        "avg_time_per_op_ms": 0.17525,
+        "avg_throughput_ops_per_sec": 5735.0608274595415,
+        "total_deliver_ms_per_replica": [
+          183,
+          173,
+          204,
+          166,
+          194,
+          169,
+          155,
+          158
+        ],
+        "total_effect_ms_per_replica": [
+          118,
+          110,
+          134,
+          113,
+          109,
+          113,
+          98,
+          108
+        ],
+        "avg_effect_ms": 112.875,
+        "execution_graph_dot": null,
+        "inter_replica_concurrency_ratio": null,
+        "used_seed": "0x0504EB5D9CD17E3CA3E91705B700AFC7C93BA811B5382E268E4D57B4D82B67B7",
+        "final_metrics": {
+          "size": 2,
+          "width": 2,
+          "height": 4
+        }
+      }
+    },
+    {
+      "run_number": 42,
+      "parameters": {
+        "num_replicas": 8,
+        "num_operations": 1000,
+        "churn_rate": 0.6,
+        "disable_stability": false,
+        "reachability": null
+      },
+      "results": {
+        "final_state": "ClassHierarchyValue { package: PackageValue { model_element_super: ModelElementValue { name: ['F', ' ... } }",
+        "avg_time_per_op_ms": 0.2325,
+        "avg_throughput_ops_per_sec": 4305.262644923833,
+        "total_deliver_ms_per_replica": [
+          259,
+          237,
+          242,
+          229,
+          232,
+          218,
+          216,
+          227
+        ],
+        "total_effect_ms_per_replica": [
+          161,
+          160,
+          148,
+          150,
+          162,
+          141,
+          143,
+          143
+        ],
+        "avg_effect_ms": 151.0,
+        "execution_graph_dot": null,
+        "inter_replica_concurrency_ratio": null,
+        "used_seed": "0xA94E2AEC3BB171537478FED2A6E4ADD681770A4B6E39F4EACF3B7D625E9857B2",
+        "final_metrics": {
+          "size": 2,
+          "width": 2,
+          "height": 4
+        }
+      }
+    },
+    {
+      "run_number": 43,
+      "parameters": {
+        "num_replicas": 8,
+        "num_operations": 1000,
+        "churn_rate": 0.6,
+        "disable_stability": false,
+        "reachability": null
+      },
+      "results": {
+        "final_state": "ClassHierarchyValue { package: PackageValue { model_element_super: ModelElementValue { name: ['n', ' ... } }",
+        "avg_time_per_op_ms": 0.22775,
+        "avg_throughput_ops_per_sec": 4392.270440556435,
+        "total_deliver_ms_per_replica": [
+          241,
+          217,
+          238,
+          222,
+          229,
+          225,
+          238,
+          212
+        ],
+        "total_effect_ms_per_replica": [
+          170,
+          150,
+          171,
+          158,
+          156,
+          154,
+          170,
+          154
+        ],
+        "avg_effect_ms": 160.375,
+        "execution_graph_dot": null,
+        "inter_replica_concurrency_ratio": null,
+        "used_seed": "0x1E3F31EAD5D2B594F7D2510165A0062BB680DB171A95C234E03BE2793C766009",
+        "final_metrics": {
+          "size": 2,
+          "width": 2,
+          "height": 4
+        }
+      }
+    },
+    {
+      "run_number": 44,
+      "parameters": {
+        "num_replicas": 8,
+        "num_operations": 1000,
+        "churn_rate": 0.6,
+        "disable_stability": false,
+        "reachability": null
+      },
+      "results": {
+        "final_state": "ClassHierarchyValue { package: PackageValue { model_element_super: ModelElementValue { name: ['T', ' ... } }",
+        "avg_time_per_op_ms": 0.16275,
+        "avg_throughput_ops_per_sec": 6160.253156002763,
+        "total_deliver_ms_per_replica": [
+          147,
+          160,
+          156,
+          174,
+          155,
+          177,
+          150,
+          183
+        ],
+        "total_effect_ms_per_replica": [
+          103,
+          106,
+          108,
+          115,
+          96,
+          112,
+          113,
+          115
+        ],
+        "avg_effect_ms": 108.5,
+        "execution_graph_dot": null,
+        "inter_replica_concurrency_ratio": null,
+        "used_seed": "0x76FCA7540ACB6B1FD4C5D2C82520B109CB91C26D6604D682C88C406880B47158",
+        "final_metrics": {
+          "size": 2,
+          "width": 2,
+          "height": 4
+        }
+      }
+    },
+    {
+      "run_number": 45,
+      "parameters": {
+        "num_replicas": 8,
+        "num_operations": 1000,
+        "churn_rate": 0.6,
+        "disable_stability": false,
+        "reachability": null
+      },
+      "results": {
+        "final_state": "ClassHierarchyValue { package: PackageValue { model_element_super: ModelElementValue { name: ['K', ' ... } }",
+        "avg_time_per_op_ms": 0.1555,
+        "avg_throughput_ops_per_sec": 6431.0176442542,
+        "total_deliver_ms_per_replica": [
+          167,
+          141,
+          153,
+          165,
+          149,
+          161,
+          150,
+          158
+        ],
+        "total_effect_ms_per_replica": [
+          91,
+          90,
+          88,
+          92,
+          82,
+          91,
+          89,
+          90
+        ],
+        "avg_effect_ms": 89.125,
+        "execution_graph_dot": null,
+        "inter_replica_concurrency_ratio": null,
+        "used_seed": "0xEE53B18E6DBF02DAE5D8195E305E2988D97CEC1B51317C65E558E34E91C5760E",
+        "final_metrics": {
+          "size": 2,
+          "width": 2,
+          "height": 4
+        }
+      }
+    },
+    {
+      "run_number": 46,
+      "parameters": {
+        "num_replicas": 8,
+        "num_operations": 1000,
+        "churn_rate": 0.6,
+        "disable_stability": false,
+        "reachability": null
+      },
+      "results": {
+        "final_state": "ClassHierarchyValue { package: PackageValue { model_element_super: ModelElementValue { name: ['K', ' ... } }",
+        "avg_time_per_op_ms": 0.16399999999999998,
+        "avg_throughput_ops_per_sec": 6107.366734135281,
+        "total_deliver_ms_per_replica": [
+          154,
+          158,
+          152,
+          169,
+          160,
+          176,
+          161,
+          182
+        ],
+        "total_effect_ms_per_replica": [
+          95,
+          105,
+          99,
+          106,
+          101,
+          101,
+          103,
+          112
+        ],
+        "avg_effect_ms": 102.75,
+        "execution_graph_dot": null,
+        "inter_replica_concurrency_ratio": null,
+        "used_seed": "0x28203D4370AC117DEC476A84A46601A886C906A3F5F0BA3B5C4DF252E7A08C7D",
+        "final_metrics": {
+          "size": 2,
+          "width": 2,
+          "height": 4
+        }
+      }
+    },
+    {
+      "run_number": 47,
+      "parameters": {
+        "num_replicas": 8,
+        "num_operations": 1000,
+        "churn_rate": 0.6,
+        "disable_stability": false,
+        "reachability": null
+      },
+      "results": {
+        "final_state": "ClassHierarchyValue { package: PackageValue { model_element_super: ModelElementValue { name: ['T', ' ... } }",
+        "avg_time_per_op_ms": 0.151,
+        "avg_throughput_ops_per_sec": 6635.296676413479,
+        "total_deliver_ms_per_replica": [
+          145,
+          137,
+          161,
+          172,
+          148,
+          143,
+          155,
+          147
+        ],
+        "total_effect_ms_per_replica": [
+          101,
+          100,
+          99,
+          107,
+          93,
+          96,
+          103,
+          100
+        ],
+        "avg_effect_ms": 99.875,
+        "execution_graph_dot": null,
+        "inter_replica_concurrency_ratio": null,
+        "used_seed": "0xD0A56FFE45E30038CBEDE6EAB18A0A9627D61B53C66B818A7EA0AB17823CE3F8",
+        "final_metrics": {
+          "size": 2,
+          "width": 2,
+          "height": 4
+        }
+      }
+    },
+    {
+      "run_number": 48,
+      "parameters": {
+        "num_replicas": 8,
+        "num_operations": 1000,
+        "churn_rate": 0.6,
+        "disable_stability": false,
+        "reachability": null
+      },
+      "results": {
+        "final_state": "ClassHierarchyValue { package: PackageValue { model_element_super: ModelElementValue { name: ['W', ' ... } }",
+        "avg_time_per_op_ms": 0.2035,
+        "avg_throughput_ops_per_sec": 4920.464854835266,
+        "total_deliver_ms_per_replica": [
+          204,
+          198,
+          192,
+          197,
+          200,
+          214,
+          232,
+          191
+        ],
+        "total_effect_ms_per_replica": [
+          132,
+          124,
+          130,
+          118,
+          130,
+          133,
+          156,
+          127
+        ],
+        "avg_effect_ms": 131.25,
+        "execution_graph_dot": null,
+        "inter_replica_concurrency_ratio": null,
+        "used_seed": "0x2F2B1E2F4BDEB493340E73D018DD566BC6B485C69D58876734DCEB454EF7F6A7",
+        "final_metrics": {
+          "size": 2,
+          "width": 2,
+          "height": 4
+        }
+      }
+    },
+    {
+      "run_number": 49,
+      "parameters": {
+        "num_replicas": 8,
+        "num_operations": 1000,
+        "churn_rate": 0.6,
+        "disable_stability": false,
+        "reachability": null
+      },
+      "results": {
+        "final_state": "ClassHierarchyValue { package: PackageValue { model_element_super: ModelElementValue { name: ['E', ' ... } }",
+        "avg_time_per_op_ms": 0.143625,
+        "avg_throughput_ops_per_sec": 6942.852136147092,
+        "total_deliver_ms_per_replica": [
+          147,
+          157,
+          137,
+          143,
+          140,
+          137,
+          141,
+          147
+        ],
+        "total_effect_ms_per_replica": [
+          90,
+          94,
+          84,
+          87,
+          94,
+          87,
+          89,
+          86
+        ],
+        "avg_effect_ms": 88.875,
+        "execution_graph_dot": null,
+        "inter_replica_concurrency_ratio": null,
+        "used_seed": "0xCF445400740456A945CEC24B418D7D42CD00F63370E7E33CDC6B5954568F2C0C",
+        "final_metrics": {
+          "size": 2,
+          "width": 2,
+          "height": 4
+        }
+      }
+    },
+    {
+      "run_number": 50,
+      "parameters": {
+        "num_replicas": 8,
+        "num_operations": 1000,
+        "churn_rate": 0.6,
+        "disable_stability": false,
+        "reachability": null
+      },
+      "results": {
+        "final_state": "ClassHierarchyValue { package: PackageValue { model_element_super: ModelElementValue { name: ['s', ' ... } }",
+        "avg_time_per_op_ms": 0.19775000000000004,
+        "avg_throughput_ops_per_sec": 5068.169620535538,
+        "total_deliver_ms_per_replica": [
+          209,
+          184,
+          203,
+          200,
+          217,
+          203,
+          193,
+          173
+        ],
+        "total_effect_ms_per_replica": [
+          134,
+          129,
+          125,
+          144,
+          144,
+          134,
+          128,
+          123
+        ],
+        "avg_effect_ms": 132.625,
+        "execution_graph_dot": null,
+        "inter_replica_concurrency_ratio": null,
+        "used_seed": "0xA4900E75F647BD82D6764846A20E374C9F76A95310A5D075382EA180A8F73FF2",
+        "final_metrics": {
+          "size": 2,
+          "width": 2,
+          "height": 4
+        }
+      }
+    },
+    {
+      "run_number": 51,
+      "parameters": {
+        "num_replicas": 8,
+        "num_operations": 1000,
+        "churn_rate": 0.6,
+        "disable_stability": false,
+        "reachability": null
+      },
+      "results": {
+        "final_state": "ClassHierarchyValue { package: PackageValue { model_element_super: ModelElementValue { name: ['L', ' ... } }",
+        "avg_time_per_op_ms": 0.181,
+        "avg_throughput_ops_per_sec": 5537.392332147478,
+        "total_deliver_ms_per_replica": [
+          207,
+          188,
+          181,
+          159,
+          182,
+          177,
+          176,
+          178
+        ],
+        "total_effect_ms_per_replica": [
+          129,
+          119,
+          114,
+          109,
+          122,
+          119,
+          124,
+          119
+        ],
+        "avg_effect_ms": 119.375,
+        "execution_graph_dot": null,
+        "inter_replica_concurrency_ratio": null,
+        "used_seed": "0x5B75EBDCFB2677788AE4A34B8A5653D4EE7F80488B8B71D05EE2A1B23611D0BF",
+        "final_metrics": {
+          "size": 2,
+          "width": 2,
+          "height": 4
+        }
+      }
+    },
+    {
+      "run_number": 52,
+      "parameters": {
+        "num_replicas": 8,
+        "num_operations": 1000,
+        "churn_rate": 0.6,
+        "disable_stability": false,
+        "reachability": null
+      },
+      "results": {
+        "final_state": "ClassHierarchyValue { package: PackageValue { model_element_super: ModelElementValue { name: ['E', ' ... } }",
+        "avg_time_per_op_ms": 0.167,
+        "avg_throughput_ops_per_sec": 5979.627881485499,
+        "total_deliver_ms_per_replica": [
+          162,
+          163,
+          180,
+          171,
+          169,
+          159,
+          162,
+          170
+        ],
+        "total_effect_ms_per_replica": [
+          96,
+          102,
+          107,
+          103,
+          103,
+          105,
+          98,
+          103
+        ],
+        "avg_effect_ms": 102.125,
+        "execution_graph_dot": null,
+        "inter_replica_concurrency_ratio": null,
+        "used_seed": "0xCE1F556837B8785CFBB7D89DC179B9970EB487B3F1259073DFC81BAE809FB835",
+        "final_metrics": {
+          "size": 2,
+          "width": 2,
+          "height": 4
+        }
+      }
+    },
+    {
+      "run_number": 53,
+      "parameters": {
+        "num_replicas": 8,
+        "num_operations": 1000,
+        "churn_rate": 0.6,
+        "disable_stability": false,
+        "reachability": null
+      },
+      "results": {
+        "final_state": "ClassHierarchyValue { package: PackageValue { model_element_super: ModelElementValue { name: ['Z', ' ... } }",
+        "avg_time_per_op_ms": 0.15724999999999997,
+        "avg_throughput_ops_per_sec": 6361.112663736858,
+        "total_deliver_ms_per_replica": [
+          152,
+          166,
+          173,
+          160,
+          150,
+          157,
+          150,
+          150
+        ],
+        "total_effect_ms_per_replica": [
+          91,
+          92,
+          95,
+          93,
+          96,
+          91,
+          93,
+          92
+        ],
+        "avg_effect_ms": 92.875,
+        "execution_graph_dot": null,
+        "inter_replica_concurrency_ratio": null,
+        "used_seed": "0xCD10C8FB59156E0918C491C8185082748D2F7300F7183D55B492C4117DD95CA8",
+        "final_metrics": {
+          "size": 2,
+          "width": 2,
+          "height": 4
+        }
+      }
+    },
+    {
+      "run_number": 54,
+      "parameters": {
+        "num_replicas": 8,
+        "num_operations": 1000,
+        "churn_rate": 0.6,
+        "disable_stability": false,
+        "reachability": null
+      },
+      "results": {
+        "final_state": "ClassHierarchyValue { package: PackageValue { model_element_super: ModelElementValue { name: ['9', ' ... } }",
+        "avg_time_per_op_ms": 0.20875000000000002,
+        "avg_throughput_ops_per_sec": 4786.626830334213,
+        "total_deliver_ms_per_replica": [
+          214,
+          204,
+          194,
+          219,
+          209,
+          207,
+          214,
+          209
+        ],
+        "total_effect_ms_per_replica": [
+          138,
+          139,
+          133,
+          143,
+          130,
+          135,
+          151,
+          141
+        ],
+        "avg_effect_ms": 138.75,
+        "execution_graph_dot": null,
+        "inter_replica_concurrency_ratio": null,
+        "used_seed": "0x46DB7845F293A37CCE58B6D3B88E19E6F5AE397205DE6A48582CE57ADF9DAD3C",
+        "final_metrics": {
+          "size": 2,
+          "width": 2,
+          "height": 4
+        }
+      }
+    },
+    {
+      "run_number": 55,
+      "parameters": {
+        "num_replicas": 8,
+        "num_operations": 1000,
+        "churn_rate": 0.6,
+        "disable_stability": false,
+        "reachability": null
+      },
+      "results": {
+        "final_state": "ClassHierarchyValue { package: PackageValue { model_element_super: ModelElementValue { name: ['V', ' ... } }",
+        "avg_time_per_op_ms": 0.28800000000000003,
+        "avg_throughput_ops_per_sec": 3471.871971487924,
+        "total_deliver_ms_per_replica": [
+          294,
+          268,
+          294,
+          297,
+          272,
+          287,
+          295,
+          297
+        ],
+        "total_effect_ms_per_replica": [
+          178,
+          184,
+          191,
+          188,
+          181,
+          185,
+          202,
+          182
+        ],
+        "avg_effect_ms": 186.375,
+        "execution_graph_dot": null,
+        "inter_replica_concurrency_ratio": null,
+        "used_seed": "0x767002674BF03C00D9BF7DEE5317B066883D968EA405FF0C6DE24C515999E531",
+        "final_metrics": {
+          "size": 2,
+          "width": 2,
+          "height": 4
+        }
+      }
+    },
+    {
+      "run_number": 56,
+      "parameters": {
+        "num_replicas": 8,
+        "num_operations": 1000,
+        "churn_rate": 0.6,
+        "disable_stability": false,
+        "reachability": null
+      },
+      "results": {
+        "final_state": "ClassHierarchyValue { package: PackageValue { model_element_super: ModelElementValue { name: ['u', ' ... } }",
+        "avg_time_per_op_ms": 0.20475000000000002,
+        "avg_throughput_ops_per_sec": 4890.057349353642,
+        "total_deliver_ms_per_replica": [
+          210,
+          201,
+          179,
+          203,
+          205,
+          225,
+          206,
+          209
+        ],
+        "total_effect_ms_per_replica": [
+          153,
+          147,
+          140,
+          149,
+          143,
+          150,
+          142,
+          153
+        ],
+        "avg_effect_ms": 147.125,
+        "execution_graph_dot": null,
+        "inter_replica_concurrency_ratio": null,
+        "used_seed": "0x78C39E9A69948D18A30B98C85378B40E4B755264315FDDBFB3994F93259F4E8E",
+        "final_metrics": {
+          "size": 2,
+          "width": 2,
+          "height": 4
+        }
+      }
+    },
+    {
+      "run_number": 57,
+      "parameters": {
+        "num_replicas": 8,
+        "num_operations": 1000,
+        "churn_rate": 0.6,
+        "disable_stability": false,
+        "reachability": null
+      },
+      "results": {
+        "final_state": "ClassHierarchyValue { package: PackageValue { model_element_super: ModelElementValue { name: ['1', ' ... } }",
+        "avg_time_per_op_ms": 0.16362500000000002,
+        "avg_throughput_ops_per_sec": 6103.155144859949,
+        "total_deliver_ms_per_replica": [
+          164,
+          180,
+          165,
+          168,
+          157,
+          161,
+          163,
+          151
+        ],
+        "total_effect_ms_per_replica": [
+          111,
+          116,
+          106,
+          111,
+          104,
+          110,
+          103,
+          103
+        ],
+        "avg_effect_ms": 108.0,
+        "execution_graph_dot": null,
+        "inter_replica_concurrency_ratio": null,
+        "used_seed": "0xBF1ED2E7EAC8C95F88E7CB318EE35EF67AC927BF82789E6E53F2CC3A12A0F1C7",
+        "final_metrics": {
+          "size": 2,
+          "width": 2,
+          "height": 4
+        }
+      }
+    },
+    {
+      "run_number": 58,
+      "parameters": {
+        "num_replicas": 8,
+        "num_operations": 1000,
+        "churn_rate": 0.6,
+        "disable_stability": false,
+        "reachability": null
+      },
+      "results": {
+        "final_state": "ClassHierarchyValue { package: PackageValue { model_element_super: ModelElementValue { name: ['7', ' ... } }",
+        "avg_time_per_op_ms": 0.197875,
+        "avg_throughput_ops_per_sec": 5067.701412988075,
+        "total_deliver_ms_per_replica": [
+          194,
+          196,
+          221,
+          207,
+          197,
+          169,
+          206,
+          193
+        ],
+        "total_effect_ms_per_replica": [
+          136,
+          138,
+          140,
+          143,
+          136,
+          130,
+          141,
+          137
+        ],
+        "avg_effect_ms": 137.625,
+        "execution_graph_dot": null,
+        "inter_replica_concurrency_ratio": null,
+        "used_seed": "0x5C55BE4C93B461A090CEAA77D1A9D41AAB573599120B1D0447457BC2D1A5D001",
+        "final_metrics": {
+          "size": 2,
+          "width": 2,
+          "height": 4
+        }
+      }
+    },
+    {
+      "run_number": 59,
+      "parameters": {
+        "num_replicas": 8,
+        "num_operations": 1000,
+        "churn_rate": 0.6,
+        "disable_stability": false,
+        "reachability": null
+      },
+      "results": {
+        "final_state": "ClassHierarchyValue { package: PackageValue { model_element_super: ModelElementValue { name: ['V', ' ... } }",
+        "avg_time_per_op_ms": 0.2385,
+        "avg_throughput_ops_per_sec": 4217.489185112154,
+        "total_deliver_ms_per_replica": [
+          284,
+          232,
+          238,
+          258,
+          237,
+          214,
+          208,
+          237
+        ],
+        "total_effect_ms_per_replica": [
+          183,
+          168,
+          167,
+          186,
+          169,
+          149,
+          140,
+          163
+        ],
+        "avg_effect_ms": 165.625,
+        "execution_graph_dot": null,
+        "inter_replica_concurrency_ratio": null,
+        "used_seed": "0xCE18E8E5A972D37067ADE598C11CA398F81A68696BEAF84FC5038751BEB081B2",
+        "final_metrics": {
+          "size": 2,
+          "width": 2,
+          "height": 4
+        }
+      }
+    },
+    {
+      "run_number": 60,
+      "parameters": {
+        "num_replicas": 8,
+        "num_operations": 1000,
+        "churn_rate": 0.6,
+        "disable_stability": false,
+        "reachability": null
+      },
+      "results": {
+        "final_state": "ClassHierarchyValue { package: PackageValue { model_element_super: ModelElementValue { name: ['k', ' ... } }",
+        "avg_time_per_op_ms": 0.174,
+        "avg_throughput_ops_per_sec": 5746.0635508871965,
+        "total_deliver_ms_per_replica": [
+          171,
+          184,
+          189,
+          175,
+          172,
+          169,
+          157,
+          175
+        ],
+        "total_effect_ms_per_replica": [
+          116,
+          111,
+          110,
+          112,
+          114,
+          113,
+          101,
+          114
+        ],
+        "avg_effect_ms": 111.375,
+        "execution_graph_dot": null,
+        "inter_replica_concurrency_ratio": null,
+        "used_seed": "0xBD3C3018049B39883B4AC03507AC16B8A288B08155F8DF50B1ADF7A11453E818",
+        "final_metrics": {
+          "size": 2,
+          "width": 2,
+          "height": 4
+        }
+      }
+    },
+    {
+      "run_number": 61,
+      "parameters": {
+        "num_replicas": 8,
+        "num_operations": 1000,
+        "churn_rate": 0.6,
+        "disable_stability": false,
+        "reachability": null
+      },
+      "results": {
+        "final_state": "ClassHierarchyValue { package: PackageValue { model_element_super: ModelElementValue { name: ['F', ' ... } }",
+        "avg_time_per_op_ms": 0.1725,
+        "avg_throughput_ops_per_sec": 5812.6323259424225,
+        "total_deliver_ms_per_replica": [
+          159,
+          156,
+          161,
+          170,
+          170,
+          184,
+          193,
+          187
+        ],
+        "total_effect_ms_per_replica": [
+          100,
+          96,
+          105,
+          104,
+          104,
+          105,
+          109,
+          102
+        ],
+        "avg_effect_ms": 103.125,
+        "execution_graph_dot": null,
+        "inter_replica_concurrency_ratio": null,
+        "used_seed": "0x83429A725EDC373B00103E1E1E54A179843C03B8598165262A75BF5E1E8F48B5",
+        "final_metrics": {
+          "size": 2,
+          "width": 2,
+          "height": 4
+        }
+      }
+    },
+    {
+      "run_number": 62,
+      "parameters": {
+        "num_replicas": 8,
+        "num_operations": 1000,
+        "churn_rate": 0.6,
+        "disable_stability": false,
+        "reachability": null
+      },
+      "results": {
+        "final_state": "ClassHierarchyValue { package: PackageValue { model_element_super: ModelElementValue { name: ['v', ' ... } }",
+        "avg_time_per_op_ms": 0.14025,
+        "avg_throughput_ops_per_sec": 7114.204566129573,
+        "total_deliver_ms_per_replica": [
+          133,
+          140,
+          145,
+          142,
+          141,
+          138,
+          150,
+          133
+        ],
+        "total_effect_ms_per_replica": [
+          95,
+          95,
+          92,
+          87,
+          95,
+          89,
+          92,
+          87
+        ],
+        "avg_effect_ms": 91.5,
+        "execution_graph_dot": null,
+        "inter_replica_concurrency_ratio": null,
+        "used_seed": "0xAB461F4F93AF1C1000E12B57353D590450FDD7EF48BDDDBFD1666C56243394C3",
+        "final_metrics": {
+          "size": 2,
+          "width": 2,
+          "height": 4
+        }
+      }
+    },
+    {
+      "run_number": 63,
+      "parameters": {
+        "num_replicas": 8,
+        "num_operations": 1000,
+        "churn_rate": 0.6,
+        "disable_stability": false,
+        "reachability": null
+      },
+      "results": {
+        "final_state": "ClassHierarchyValue { package: PackageValue { model_element_super: ModelElementValue { name: ['v', ' ... } }",
+        "avg_time_per_op_ms": 0.139,
+        "avg_throughput_ops_per_sec": 7181.941151321198,
+        "total_deliver_ms_per_replica": [
+          142,
+          149,
+          145,
+          131,
+          136,
+          141,
+          125,
+          143
+        ],
+        "total_effect_ms_per_replica": [
+          90,
+          90,
+          95,
+          87,
+          89,
+          85,
+          80,
+          92
+        ],
+        "avg_effect_ms": 88.5,
+        "execution_graph_dot": null,
+        "inter_replica_concurrency_ratio": null,
+        "used_seed": "0x32254F1BB3CA12B68C5E93DC3BD4488B734117ED8500CECE5AE5DC10CAD76DFA",
+        "final_metrics": {
+          "size": 2,
+          "width": 2,
+          "height": 4
+        }
+      }
+    },
+    {
+      "run_number": 64,
+      "parameters": {
+        "num_replicas": 8,
+        "num_operations": 1000,
+        "churn_rate": 0.6,
+        "disable_stability": false,
+        "reachability": null
+      },
+      "results": {
+        "final_state": "ClassHierarchyValue { package: PackageValue { model_element_super: ModelElementValue { name: ['h', ' ... } }",
+        "avg_time_per_op_ms": 0.19125,
+        "avg_throughput_ops_per_sec": 5222.632123108328,
+        "total_deliver_ms_per_replica": [
+          201,
+          181,
+          187,
+          198,
+          201,
+          198,
+          192,
+          172
+        ],
+        "total_effect_ms_per_replica": [
+          135,
+          118,
+          128,
+          132,
+          134,
+          126,
+          124,
+          122
+        ],
+        "avg_effect_ms": 127.375,
+        "execution_graph_dot": null,
+        "inter_replica_concurrency_ratio": null,
+        "used_seed": "0x189FF0377B0A3034449D11BC43068078C9F7F0C584E4EA7C7C60406B1A13954D",
+        "final_metrics": {
+          "size": 2,
+          "width": 2,
+          "height": 4
+        }
+      }
+    },
+    {
+      "run_number": 65,
+      "parameters": {
+        "num_replicas": 8,
+        "num_operations": 1000,
+        "churn_rate": 0.6,
+        "disable_stability": false,
+        "reachability": null
+      },
+      "results": {
+        "final_state": "ClassHierarchyValue { package: PackageValue { model_element_super: ModelElementValue { name: ['b', ' ... } }",
+        "avg_time_per_op_ms": 0.18637499999999999,
+        "avg_throughput_ops_per_sec": 5374.367462036965,
+        "total_deliver_ms_per_replica": [
+          212,
+          181,
+          190,
+          184,
+          168,
+          180,
+          182,
+          194
+        ],
+        "total_effect_ms_per_replica": [
+          136,
+          130,
+          126,
+          128,
+          130,
+          125,
+          132,
+          127
+        ],
+        "avg_effect_ms": 129.25,
+        "execution_graph_dot": null,
+        "inter_replica_concurrency_ratio": null,
+        "used_seed": "0xF4382C29655436FABF7E038548A6A0021B3E5FCC3C43B077FA73011C05D1205C",
+        "final_metrics": {
+          "size": 2,
+          "width": 2,
+          "height": 4
+        }
+      }
+    },
+    {
+      "run_number": 66,
+      "parameters": {
+        "num_replicas": 8,
+        "num_operations": 1000,
+        "churn_rate": 0.6,
+        "disable_stability": false,
+        "reachability": null
+      },
+      "results": {
+        "final_state": "ClassHierarchyValue { package: PackageValue { model_element_super: ModelElementValue { name: ['0', ' ... } }",
+        "avg_time_per_op_ms": 0.196625,
+        "avg_throughput_ops_per_sec": 5080.717724144144,
+        "total_deliver_ms_per_replica": [
+          197,
+          190,
+          199,
+          181,
+          204,
+          198,
+          203,
+          201
+        ],
+        "total_effect_ms_per_replica": [
+          137,
+          131,
+          134,
+          124,
+          138,
+          135,
+          131,
+          135
+        ],
+        "avg_effect_ms": 133.125,
+        "execution_graph_dot": null,
+        "inter_replica_concurrency_ratio": null,
+        "used_seed": "0xB061A69E59654D33D13B319D32EE73DD8CD9BCE943C9C4F33201DE324C8506E1",
+        "final_metrics": {
+          "size": 2,
+          "width": 2,
+          "height": 4
+        }
+      }
+    },
+    {
+      "run_number": 67,
+      "parameters": {
+        "num_replicas": 8,
+        "num_operations": 1000,
+        "churn_rate": 0.6,
+        "disable_stability": false,
+        "reachability": null
+      },
+      "results": {
+        "final_state": "ClassHierarchyValue { package: PackageValue { model_element_super: ModelElementValue { name: ['m', ' ... } }",
+        "avg_time_per_op_ms": 0.178125,
+        "avg_throughput_ops_per_sec": 5605.2289624278765,
+        "total_deliver_ms_per_replica": [
+          176,
+          171,
+          167,
+          178,
+          183,
+          178,
+          186,
+          186
+        ],
+        "total_effect_ms_per_replica": [
+          115,
+          114,
+          119,
+          114,
+          129,
+          112,
+          121,
+          123
+        ],
+        "avg_effect_ms": 118.375,
+        "execution_graph_dot": null,
+        "inter_replica_concurrency_ratio": null,
+        "used_seed": "0xAD65EDEC175A4BF2AC8E1CB38629F3D385760019D8537C8A1B97554FD60DC801",
+        "final_metrics": {
+          "size": 2,
+          "width": 2,
+          "height": 4
+        }
+      }
+    },
+    {
+      "run_number": 68,
+      "parameters": {
+        "num_replicas": 8,
+        "num_operations": 1000,
+        "churn_rate": 0.6,
+        "disable_stability": false,
+        "reachability": null
+      },
+      "results": {
+        "final_state": "ClassHierarchyValue { package: PackageValue { model_element_super: ModelElementValue { name: ['V', ' ... } }",
+        "avg_time_per_op_ms": 0.22937500000000002,
+        "avg_throughput_ops_per_sec": 4403.599873769728,
+        "total_deliver_ms_per_replica": [
+          254,
+          223,
+          222,
+          178,
+          244,
+          220,
+          259,
+          235
+        ],
+        "total_effect_ms_per_replica": [
+          180,
+          159,
+          158,
+          123,
+          177,
+          152,
+          165,
+          161
+        ],
+        "avg_effect_ms": 159.375,
+        "execution_graph_dot": null,
+        "inter_replica_concurrency_ratio": null,
+        "used_seed": "0x84794E4EEABC810DFCAB2ECEBF7CF871914E0087AFA6395A93BC5DADFB009454",
+        "final_metrics": {
+          "size": 2,
+          "width": 2,
+          "height": 4
+        }
+      }
+    },
+    {
+      "run_number": 69,
+      "parameters": {
+        "num_replicas": 8,
+        "num_operations": 1000,
+        "churn_rate": 0.6,
+        "disable_stability": false,
+        "reachability": null
+      },
+      "results": {
+        "final_state": "ClassHierarchyValue { package: PackageValue { model_element_super: ModelElementValue { name: ['8', ' ... } }",
+        "avg_time_per_op_ms": 0.183625,
+        "avg_throughput_ops_per_sec": 5432.323063003977,
+        "total_deliver_ms_per_replica": [
+          179,
+          185,
+          176,
+          192,
+          185,
+          185,
+          183,
+          184
+        ],
+        "total_effect_ms_per_replica": [
+          123,
+          124,
+          127,
+          129,
+          131,
+          124,
+          123,
+          119
+        ],
+        "avg_effect_ms": 125.0,
+        "execution_graph_dot": null,
+        "inter_replica_concurrency_ratio": null,
+        "used_seed": "0x8837A2E6DE18AD903B06E3C14911E45C70803B9163321679B6C63E5DD96593A8",
+        "final_metrics": {
+          "size": 2,
+          "width": 2,
+          "height": 4
+        }
+      }
+    },
+    {
+      "run_number": 70,
+      "parameters": {
+        "num_replicas": 8,
+        "num_operations": 1000,
+        "churn_rate": 0.6,
+        "disable_stability": false,
+        "reachability": null
+      },
+      "results": {
+        "final_state": "ClassHierarchyValue { package: PackageValue { model_element_super: ModelElementValue { name: ['q', ' ... } }",
+        "avg_time_per_op_ms": 0.198875,
+        "avg_throughput_ops_per_sec": 5037.839489209322,
+        "total_deliver_ms_per_replica": [
+          197,
+          214,
+          224,
+          187,
+          198,
+          192,
+          195,
+          184
+        ],
+        "total_effect_ms_per_replica": [
+          123,
+          127,
+          134,
+          130,
+          131,
+          123,
+          120,
+          117
+        ],
+        "avg_effect_ms": 125.625,
+        "execution_graph_dot": null,
+        "inter_replica_concurrency_ratio": null,
+        "used_seed": "0x7AB97BE119073E8280B4E144E6750A76FBC89CBECAA52EDBD2E8CC9CB176FA34",
+        "final_metrics": {
+          "size": 2,
+          "width": 2,
+          "height": 4
+        }
+      }
+    },
+    {
+      "run_number": 71,
+      "parameters": {
+        "num_replicas": 8,
+        "num_operations": 1000,
+        "churn_rate": 0.6,
+        "disable_stability": false,
+        "reachability": null
+      },
+      "results": {
+        "final_state": "ClassHierarchyValue { package: PackageValue { model_element_super: ModelElementValue { name: ['x', ' ... } }",
+        "avg_time_per_op_ms": 0.161625,
+        "avg_throughput_ops_per_sec": 6186.658201702239,
+        "total_deliver_ms_per_replica": [
+          167,
+          164,
+          160,
+          153,
+          172,
+          144,
+          166,
+          167
+        ],
+        "total_effect_ms_per_replica": [
+          101,
+          101,
+          106,
+          95,
+          106,
+          99,
+          105,
+          103
+        ],
+        "avg_effect_ms": 102.0,
+        "execution_graph_dot": null,
+        "inter_replica_concurrency_ratio": null,
+        "used_seed": "0x491066FD6048A186F86758985A4D250332B450D190E911284F1EB68E224315D6",
+        "final_metrics": {
+          "size": 2,
+          "width": 2,
+          "height": 4
+        }
+      }
+    },
+    {
+      "run_number": 72,
+      "parameters": {
+        "num_replicas": 8,
+        "num_operations": 1000,
+        "churn_rate": 0.6,
+        "disable_stability": false,
+        "reachability": null
+      },
+      "results": {
+        "final_state": "ClassHierarchyValue { package: PackageValue { model_element_super: ModelElementValue { name: ['4', ' ... } }",
+        "avg_time_per_op_ms": 0.17425,
+        "avg_throughput_ops_per_sec": 5729.026952793376,
+        "total_deliver_ms_per_replica": [
+          178,
+          170,
+          180,
+          170,
+          167,
+          170,
+          184,
+          175
+        ],
+        "total_effect_ms_per_replica": [
+          118,
+          112,
+          116,
+          117,
+          117,
+          113,
+          116,
+          112
+        ],
+        "avg_effect_ms": 115.125,
+        "execution_graph_dot": null,
+        "inter_replica_concurrency_ratio": null,
+        "used_seed": "0x0FB37B13ACE4B47402F88DC09E12B3675D4BC27CBB3BA03605B96A3A879C5BF2",
+        "final_metrics": {
+          "size": 2,
+          "width": 2,
+          "height": 4
+        }
+      }
+    },
+    {
+      "run_number": 73,
+      "parameters": {
+        "num_replicas": 8,
+        "num_operations": 1000,
+        "churn_rate": 0.6,
+        "disable_stability": false,
+        "reachability": null
+      },
+      "results": {
+        "final_state": "ClassHierarchyValue { package: PackageValue { model_element_super: ModelElementValue { name: ['R', ' ... } }",
+        "avg_time_per_op_ms": 0.17400000000000002,
+        "avg_throughput_ops_per_sec": 5760.419684009941,
+        "total_deliver_ms_per_replica": [
+          158,
+          159,
+          162,
+          177,
+          176,
+          178,
+          189,
+          193
+        ],
+        "total_effect_ms_per_replica": [
+          108,
+          103,
+          109,
+          120,
+          117,
+          115,
+          122,
+          123
+        ],
+        "avg_effect_ms": 114.625,
+        "execution_graph_dot": null,
+        "inter_replica_concurrency_ratio": null,
+        "used_seed": "0x5A4DEEE17F9C14A903E64E0EC35DF50BF9C9AC5DF9E0B326FF92BA9B627CE110",
+        "final_metrics": {
+          "size": 2,
+          "width": 2,
+          "height": 4
+        }
+      }
+    },
+    {
+      "run_number": 74,
+      "parameters": {
+        "num_replicas": 8,
+        "num_operations": 1000,
+        "churn_rate": 0.6,
+        "disable_stability": false,
+        "reachability": null
+      },
+      "results": {
+        "final_state": "ClassHierarchyValue { package: PackageValue { model_element_super: ModelElementValue { name: ['w', ' ... } }",
+        "avg_time_per_op_ms": 0.184,
+        "avg_throughput_ops_per_sec": 5432.897496422508,
+        "total_deliver_ms_per_replica": [
+          186,
+          193,
+          178,
+          194,
+          167,
+          180,
+          177,
+          197
+        ],
+        "total_effect_ms_per_replica": [
+          133,
+          121,
+          122,
+          132,
+          117,
+          129,
+          132,
+          132
+        ],
+        "avg_effect_ms": 127.25,
+        "execution_graph_dot": null,
+        "inter_replica_concurrency_ratio": null,
+        "used_seed": "0x98BCE11CE05FBA594F0FF10F5093BD08C3C8CA06B6B625A94EFC0DCD35E03ABA",
+        "final_metrics": {
+          "size": 2,
+          "width": 2,
+          "height": 4
+        }
+      }
+    },
+    {
+      "run_number": 75,
+      "parameters": {
+        "num_replicas": 8,
+        "num_operations": 1000,
+        "churn_rate": 0.6,
+        "disable_stability": false,
+        "reachability": null
+      },
+      "results": {
+        "final_state": "ClassHierarchyValue { package: PackageValue { model_element_super: ModelElementValue { name: ['h', ' ... } }",
+        "avg_time_per_op_ms": 0.147875,
+        "avg_throughput_ops_per_sec": 6755.605693368465,
+        "total_deliver_ms_per_replica": [
+          139,
+          146,
+          140,
+          153,
+          142,
+          158,
+          150,
+          155
+        ],
+        "total_effect_ms_per_replica": [
+          95,
+          100,
+          98,
+          104,
+          96,
+          105,
+          105,
+          102
+        ],
+        "avg_effect_ms": 100.625,
+        "execution_graph_dot": null,
+        "inter_replica_concurrency_ratio": null,
+        "used_seed": "0x7295C8EFC7F7BE6C84DD27BEE5A5F3FF707C07587903F0E6C46266A098BD6E88",
+        "final_metrics": {
+          "size": 2,
+          "width": 2,
+          "height": 4
+        }
+      }
+    },
+    {
+      "run_number": 76,
+      "parameters": {
+        "num_replicas": 8,
+        "num_operations": 1000,
+        "churn_rate": 0.6,
+        "disable_stability": false,
+        "reachability": null
+      },
+      "results": {
+        "final_state": "ClassHierarchyValue { package: PackageValue { model_element_super: ModelElementValue { name: ['X', ' ... } }",
+        "avg_time_per_op_ms": 0.22849999999999998,
+        "avg_throughput_ops_per_sec": 4407.951907332739,
+        "total_deliver_ms_per_replica": [
+          228,
+          248,
+          255,
+          183,
+          218,
+          216,
+          244,
+          236
+        ],
+        "total_effect_ms_per_replica": [
+          141,
+          153,
+          149,
+          122,
+          155,
+          145,
+          152,
+          147
+        ],
+        "avg_effect_ms": 145.5,
+        "execution_graph_dot": null,
+        "inter_replica_concurrency_ratio": null,
+        "used_seed": "0x51AF0B2A6614C4D30F6375F0440ED82C171E68DFD1F38152A29B56673038DBD6",
+        "final_metrics": {
+          "size": 2,
+          "width": 2,
+          "height": 4
+        }
+      }
+    },
+    {
+      "run_number": 77,
+      "parameters": {
+        "num_replicas": 8,
+        "num_operations": 1000,
+        "churn_rate": 0.6,
+        "disable_stability": false,
+        "reachability": null
+      },
+      "results": {
+        "final_state": "ClassHierarchyValue { package: PackageValue { model_element_super: ModelElementValue { name: ['h', ' ... } }",
+        "avg_time_per_op_ms": 0.149625,
+        "avg_throughput_ops_per_sec": 6673.5157685392805,
+        "total_deliver_ms_per_replica": [
+          158,
+          144,
+          149,
+          153,
+          140,
+          160,
+          146,
+          147
+        ],
+        "total_effect_ms_per_replica": [
+          101,
+          94,
+          99,
+          101,
+          97,
+          103,
+          94,
+          102
+        ],
+        "avg_effect_ms": 98.875,
+        "execution_graph_dot": null,
+        "inter_replica_concurrency_ratio": null,
+        "used_seed": "0x00911AAFA9FC33DFFEE9A204A44E14DBE82F454447B334A8DD2053C559ACE535",
+        "final_metrics": {
+          "size": 2,
+          "width": 2,
+          "height": 4
+        }
+      }
+    },
+    {
+      "run_number": 78,
+      "parameters": {
+        "num_replicas": 8,
+        "num_operations": 1000,
+        "churn_rate": 0.6,
+        "disable_stability": false,
+        "reachability": null
+      },
+      "results": {
+        "final_state": "ClassHierarchyValue { package: PackageValue { model_element_super: ModelElementValue { name: ['Q', ' ... } }",
+        "avg_time_per_op_ms": 0.142625,
+        "avg_throughput_ops_per_sec": 7016.618449150474,
+        "total_deliver_ms_per_replica": [
+          148,
+          130,
+          145,
+          136,
+          135,
+          140,
+          147,
+          160
+        ],
+        "total_effect_ms_per_replica": [
+          90,
+          89,
+          86,
+          89,
+          84,
+          86,
+          96,
+          93
+        ],
+        "avg_effect_ms": 89.125,
+        "execution_graph_dot": null,
+        "inter_replica_concurrency_ratio": null,
+        "used_seed": "0xA16B897BAD7C4D02773BBF0976796771CA06162CB14D2D1FB66CBFC780C055F1",
+        "final_metrics": {
+          "size": 2,
+          "width": 2,
+          "height": 4
+        }
+      }
+    },
+    {
+      "run_number": 79,
+      "parameters": {
+        "num_replicas": 8,
+        "num_operations": 1000,
+        "churn_rate": 0.6,
+        "disable_stability": false,
+        "reachability": null
+      },
+      "results": {
+        "final_state": "ClassHierarchyValue { package: PackageValue { model_element_super: ModelElementValue { name: ['X', ' ... } }",
+        "avg_time_per_op_ms": 0.17625,
+        "avg_throughput_ops_per_sec": 5693.871163081959,
+        "total_deliver_ms_per_replica": [
+          149,
+          183,
+          178,
+          171,
+          170,
+          194,
+          184,
+          181
+        ],
+        "total_effect_ms_per_replica": [
+          110,
+          115,
+          120,
+          115,
+          115,
+          119,
+          123,
+          114
+        ],
+        "avg_effect_ms": 116.375,
+        "execution_graph_dot": null,
+        "inter_replica_concurrency_ratio": null,
+        "used_seed": "0x88DB38E3FE8121DC845647C9E39BDDC0AD3E55E177F3E21AB7B766A01F3A040E",
+        "final_metrics": {
+          "size": 2,
+          "width": 2,
+          "height": 4
+        }
+      }
+    },
+    {
+      "run_number": 80,
+      "parameters": {
+        "num_replicas": 8,
+        "num_operations": 1000,
+        "churn_rate": 0.6,
+        "disable_stability": false,
+        "reachability": null
+      },
+      "results": {
+        "final_state": "ClassHierarchyValue { package: PackageValue { model_element_super: ModelElementValue { name: ['E', ' ... } }",
+        "avg_time_per_op_ms": 0.168875,
+        "avg_throughput_ops_per_sec": 5923.065563381962,
+        "total_deliver_ms_per_replica": [
+          183,
+          157,
+          161,
+          165,
+          180,
+          159,
+          179,
+          167
+        ],
+        "total_effect_ms_per_replica": [
+          134,
+          112,
+          109,
+          116,
+          116,
+          118,
+          123,
+          118
+        ],
+        "avg_effect_ms": 118.25,
+        "execution_graph_dot": null,
+        "inter_replica_concurrency_ratio": null,
+        "used_seed": "0xF43987A17F0208F3882050D4C5790DA8E3FDF1DEFEC1127CDD4B4D890F230AFA",
+        "final_metrics": {
+          "size": 2,
+          "width": 2,
+          "height": 4
+        }
+      }
+    },
+    {
+      "run_number": 81,
+      "parameters": {
+        "num_replicas": 8,
+        "num_operations": 1000,
+        "churn_rate": 0.6,
+        "disable_stability": false,
+        "reachability": null
+      },
+      "results": {
+        "final_state": "ClassHierarchyValue { package: PackageValue { model_element_super: ModelElementValue { name: ['W', ' ... } }",
+        "avg_time_per_op_ms": 0.26675000000000004,
+        "avg_throughput_ops_per_sec": 3749.070757186283,
+        "total_deliver_ms_per_replica": [
+          291,
+          265,
+          263,
+          263,
+          269,
+          278,
+          252,
+          253
+        ],
+        "total_effect_ms_per_replica": [
+          198,
+          179,
+          188,
+          189,
+          183,
+          196,
+          182,
+          179
+        ],
+        "avg_effect_ms": 186.75,
+        "execution_graph_dot": null,
+        "inter_replica_concurrency_ratio": null,
+        "used_seed": "0x2B8D0E5E29D55008C63C344FAB3020206216D2A606BFFEE06414E6DA0BEB2D03",
+        "final_metrics": {
+          "size": 2,
+          "width": 2,
+          "height": 4
+        }
+      }
+    },
+    {
+      "run_number": 82,
+      "parameters": {
+        "num_replicas": 8,
+        "num_operations": 1000,
+        "churn_rate": 0.6,
+        "disable_stability": false,
+        "reachability": null
+      },
+      "results": {
+        "final_state": "ClassHierarchyValue { package: PackageValue { model_element_super: ModelElementValue { name: ['S', ' ... } }",
+        "avg_time_per_op_ms": 0.22887500000000002,
+        "avg_throughput_ops_per_sec": 4371.629120926797,
+        "total_deliver_ms_per_replica": [
+          210,
+          225,
+          221,
+          236,
+          231,
+          218,
+          256,
+          234
+        ],
+        "total_effect_ms_per_replica": [
+          142,
+          147,
+          141,
+          156,
+          155,
+          138,
+          161,
+          153
+        ],
+        "avg_effect_ms": 149.125,
+        "execution_graph_dot": null,
+        "inter_replica_concurrency_ratio": null,
+        "used_seed": "0xEF8B5996A62C7294C68B0939E7D28936BAD7E51F53BA82BAA71B74116BA71BD2",
+        "final_metrics": {
+          "size": 2,
+          "width": 2,
+          "height": 4
+        }
+      }
+    },
+    {
+      "run_number": 83,
+      "parameters": {
+        "num_replicas": 8,
+        "num_operations": 1000,
+        "churn_rate": 0.6,
+        "disable_stability": false,
+        "reachability": null
+      },
+      "results": {
+        "final_state": "ClassHierarchyValue { package: PackageValue { model_element_super: ModelElementValue { name: ['K', ' ... } }",
+        "avg_time_per_op_ms": 0.22200000000000003,
+        "avg_throughput_ops_per_sec": 4504.011942099098,
+        "total_deliver_ms_per_replica": [
+          220,
+          242,
+          215,
+          213,
+          237,
+          209,
+          227,
+          213
+        ],
+        "total_effect_ms_per_replica": [
+          151,
+          167,
+          161,
+          151,
+          147,
+          151,
+          155,
+          154
+        ],
+        "avg_effect_ms": 154.625,
+        "execution_graph_dot": null,
+        "inter_replica_concurrency_ratio": null,
+        "used_seed": "0x42F8013516B7307DEA958DA3189B8166445606FB69D91A5DB3BE321479F5B103",
+        "final_metrics": {
+          "size": 2,
+          "width": 2,
+          "height": 4
+        }
+      }
+    },
+    {
+      "run_number": 84,
+      "parameters": {
+        "num_replicas": 8,
+        "num_operations": 1000,
+        "churn_rate": 0.6,
+        "disable_stability": false,
+        "reachability": null
+      },
+      "results": {
+        "final_state": "ClassHierarchyValue { package: PackageValue { model_element_super: ModelElementValue { name: ['1', ' ... } }",
+        "avg_time_per_op_ms": 0.144375,
+        "avg_throughput_ops_per_sec": 6907.084839683245,
+        "total_deliver_ms_per_replica": [
+          135,
+          150,
+          143,
+          138,
+          152,
+          147,
+          141,
+          149
+        ],
+        "total_effect_ms_per_replica": [
+          93,
+          118,
+          95,
+          88,
+          98,
+          98,
+          92,
+          92
+        ],
+        "avg_effect_ms": 96.75,
+        "execution_graph_dot": null,
+        "inter_replica_concurrency_ratio": null,
+        "used_seed": "0xB96E521725A8027D4C8BD0BFA7C42C30DE5594EAE38C99CA49A05E94C4AE28C0",
+        "final_metrics": {
+          "size": 2,
+          "width": 2,
+          "height": 4
+        }
+      }
+    },
+    {
+      "run_number": 85,
+      "parameters": {
+        "num_replicas": 8,
+        "num_operations": 1000,
+        "churn_rate": 0.6,
+        "disable_stability": false,
+        "reachability": null
+      },
+      "results": {
+        "final_state": "ClassHierarchyValue { package: PackageValue { model_element_super: ModelElementValue { name: ['4', ' ... } }",
+        "avg_time_per_op_ms": 0.17562499999999998,
+        "avg_throughput_ops_per_sec": 5702.782703003463,
+        "total_deliver_ms_per_replica": [
+          160,
+          189,
+          172,
+          154,
+          180,
+          178,
+          194,
+          178
+        ],
+        "total_effect_ms_per_replica": [
+          120,
+          123,
+          121,
+          110,
+          126,
+          123,
+          132,
+          128
+        ],
+        "avg_effect_ms": 122.875,
+        "execution_graph_dot": null,
+        "inter_replica_concurrency_ratio": null,
+        "used_seed": "0xEA9D87BD46E348693483D874800C015892E1DE2C507E067B3B3858F27DFDE709",
+        "final_metrics": {
+          "size": 2,
+          "width": 2,
+          "height": 4
+        }
+      }
+    },
+    {
+      "run_number": 86,
+      "parameters": {
+        "num_replicas": 8,
+        "num_operations": 1000,
+        "churn_rate": 0.6,
+        "disable_stability": false,
+        "reachability": null
+      },
+      "results": {
+        "final_state": "ClassHierarchyValue { package: PackageValue { model_element_super: ModelElementValue { name: ['O', ' ... } }",
+        "avg_time_per_op_ms": 0.164,
+        "avg_throughput_ops_per_sec": 6100.8394778803995,
+        "total_deliver_ms_per_replica": [
+          140,
+          159,
+          170,
+          162,
+          178,
+          170,
+          172,
+          161
+        ],
+        "total_effect_ms_per_replica": [
+          100,
+          111,
+          119,
+          114,
+          116,
+          114,
+          113,
+          119
+        ],
+        "avg_effect_ms": 113.25,
+        "execution_graph_dot": null,
+        "inter_replica_concurrency_ratio": null,
+        "used_seed": "0x89E256C37D2F08F5C3EB5954F2CD8579F8BE667D0B8976CEF0AF43711C567F4B",
+        "final_metrics": {
+          "size": 2,
+          "width": 2,
+          "height": 4
+        }
+      }
+    },
+    {
+      "run_number": 87,
+      "parameters": {
+        "num_replicas": 8,
+        "num_operations": 1000,
+        "churn_rate": 0.6,
+        "disable_stability": false,
+        "reachability": null
+      },
+      "results": {
+        "final_state": "ClassHierarchyValue { package: PackageValue { model_element_super: ModelElementValue { name: ['v', ' ... } }",
+        "avg_time_per_op_ms": 0.14687499999999998,
+        "avg_throughput_ops_per_sec": 6809.613738284356,
+        "total_deliver_ms_per_replica": [
+          157,
+          145,
+          137,
+          134,
+          140,
+          149,
+          165,
+          148
+        ],
+        "total_effect_ms_per_replica": [
+          97,
+          102,
+          92,
+          99,
+          92,
+          93,
+          102,
+          93
+        ],
+        "avg_effect_ms": 96.25,
+        "execution_graph_dot": null,
+        "inter_replica_concurrency_ratio": null,
+        "used_seed": "0x84B1A4B625C6E456D4293C9FFA2B5AABCC6C55C4909F83CD847DF7EDA26A1E61",
+        "final_metrics": {
+          "size": 2,
+          "width": 2,
+          "height": 4
+        }
+      }
+    },
+    {
+      "run_number": 88,
+      "parameters": {
+        "num_replicas": 8,
+        "num_operations": 1000,
+        "churn_rate": 0.6,
+        "disable_stability": false,
+        "reachability": null
+      },
+      "results": {
+        "final_state": "ClassHierarchyValue { package: PackageValue { model_element_super: ModelElementValue { name: ['4', ' ... } }",
+        "avg_time_per_op_ms": 0.229375,
+        "avg_throughput_ops_per_sec": 4360.857986223316,
+        "total_deliver_ms_per_replica": [
+          227,
+          222,
+          217,
+          215,
+          241,
+          250,
+          229,
+          234
+        ],
+        "total_effect_ms_per_replica": [
+          155,
+          161,
+          155,
+          155,
+          165,
+          170,
+          160,
+          163
+        ],
+        "avg_effect_ms": 160.5,
+        "execution_graph_dot": null,
+        "inter_replica_concurrency_ratio": null,
+        "used_seed": "0x46A975B6CD9355A1E4343E93627A0488271F88E6FB3214B106937BB96B6A12EF",
+        "final_metrics": {
+          "size": 2,
+          "width": 2,
+          "height": 4
+        }
+      }
+    },
+    {
+      "run_number": 89,
+      "parameters": {
+        "num_replicas": 8,
+        "num_operations": 1000,
+        "churn_rate": 0.6,
+        "disable_stability": false,
+        "reachability": null
+      },
+      "results": {
+        "final_state": "ClassHierarchyValue { package: PackageValue { model_element_super: ModelElementValue { name: ['0', ' ... } }",
+        "avg_time_per_op_ms": 0.14975000000000002,
+        "avg_throughput_ops_per_sec": 6683.983103380869,
+        "total_deliver_ms_per_replica": [
+          144,
+          144,
+          157,
+          163,
+          161,
+          145,
+          145,
+          139
+        ],
+        "total_effect_ms_per_replica": [
+          99,
+          95,
+          99,
+          97,
+          94,
+          92,
+          101,
+          92
+        ],
+        "avg_effect_ms": 96.125,
+        "execution_graph_dot": null,
+        "inter_replica_concurrency_ratio": null,
+        "used_seed": "0xD3B705CADC2FED5CA825DFE293DB4520AAC2D383897F6317B5BC041E5C55EF37",
+        "final_metrics": {
+          "size": 2,
+          "width": 2,
+          "height": 4
+        }
+      }
+    },
+    {
+      "run_number": 90,
+      "parameters": {
+        "num_replicas": 8,
+        "num_operations": 1000,
+        "churn_rate": 0.6,
+        "disable_stability": false,
+        "reachability": null
+      },
+      "results": {
+        "final_state": "ClassHierarchyValue { package: PackageValue { model_element_super: ModelElementValue { name: ['z', ' ... } }",
+        "avg_time_per_op_ms": 0.179625,
+        "avg_throughput_ops_per_sec": 5587.105459611133,
+        "total_deliver_ms_per_replica": [
+          216,
+          169,
+          168,
+          165,
+          169,
+          181,
+          184,
+          185
+        ],
+        "total_effect_ms_per_replica": [
+          145,
+          106,
+          107,
+          108,
+          105,
+          112,
+          111,
+          113
+        ],
+        "avg_effect_ms": 113.375,
+        "execution_graph_dot": null,
+        "inter_replica_concurrency_ratio": null,
+        "used_seed": "0x9C8241DAAD0A6EAEBDC8932EAEE1A06182D92FE1987EE1AF816DB911CED6B67E",
+        "final_metrics": {
+          "size": 2,
+          "width": 2,
+          "height": 4
+        }
+      }
+    },
+    {
+      "run_number": 91,
+      "parameters": {
+        "num_replicas": 8,
+        "num_operations": 1000,
+        "churn_rate": 0.6,
+        "disable_stability": false,
+        "reachability": null
+      },
+      "results": {
+        "final_state": "ClassHierarchyValue { package: PackageValue { model_element_super: ModelElementValue { name: ['a', ' ... } }",
+        "avg_time_per_op_ms": 0.16762499999999997,
+        "avg_throughput_ops_per_sec": 5968.167912806382,
+        "total_deliver_ms_per_replica": [
+          167,
+          176,
+          174,
+          180,
+          154,
+          152,
+          174,
+          164
+        ],
+        "total_effect_ms_per_replica": [
+          103,
+          97,
+          108,
+          108,
+          100,
+          89,
+          105,
+          103
+        ],
+        "avg_effect_ms": 101.625,
+        "execution_graph_dot": null,
+        "inter_replica_concurrency_ratio": null,
+        "used_seed": "0x661613A051428D5CF3BAE5E44A9A5F5C1A2A6806450098A8FB3E67C7754621AB",
+        "final_metrics": {
+          "size": 2,
+          "width": 2,
+          "height": 4
+        }
+      }
+    },
+    {
+      "run_number": 92,
+      "parameters": {
+        "num_replicas": 8,
+        "num_operations": 1000,
+        "churn_rate": 0.6,
+        "disable_stability": false,
+        "reachability": null
+      },
+      "results": {
+        "final_state": "ClassHierarchyValue { package: PackageValue { model_element_super: ModelElementValue { name: ['v', ' ... } }",
+        "avg_time_per_op_ms": 0.1605,
+        "avg_throughput_ops_per_sec": 6229.447329662744,
+        "total_deliver_ms_per_replica": [
+          164,
+          155,
+          171,
+          159,
+          143,
+          152,
+          166,
+          174
+        ],
+        "total_effect_ms_per_replica": [
+          114,
+          112,
+          121,
+          116,
+          105,
+          106,
+          115,
+          113
+        ],
+        "avg_effect_ms": 112.75,
+        "execution_graph_dot": null,
+        "inter_replica_concurrency_ratio": null,
+        "used_seed": "0x80644495CB768808C08EF999A5FD8D637BC0997D8905D642A533C4E57057F13D",
+        "final_metrics": {
+          "size": 2,
+          "width": 2,
+          "height": 4
+        }
+      }
+    },
+    {
+      "run_number": 93,
+      "parameters": {
+        "num_replicas": 8,
+        "num_operations": 1000,
+        "churn_rate": 0.6,
+        "disable_stability": false,
+        "reachability": null
+      },
+      "results": {
+        "final_state": "ClassHierarchyValue { package: PackageValue { model_element_super: ModelElementValue { name: ['8', ' ... } }",
+        "avg_time_per_op_ms": 0.18999999999999997,
+        "avg_throughput_ops_per_sec": 5262.90741622876,
+        "total_deliver_ms_per_replica": [
+          208,
+          187,
+          186,
+          178,
+          180,
+          194,
+          192,
+          195
+        ],
+        "total_effect_ms_per_replica": [
+          136,
+          122,
+          126,
+          123,
+          124,
+          132,
+          128,
+          126
+        ],
+        "avg_effect_ms": 127.125,
+        "execution_graph_dot": null,
+        "inter_replica_concurrency_ratio": null,
+        "used_seed": "0xA8FFB6550FA6CAEDBC28E12171DEE7DD98CB3D516CB3680209A52C8025073BC0",
+        "final_metrics": {
+          "size": 2,
+          "width": 2,
+          "height": 4
+        }
+      }
+    },
+    {
+      "run_number": 94,
+      "parameters": {
+        "num_replicas": 8,
+        "num_operations": 1000,
+        "churn_rate": 0.6,
+        "disable_stability": false,
+        "reachability": null
+      },
+      "results": {
+        "final_state": "ClassHierarchyValue { package: PackageValue { model_element_super: ModelElementValue { name: ['V', ' ... } }",
+        "avg_time_per_op_ms": 0.21837500000000004,
+        "avg_throughput_ops_per_sec": 4584.7449631275085,
+        "total_deliver_ms_per_replica": [
+          231,
+          227,
+          202,
+          204,
+          235,
+          213,
+          221,
+          214
+        ],
+        "total_effect_ms_per_replica": [
+          158,
+          150,
+          142,
+          145,
+          170,
+          142,
+          146,
+          149
+        ],
+        "avg_effect_ms": 150.25,
+        "execution_graph_dot": null,
+        "inter_replica_concurrency_ratio": null,
+        "used_seed": "0x80E6AFE5EAE5939716541339A0DBC897BDF2B6935277FB9657243AF05617D986",
+        "final_metrics": {
+          "size": 2,
+          "width": 2,
+          "height": 4
+        }
+      }
+    },
+    {
+      "run_number": 95,
+      "parameters": {
+        "num_replicas": 8,
+        "num_operations": 1000,
+        "churn_rate": 0.6,
+        "disable_stability": false,
+        "reachability": null
+      },
+      "results": {
+        "final_state": "ClassHierarchyValue { package: PackageValue { model_element_super: ModelElementValue { name: ['8', ' ... } }",
+        "avg_time_per_op_ms": 0.18912500000000004,
+        "avg_throughput_ops_per_sec": 5305.936800902487,
+        "total_deliver_ms_per_replica": [
+          194,
+          191,
+          203,
+          162,
+          175,
+          203,
+          185,
+          200
+        ],
+        "total_effect_ms_per_replica": [
+          122,
+          114,
+          115,
+          107,
+          106,
+          124,
+          111,
+          112
+        ],
+        "avg_effect_ms": 113.875,
+        "execution_graph_dot": null,
+        "inter_replica_concurrency_ratio": null,
+        "used_seed": "0x4ABA2D82DAF07FC70C011BB94CDD4615C1AF47DBF20F931E6BA0697B0047C8BF",
+        "final_metrics": {
+          "size": 2,
+          "width": 2,
+          "height": 4
+        }
+      }
+    },
+    {
+      "run_number": 96,
+      "parameters": {
+        "num_replicas": 8,
+        "num_operations": 1000,
+        "churn_rate": 0.6,
+        "disable_stability": false,
+        "reachability": null
+      },
+      "results": {
+        "final_state": "ClassHierarchyValue { package: PackageValue { model_element_super: ModelElementValue { name: ['5', ' ... } }",
+        "avg_time_per_op_ms": 0.14650000000000002,
+        "avg_throughput_ops_per_sec": 6823.3941239852,
+        "total_deliver_ms_per_replica": [
+          156,
+          136,
+          150,
+          141,
+          149,
+          145,
+          152,
+          143
+        ],
+        "total_effect_ms_per_replica": [
+          88,
+          84,
+          91,
+          87,
+          88,
+          85,
+          89,
+          84
+        ],
+        "avg_effect_ms": 87.0,
+        "execution_graph_dot": null,
+        "inter_replica_concurrency_ratio": null,
+        "used_seed": "0x97DE936E53FB1E88F034F424227DEB315A18E68E620CD49867C15CE07FBFB9F4",
+        "final_metrics": {
+          "size": 2,
+          "width": 2,
+          "height": 4
+        }
+      }
+    },
+    {
+      "run_number": 97,
+      "parameters": {
+        "num_replicas": 8,
+        "num_operations": 1000,
+        "churn_rate": 0.6,
+        "disable_stability": false,
+        "reachability": null
+      },
+      "results": {
+        "final_state": "ClassHierarchyValue { package: PackageValue { model_element_super: ModelElementValue { name: ['N', ' ... } }",
+        "avg_time_per_op_ms": 0.16337500000000002,
+        "avg_throughput_ops_per_sec": 6130.374412426024,
+        "total_deliver_ms_per_replica": [
+          165,
+          170,
+          149,
+          155,
+          151,
+          167,
+          169,
+          181
+        ],
+        "total_effect_ms_per_replica": [
+          102,
+          100,
+          100,
+          102,
+          97,
+          101,
+          108,
+          105
+        ],
+        "avg_effect_ms": 101.875,
+        "execution_graph_dot": null,
+        "inter_replica_concurrency_ratio": null,
+        "used_seed": "0x9BEF6F95E1A83BE8E8BE5E9C14B71305EE2255E839D096AF0C9809B796CA26BE",
+        "final_metrics": {
+          "size": 2,
+          "width": 2,
+          "height": 4
+        }
+      }
+    },
+    {
+      "run_number": 98,
+      "parameters": {
+        "num_replicas": 8,
+        "num_operations": 1000,
+        "churn_rate": 0.6,
+        "disable_stability": false,
+        "reachability": null
+      },
+      "results": {
+        "final_state": "ClassHierarchyValue { package: PackageValue { model_element_super: ModelElementValue { name: ['8', ' ... } }",
+        "avg_time_per_op_ms": 0.15650000000000003,
+        "avg_throughput_ops_per_sec": 6420.692759191357,
+        "total_deliver_ms_per_replica": [
+          167,
+          175,
+          147,
+          144,
+          136,
+          143,
+          173,
+          167
+        ],
+        "total_effect_ms_per_replica": [
+          100,
+          109,
+          98,
+          97,
+          88,
+          95,
+          104,
+          106
+        ],
+        "avg_effect_ms": 99.625,
+        "execution_graph_dot": null,
+        "inter_replica_concurrency_ratio": null,
+        "used_seed": "0xE0462C4CFC7F7682D4F0BABF7E0EA6DABC7EBCB1A0E6019757497F981612DAB0",
+        "final_metrics": {
+          "size": 2,
+          "width": 2,
+          "height": 4
+        }
+      }
+    },
+    {
+      "run_number": 99,
+      "parameters": {
+        "num_replicas": 8,
+        "num_operations": 1000,
+        "churn_rate": 0.6,
+        "disable_stability": false,
+        "reachability": null
+      },
+      "results": {
+        "final_state": "ClassHierarchyValue { package: PackageValue { model_element_super: ModelElementValue { name: ['f', ' ... } }",
+        "avg_time_per_op_ms": 0.128375,
+        "avg_throughput_ops_per_sec": 7825.24610758094,
+        "total_deliver_ms_per_replica": [
+          125,
+          137,
+          124,
+          133,
+          147,
+          126,
+          129,
+          106
+        ],
+        "total_effect_ms_per_replica": [
+          71,
+          69,
+          69,
+          68,
+          73,
+          71,
+          67,
+          61
+        ],
+        "avg_effect_ms": 68.625,
+        "execution_graph_dot": null,
+        "inter_replica_concurrency_ratio": null,
+        "used_seed": "0xBE1FB5480304F40FE8278814DE334A1877B93D3F481E046F22D400C3201062B0",
+        "final_metrics": {
+          "size": 2,
+          "width": 2,
+          "height": 4
+        }
+      }
+    },
+    {
+      "run_number": 100,
+      "parameters": {
+        "num_replicas": 8,
+        "num_operations": 1000,
+        "churn_rate": 0.6,
+        "disable_stability": false,
+        "reachability": null
+      },
+      "results": {
+        "final_state": "ClassHierarchyValue { package: PackageValue { model_element_super: ModelElementValue { name: ['N', ' ... } }",
+        "avg_time_per_op_ms": 0.14775000000000002,
+        "avg_throughput_ops_per_sec": 6771.094705852523,
+        "total_deliver_ms_per_replica": [
+          156,
+          142,
+          150,
+          143,
+          167,
+          138,
+          149,
+          137
+        ],
+        "total_effect_ms_per_replica": [
+          97,
+          94,
+          105,
+          96,
+          106,
+          98,
+          97,
+          99
+        ],
+        "avg_effect_ms": 99.0,
+        "execution_graph_dot": null,
+        "inter_replica_concurrency_ratio": null,
+        "used_seed": "0x7E07129EBDC479CE793737DCDD3DD08B6E03A37B409A500139D890FE478B2863",
+        "final_metrics": {
+          "size": 2,
+          "width": 2,
+          "height": 4
+        }
+      }
+    }
+  ]
+}
