@@ -4,12 +4,15 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-moirai-crdt = { path = "../moirai/moirai-crdt" }
-moirai-protocol = { path = "../moirai/moirai-protocol" }
-moirai-macros = { path = "../moirai/moirai-macros" }
-moirai-fuzz = { path = "../moirai/moirai-fuzz" }
+moirai-protocol = { git = "https://github.com/CEA-LIST/Moirai.git", tag = "v0.5" }
+moirai-fuzz = { git = "https://github.com/CEA-LIST/Moirai.git", tag = "v0.5" }
+moirai-crdt = { git = "https://github.com/CEA-LIST/Moirai.git", tag = "v0.5" }
+moirai-macros = { git = "https://github.com/CEA-LIST/Moirai.git", tag = "v0.5" }
 petgraph = "0.8.3"
 rand = "0.10.0"
+deepsize = { git = "https://github.com/leo-olivier/deepsize.git", optional = true, features = [
+    "elsa",
+] }
 vf2 = { version = "1.0.1", features = ["petgraph"] }
 
 [features]
@@ -20,4 +23,10 @@ sink = [
     "moirai-fuzz/sink",
     "moirai-macros/sink",
     "moirai-crdt/sink",
+]
+test_utils = [
+    "dep:deepsize",
+    "moirai-protocol/test_utils",
+    "moirai-macros/test_utils",
+    "moirai-crdt/test_utils",
 ]

@@ -1,8 +1,5 @@
 use moirai_crdt::list::nested_list::{NestedList, NestedListLog};
-use moirai_fuzz::{
-    metrics::{FuzzMetrics, StructureMetrics},
-    op_generator::OpGeneratorNested,
-};
+use moirai_fuzz::op_generator::OpGeneratorNested;
 use moirai_protocol::{
     crdt::{eval::EvalNested, query::Read},
     state::log::IsLog,
@@ -75,7 +72,7 @@ fn generate_boxed_model_list(
         },
     };
 
-    assert!(log.is_enabled(&op));
+    assert!(log.is_enabled(&op).is_ok());
     op
 }
 
@@ -121,7 +118,7 @@ fn generate_structural_feature_list(
         },
     };
 
-    assert!(log.is_enabled(&op));
+    assert!(log.is_enabled(&op).is_ok());
     op
 }
 
@@ -400,14 +397,5 @@ impl OpGeneratorNested for ClassLog {
 impl OpGeneratorNested for DataTypeLog {
     fn generate(&self, rng: &mut impl Rng) -> Self::Op {
         DataType::ClassifierSuper(self.classifier_super().generate(rng))
-    }
-}
-
-impl FuzzMetrics for ClassHierarchyLog {
-    fn structure_metrics(&self) -> StructureMetrics {
-        StructureMetrics::object([
-            self.package_log().structure_metrics(),
-            self.reference_manager_log().structure_metrics(),
-        ])
     }
 }
