@@ -2,9 +2,10 @@
 mod __classifiers {
     pub use moirai_macros::record;
     pub use moirai_macros::union;
-    pub use moirai_protocol::state::graph_log::GraphLog as EventGraph;
+    pub use moirai_protocol::state::graph_log::GraphLog;
     pub use moirai_crdt::list::eg_walker::List;
     pub use moirai_crdt::list::nested_list::NestedListLog;
+    pub use moirai_protocol::state::log::BoxedLog;
     pub use moirai_protocol::state::po_log::VecLog;
     pub use moirai_crdt::counter::resettable_counter::Counter;
     pub use moirai_crdt::flag::ew_flag::EWFlag;
@@ -14,7 +15,7 @@ __classifiers::union!(
     PackageLog) | StructuralFeature(StructuralFeatureKind, StructuralFeatureKindLog)
 );
 __classifiers::record!(
-    ModelElement { name : __classifiers::EventGraph < __classifiers::List < char > >, }
+    ModelElement { name : __classifiers::GraphLog < __classifiers::List < char > >, }
 );
 __classifiers::union!(
     ClassifierKind = Class(Class, ClassLog) | DataType(DataType, DataTypeLog)
@@ -22,7 +23,7 @@ __classifiers::union!(
 __classifiers::record!(Classifier { model_element_super : ModelElementLog, });
 __classifiers::record!(
     Package { model_element_super : ModelElementLog, content :
-    __classifiers::NestedListLog < Box < ModelElementKindLog > >, }
+    __classifiers::NestedListLog < __classifiers::BoxedLog < ModelElementKindLog > >, }
 );
 __classifiers::union!(
     StructuralFeatureKind = Attribute(Attribute, AttributeLog) | Reference(Reference,

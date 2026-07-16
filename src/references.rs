@@ -2,23 +2,16 @@
 mod __references {
     pub use moirai_macros::typed_graph;
     pub use moirai_protocol::state::object_path::ObjectPath;
-    pub use moirai_protocol::state::object_path::PathSegment::{
-        Field, ListElement, MapEntry, Variant,
-    };
 }
-pub fn instance_from_path(path: &__references::ObjectPath) -> Option<Instance> {
-    let segs = path.segments();
-    match segs {
-        [.., __references::Variant("class")] => Some(Instance::ClassId(ClassId(path.clone()))),
-        [.., __references::Variant("attribute")] => {
-            Some(Instance::AttributeId(AttributeId(path.clone())))
-        }
-        [.., __references::Variant("reference")] => {
-            Some(Instance::ReferenceId(ReferenceId(path.clone())))
-        }
-        [.., __references::Variant("datatype")] => {
-            Some(Instance::DataTypeId(DataTypeId(path.clone())))
-        }
+pub fn instance_from_sink_kind(
+    kind: &str,
+    path: &__references::ObjectPath,
+) -> Option<Instance> {
+    match kind {
+        "Attribute" => Some(Instance::AttributeId(AttributeId(path.clone()))),
+        "Reference" => Some(Instance::ReferenceId(ReferenceId(path.clone()))),
+        "Class" => Some(Instance::ClassId(ClassId(path.clone()))),
+        "DataType" => Some(Instance::DataTypeId(DataTypeId(path.clone()))),
         _ => None,
     }
 }

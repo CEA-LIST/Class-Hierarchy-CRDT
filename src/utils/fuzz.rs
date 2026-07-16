@@ -2,7 +2,7 @@ use moirai_crdt::list::nested_list::{NestedList, NestedListLog};
 use moirai_fuzz::op_generator::OpGeneratorNested;
 use moirai_protocol::{
     crdt::{eval::EvalNested, query::Read},
-    state::log::IsLog,
+    state::log::{BoxedLog, IsLog},
 };
 use rand::{
     Rng, RngExt,
@@ -17,10 +17,10 @@ use crate::{
 };
 
 fn generate_boxed_model_element_kind(
-    log: &ModelElementKindLog,
+    log: &BoxedLog<ModelElementKindLog>,
     rng: &mut impl Rng,
 ) -> Box<ModelElementKind> {
-    Box::new((*log).generate(rng))
+    log.generate(rng)
 }
 
 fn generate_structural_feature_kind(
@@ -31,7 +31,7 @@ fn generate_structural_feature_kind(
 }
 
 fn generate_boxed_model_list(
-    log: &NestedListLog<Box<ModelElementKindLog>>,
+    log: &NestedListLog<BoxedLog<ModelElementKindLog>>,
     rng: &mut impl Rng,
 ) -> NestedList<Box<ModelElementKind>> {
     #[derive(Clone, Copy)]
@@ -52,7 +52,8 @@ fn generate_boxed_model_list(
     let op = match choice {
         Choice::Insert => {
             let pos = rng.random_range(0..=positions.len());
-            let op = generate_boxed_model_element_kind(&Box::<ModelElementKindLog>::default(), rng);
+            let op =
+                generate_boxed_model_element_kind(&BoxedLog::<ModelElementKindLog>::default(), rng);
             NestedList::Insert { pos, op }
         }
         Choice::Update => {
@@ -63,7 +64,10 @@ fn generate_boxed_model_list(
                 .get_child(target_id)
                 .map(|child| generate_boxed_model_element_kind(child, rng))
                 .unwrap_or_else(|| {
-                    generate_boxed_model_element_kind(&Box::<ModelElementKindLog>::default(), rng)
+                    generate_boxed_model_element_kind(
+                        &BoxedLog::<ModelElementKindLog>::default(),
+                        rng,
+                    )
                 });
             NestedList::Update { pos, op }
         }
@@ -397,5 +401,23 @@ impl OpGeneratorNested for ClassLog {
 impl OpGeneratorNested for DataTypeLog {
     fn generate(&self, rng: &mut impl Rng) -> Self::Op {
         DataType::ClassifierSuper(self.classifier_super().generate(rng))
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use rand::{SeedableRng, rngs::SmallRng};
+
+    use super::*;
+
+    #[test]
+    fn generates_boxed_package_content_operation() {
+        let package = PackageLog::default();
+        let mut rng = SmallRng::seed_from_u64(0);
+
+        let op = generate_boxed_model_list(package.content(), &mut rng);
+
+        assert!(matches!(op, NestedList::Insert { .. }));
+        assert!(package.content().is_enabled(&op).is_ok());
     }
 }

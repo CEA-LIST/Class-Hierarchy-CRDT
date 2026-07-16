@@ -15,11 +15,11 @@ use moirai_crdt::{
 };
 use moirai_macros::typed_graph::Arc;
 use moirai_protocol::{
+    broadcast::internalizer::InternalizeOp,
     broadcast::tcsb::{IsTcsbTest, Tcsb},
     crdt::query::Read,
     replica::{IsReplica, Replica},
     state::object_path::ObjectPath,
-    utils::intern_str::InternalizeOp,
 };
 use petgraph::Graph;
 
