@@ -8,9 +8,9 @@ Class Hierarchy is a simplified metamodel of a metalanguage, close to Ecore. It 
 
 ## Generated Artifacts
 
-Arachne generated the `classifier.rs`, `references.rs`, `package.rs`, and `lib.rs` files.
+Arachne generated the `classifiers.rs`, `references.rs`, `package.rs`, and `lib.rs` files.
 
-- `classifier.rs`: contains the replicated object hierarchy, i.e., the CRDTs reproducing the (concrete and abstract) classes, interfaces, enums, and owned features (attributes and containment references).
+- `classifiers.rs`: contains the replicated object hierarchy, i.e., the CRDTs reproducing the (concrete and abstract) classes, interfaces, enums, and owned features (attributes and containment references).
 - `references.rs`: contains the Typed Graph CRDT implementation. Manages the non-containment references between replicated objects.
 - `package.rs`: the root replicated object that contains both the object hierarchy and the typed graph. This is the object with which end-users interact.
 
@@ -35,7 +35,7 @@ Arachne generated the `classifier.rs`, `references.rs`, `package.rs`, and `lib.r
 
 ## Running the project
 
-Rust must be installed on your machine: <https://rust-lang.org/tools/install>.
+Rust must be installed on your machine: <https://rust-lang.org/tools/install>. The commands assume a POSIX shell.
 
 Running all the tests:
 
