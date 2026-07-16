@@ -3,7 +3,7 @@ use class_hierarchy::{
         Attribute, Class, Classifier, ClassifierKind, DataType, ModelElement, ModelElementKind,
         Package, StructuralFeature, StructuralFeatureKind,
     },
-    package::{ClassHierarchy, ClassHierarchyLog},
+    package::{ClassHierarchy, ClassHierarchyLog, ReadAsEcore},
     references::{AttributeId, AttributeTypEdge, ClassId, DataTypeId, Refs},
     utils::graph_view::Vf2GraphView,
 };
@@ -18,6 +18,19 @@ use moirai_protocol::{
     crdt::query::Read,
     replica::{IsReplica, Replica},
 };
+
+#[test]
+fn read_as_ecore() {
+    let mut replica_a = Replica::<ClassHierarchyLog, Tcsb<ClassHierarchy>>::new("a".to_string());
+
+    replica_a
+        .send(ClassHierarchy::Package(Package::New))
+        .unwrap();
+
+    println!("{:?}", replica_a.query(Read::new()));
+    let ecore = replica_a.query(ReadAsEcore::new());
+    println!("{}", String::from_utf8(ecore).unwrap());
+}
 
 #[test]
 fn conflicting_ref_type_max() {
