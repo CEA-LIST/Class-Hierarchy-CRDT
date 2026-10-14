@@ -1,3 +1,6 @@
+// Reference vertices and cascades are maintained by sink effects.
+#![cfg(feature = "sink")]
+
 use class_hierarchy::{
     classifiers::{
         Attribute, Class, Classifier, ClassifierKind, ModelElement, ModelElementKind, Package,
@@ -15,8 +18,7 @@ use moirai_crdt::{
 };
 use moirai_macros::typed_graph::Arc;
 use moirai_protocol::{
-    broadcast::internalizer::InternalizeOp,
-    broadcast::tcsb::{IsTcsbTest, Tcsb},
+    broadcast::tcsb::Tcsb,
     crdt::query::Read,
     replica::{IsReplica, Replica},
     state::object_path::ObjectPath,
@@ -35,13 +37,37 @@ use petgraph::Graph;
 ///     7 [ label="[Package(Content(Update { pos: 0, op: ClassifierKind(Class(Features(Delete { pos: 0 }))) }))@(0:3)]"]
 ///     8 [ label="[Package(Content(Update { pos: 0, op: ClassifierKind(Class(Features(Update { pos: 0, op: Attribute(StructuralFeature(IsUnique(Enable))) }))) }))@(2:4)]"]
 ///     9 [ label="[Package(Content(Insert { pos: 1, op: StructuralFeatureKind(Attribute(StructuralFeature(IsUnique(Clear)))) }))@(0:4)]"]
-///     0 -> 1 [ ]  1 -> 2 [ ]  0 -> 2 [ ]  0 -> 3 [ ]  1 -> 3 [ ]  3 -> 4 [ ]  1 -> 4 [ ]  4 -> 5 [ ]  3 -> 5 [ ]  1 -> 5 [ ]  5 -> 6 [ ]  3 -> 6 [ ] 	1 ->	6 [ ]	3 ->	7 [ ]	1 ->	7 [ ]	6 ->	7 [ ]	6 ->	8 [ ]	3 ->	8 [ ]	1 ->	8 [ ]	7 ->	9 [ ]	1 ->	9 [ ]	6 ->	9 [ ]
+///     0 -> 1 [ ]
+///     1 -> 2 [ ]
+///     0 -> 2 [ ]
+///     0 -> 3 [ ]
+///     1 -> 3 [ ]
+///     3 -> 4 [ ]
+///     1 -> 4 [ ]
+///     4 -> 5 [ ]
+///     3 -> 5 [ ]
+///     1 -> 5 [ ]
+///     5 -> 6 [ ]
+///     3 -> 6 [ ]
+///     1 -> 6 [ ]
+///     3 -> 7 [ ]
+///     1 -> 7 [ ]
+///     6 -> 7 [ ]
+///     6 -> 8 [ ]
+///     3 -> 8 [ ]
+///     1 -> 8 [ ]
+///     7 -> 9 [ ]
+///     1 -> 9 [ ]
+///     6 -> 9 [ ]
 /// }
 #[test]
 fn regression_1() {
-    let mut replica_a = Replica::<ClassHierarchyLog, Tcsb<ClassHierarchy>>::new("a".to_string());
-    let mut replica_b = Replica::<ClassHierarchyLog, Tcsb<ClassHierarchy>>::new("b".to_string());
-    let mut replica_c = Replica::<ClassHierarchyLog, Tcsb<ClassHierarchy>>::new("c".to_string());
+    let mut replica_a =
+        Replica::<ClassHierarchyLog, Tcsb<ClassHierarchy>>::bootstrap("a".into(), &["a", "b", "c"]);
+    let mut replica_b =
+        Replica::<ClassHierarchyLog, Tcsb<ClassHierarchy>>::bootstrap("b".into(), &["a", "b", "c"]);
+    let mut replica_c =
+        Replica::<ClassHierarchyLog, Tcsb<ClassHierarchy>>::bootstrap("c".into(), &["a", "b", "c"]);
 
     let e0 = replica_a
         .send(ClassHierarchy::Package(Package::ModelElementSuper(
@@ -187,17 +213,17 @@ fn regression_1() {
     }
 
     assert_eq!(
-        replica_a.query(Read::<ClassHierarchyValue>::new()).package,
-        replica_b.query(Read::<ClassHierarchyValue>::new()).package
+        replica_a.query(&Read::<ClassHierarchyValue>::new()).package,
+        replica_b.query(&Read::<ClassHierarchyValue>::new()).package
     );
     assert_eq!(
-        replica_b.query(Read::<ClassHierarchyValue>::new()).package,
-        replica_c.query(Read::<ClassHierarchyValue>::new()).package
+        replica_b.query(&Read::<ClassHierarchyValue>::new()).package,
+        replica_c.query(&Read::<ClassHierarchyValue>::new()).package
     );
 
-    let a_refs = replica_a.query(Read::<ClassHierarchyValue>::new()).refs;
-    let b_refs = replica_b.query(Read::<ClassHierarchyValue>::new()).refs;
-    let c_refs = replica_c.query(Read::<ClassHierarchyValue>::new()).refs;
+    let a_refs = replica_a.query(&Read::<ClassHierarchyValue>::new()).refs;
+    let b_refs = replica_b.query(&Read::<ClassHierarchyValue>::new()).refs;
+    let c_refs = replica_c.query(&Read::<ClassHierarchyValue>::new()).refs;
     assert_eq!(a_refs.node_count(), b_refs.node_count());
     assert_eq!(b_refs.node_count(), c_refs.node_count());
     assert_eq!(a_refs.edge_count(), b_refs.edge_count());
@@ -206,8 +232,15 @@ fn regression_1() {
 
 #[test]
 fn regression_2() {
-    let mut replicas = (0..8)
-        .map(|i| Replica::<ClassHierarchyLog, Tcsb<ClassHierarchy>>::new(i.to_string()))
+    let members = (0..8).map(|i| i.to_string()).collect::<Vec<_>>();
+    let mut replicas = members
+        .iter()
+        .map(|id| {
+            Replica::<ClassHierarchyLog, Tcsb<ClassHierarchy>>::bootstrap(
+                id.clone().into(),
+                &members,
+            )
+        })
         .collect::<Vec<_>>();
 
     let e0 = replicas[1]
@@ -468,18 +501,18 @@ fn regression_2() {
 
     for target in 0..replicas.len() {
         for event in &all_events {
-            if event.event().id().origin_id() == target.to_string() {
+            if event.event().id().origin_id().as_ref() == target.to_string() {
                 continue;
             }
             replicas[target].receive(event.clone());
         }
     }
 
-    let graph = replicas[0].query(Read::new()).refs;
+    let graph = replicas[0].query(&Read::<ClassHierarchyValue>::new()).refs;
     for replica in &replicas[1..] {
         vf2::isomorphisms(
             &Vf2GraphView(&graph),
-            &Vf2GraphView(&replica.query(Read::new()).refs),
+            &Vf2GraphView(&replica.query(&Read::<ClassHierarchyValue>::new()).refs),
         )
         .first()
         .expect("graphs should be isomorphic");
@@ -487,59 +520,59 @@ fn regression_2() {
 }
 
 /// This test implements this execution trace:
-// digraph {
-//         0       [label="[Package(Content(Insert { pos: 0, op: ClassifierKind(Class(Features(Insert { pos: 0, op: Attribute(StructuralFeature(Upper(\Inc(130404)))) }))) }))@(6:1)]"];
-//         1       [label="[AddReference(AttributeToClass(Arc { source: AttributeId(ObjectPath { root: 'class_hierarchy', segments: [Field('package'), Field('\content'), ListElement(EventId { idx: ReplicaIdx(6), seq: 1, resolver: 0 => 2, 1 => 0, 2 => 1, 3 => 3, 4 => 4, 5 => 5, 6 => 6, 7 => \7 }), Variant('classifier'), Variant('class'), Field('features'), ListElement(EventId { idx: ReplicaIdx(6), seq: 1, resolver: 0 => \2, 1 => 0, 2 => 1, 3 => 3, 4 => 4, 5 => 5, 6 => 6, 7 => 7 }), Variant('attribute')] }), target: ClassId(ObjectPath { root: 'class_\hierarchy', segments: [Field('package'), Field('content'), ListElement(EventId { idx: ReplicaIdx(6), seq: 1, resolver: 0 => 2, 1 => \0, 2 => 1, 3 => 3, 4 => 4, 5 => 5, 6 => 6, 7 => 7 }), Variant('classifier'), Variant('class')] }), kind: AttributeTypEdge }))@(2:\1)]"];
-//         0 -> 1;
-//         2       [label="[Package(Content(Update { pos: 0, op: ClassifierKind(Class(IsAbstract(Clear))) }))@(1:1)]"];
-//         0 -> 2;
-//         3       [label="[Package(Content(Insert { pos: 1, op: ClassifierKind(Class(Classifier(ModelElement(Name(Insert { content: '1', pos: 0 }))))) }))@(\0:1)]"];
-//         0 -> 3;
-//         5       [label="[Package(ModelElement(Name(Insert { content: 'r', pos: 0 })))@(1:2)]"];
-//         2 -> 5;
-//         4       [label="[Package(ModelElement(Name(Insert { content: 'y', pos: 0 })))@(6:2)]"];
-//         3 -> 4;
-//         8       [label="[AddReference(AttributeToClass(Arc { source: AttributeId(ObjectPath { root: 'class_hierarchy', segments: [Field('package'), Field('\content'), ListElement(EventId { idx: ReplicaIdx(6), seq: 1, resolver: 0 => 0, 1 => 1, 2 => 2, 3 => 3, 4 => 4, 5 => 5, 6 => 6, 7 => \7 }), Variant('classifier'), Variant('class'), Field('features'), ListElement(EventId { idx: ReplicaIdx(6), seq: 1, resolver: 0 => \0, 1 => 1, 2 => 2, 3 => 3, 4 => 4, 5 => 5, 6 => 6, 7 => 7 }), Variant('attribute')] }), target: ClassId(ObjectPath { root: 'class_\hierarchy', segments: [Field('package'), Field('content'), ListElement(EventId { idx: ReplicaIdx(0), seq: 1, resolver: 0 => 0, 1 => \1, 2 => 2, 3 => 3, 4 => 4, 5 => 5, 6 => 6, 7 => 7 }), Variant('classifier'), Variant('class')] }), kind: AttributeTypEdge }))@(0:\2)]"];
-//         3 -> 8;
-//         6       [label="[AddReference(AttributeToClass(Arc { source: AttributeId(ObjectPath { root: 'class_hierarchy', segments: [Field('package'), Field('\content'), ListElement(EventId { idx: ReplicaIdx(0), seq: 1, resolver: 0 => 6, 1 => 0, 2 => 1, 3 => 2, 4 => 3, 5 => 4, 6 => 5, 7 => \7 }), Variant('classifier'), Variant('class'), Field('features'), ListElement(EventId { idx: ReplicaIdx(0), seq: 1, resolver: 0 => \6, 1 => 0, 2 => 1, 3 => 2, 4 => 3, 5 => 4, 6 => 5, 7 => 7 }), Variant('attribute')] }), target: ClassId(ObjectPath { root: 'class_\hierarchy', segments: [Field('package'), Field('content'), ListElement(EventId { idx: ReplicaIdx(0), seq: 1, resolver: 0 => 6, 1 => \0, 2 => 1, 3 => 2, 4 => 3, 5 => 4, 6 => 5, 7 => 7 }), Variant('classifier'), Variant('class')] }), kind: AttributeTypEdge }))@(6:\3)]"];
-//         4 -> 6;
-//         7       [label="[Package(Content(Update { pos: 0, op: ClassifierKind(Class(IsAbstract(Clear))) }))@(6:4)]"];
-//         6 -> 7;
-//         9       [label="[Package(ModelElement(Name(Insert { content: 'A', pos: 0 })))@(7:1)]"];
-//         8 -> 9;
-// }
+/// digraph {
+///     0 [label="[Package(Content(Insert { pos: 0, op: ClassifierKind(Class(Features(Insert { pos: 0, op: Attribute(StructuralFeature(Upper(\Inc(130404)))) }))) }))@(6:1)]"];
+///     1 [label="[AddReference(AttributeToClass(Arc { source: AttributeId(ObjectPath { root: 'class_hierarchy', segments: [Field('package'), Field('\content'), ListElement(EventId { idx: ReplicaIdx(6), seq: 1, resolver: 0 => 2, 1 => 0, 2 => 1, 3 => 3, 4 => 4, 5 => 5, 6 => 6, 7 => \7 }), Variant('classifier'), Variant('class'), Field('features'), ListElement(EventId { idx: ReplicaIdx(6), seq: 1, resolver: 0 => \2, 1 => 0, 2 => 1, 3 => 3, 4 => 4, 5 => 5, 6 => 6, 7 => 7 }), Variant('attribute')] }), target: ClassId(ObjectPath { root: 'class_\hierarchy', segments: [Field('package'), Field('content'), ListElement(EventId { idx: ReplicaIdx(6), seq: 1, resolver: 0 => 2, 1 => \0, 2 => 1, 3 => 3, 4 => 4, 5 => 5, 6 => 6, 7 => 7 }), Variant('classifier'), Variant('class')] }), kind: AttributeTypEdge }))@(2:\1)]"];
+///     0 -> 1;
+///     2 [label="[Package(Content(Update { pos: 0, op: ClassifierKind(Class(IsAbstract(Clear))) }))@(1:1)]"];
+///     0 -> 2;
+///     3 [label="[Package(Content(Insert { pos: 1, op: ClassifierKind(Class(Classifier(ModelElement(Name(Insert { content: '1', pos: 0 }))))) }))@(\0:1)]"];
+///     0 -> 3;
+///     5 [label="[Package(ModelElement(Name(Insert { content: 'r', pos: 0 })))@(1:2)]"];
+///     2 -> 5;
+///     4 [label="[Package(ModelElement(Name(Insert { content: 'y', pos: 0 })))@(6:2)]"];
+///     3 -> 4;
+///     8 [label="[AddReference(AttributeToClass(Arc { source: AttributeId(ObjectPath { root: 'class_hierarchy', segments: [Field('package'), Field('\content'), ListElement(EventId { idx: ReplicaIdx(6), seq: 1, resolver: 0 => 0, 1 => 1, 2 => 2, 3 => 3, 4 => 4, 5 => 5, 6 => 6, 7 => \7 }), Variant('classifier'), Variant('class'), Field('features'), ListElement(EventId { idx: ReplicaIdx(6), seq: 1, resolver: 0 => \0, 1 => 1, 2 => 2, 3 => 3, 4 => 4, 5 => 5, 6 => 6, 7 => 7 }), Variant('attribute')] }), target: ClassId(ObjectPath { root: 'class_\hierarchy', segments: [Field('package'), Field('content'), ListElement(EventId { idx: ReplicaIdx(0), seq: 1, resolver: 0 => 0, 1 => \1, 2 => 2, 3 => 3, 4 => 4, 5 => 5, 6 => 6, 7 => 7 }), Variant('classifier'), Variant('class')] }), kind: AttributeTypEdge }))@(0:\2)]"];
+///     3 -> 8;
+///     6 [label="[AddReference(AttributeToClass(Arc { source: AttributeId(ObjectPath { root: 'class_hierarchy', segments: [Field('package'), Field('\content'), ListElement(EventId { idx: ReplicaIdx(0), seq: 1, resolver: 0 => 6, 1 => 0, 2 => 1, 3 => 2, 4 => 3, 5 => 4, 6 => 5, 7 => \7 }), Variant('classifier'), Variant('class'), Field('features'), ListElement(EventId { idx: ReplicaIdx(0), seq: 1, resolver: 0 => \6, 1 => 0, 2 => 1, 3 => 2, 4 => 3, 5 => 4, 6 => 5, 7 => 7 }), Variant('attribute')] }), target: ClassId(ObjectPath { root: 'class_\hierarchy', segments: [Field('package'), Field('content'), ListElement(EventId { idx: ReplicaIdx(0), seq: 1, resolver: 0 => 6, 1 => \0, 2 => 1, 3 => 2, 4 => 3, 5 => 4, 6 => 5, 7 => 7 }), Variant('classifier'), Variant('class')] }), kind: AttributeTypEdge }))@(6:\3)]"];
+///     4 -> 6;
+///     7 [label="[Package(Content(Update { pos: 0, op: ClassifierKind(Class(IsAbstract(Clear))) }))@(6:4)]"];
+///     6 -> 7;
+///     9 [label="[Package(ModelElement(Name(Insert { content: 'A', pos: 0 })))@(7:1)]"];
+///     8 -> 9;
+/// }
 #[test]
 fn divergent_refs() {
     let mut replica_0 = Replica::<ClassHierarchyLog, Tcsb<ClassHierarchy>>::bootstrap(
-        "0".to_string(),
+        "0".into(),
         &["0", "1", "2", "3", "4", "5", "6", "7"],
     );
     let mut replica_1 = Replica::<ClassHierarchyLog, Tcsb<ClassHierarchy>>::bootstrap(
-        "1".to_string(),
+        "1".into(),
         &["0", "1", "2", "3", "4", "5", "6", "7"],
     );
     let mut replica_2 = Replica::<ClassHierarchyLog, Tcsb<ClassHierarchy>>::bootstrap(
-        "2".to_string(),
+        "2".into(),
         &["0", "1", "2", "3", "4", "5", "6", "7"],
     );
     let mut replica_3 = Replica::<ClassHierarchyLog, Tcsb<ClassHierarchy>>::bootstrap(
-        "3".to_string(),
+        "3".into(),
         &["0", "1", "2", "3", "4", "5", "6", "7"],
     );
     let mut replica_4 = Replica::<ClassHierarchyLog, Tcsb<ClassHierarchy>>::bootstrap(
-        "4".to_string(),
+        "4".into(),
         &["0", "1", "2", "3", "4", "5", "6", "7"],
     );
     let mut replica_5 = Replica::<ClassHierarchyLog, Tcsb<ClassHierarchy>>::bootstrap(
-        "5".to_string(),
+        "5".into(),
         &["0", "1", "2", "3", "4", "5", "6", "7"],
     );
     let mut replica_6 = Replica::<ClassHierarchyLog, Tcsb<ClassHierarchy>>::bootstrap(
-        "6".to_string(),
+        "6".into(),
         &["0", "1", "2", "3", "4", "5", "6", "7"],
     );
     let mut replica_7 = Replica::<ClassHierarchyLog, Tcsb<ClassHierarchy>>::bootstrap(
-        "7".to_string(),
+        "7".into(),
         &["0", "1", "2", "3", "4", "5", "6", "7"],
     );
 
@@ -560,24 +593,21 @@ fn divergent_refs() {
         .unwrap();
     replica_2.receive(e6_1.clone());
 
-    let translated_id = e6_1
-        .event()
-        .id()
-        .clone()
-        .internalize(replica_2.tcsb().interner());
+    // Object paths store resolved event IDs, so no local-index translation is needed.
+    let e6_1_id = e6_1.event().id().clone();
     let attribute_id_path = ObjectPath::new("class_hierarchy")
         .field("package")
         .field("content")
-        .list_element(translated_id.clone())
+        .list_element(e6_1_id.clone())
         .variant("classifier")
         .variant("class")
         .field("features")
-        .list_element(translated_id.clone())
+        .list_element(e6_1_id.clone())
         .variant("attribute");
     let class_id_path = ObjectPath::new("class_hierarchy")
         .field("package")
         .field("content")
-        .list_element(translated_id.clone())
+        .list_element(e6_1_id.clone())
         .variant("classifier")
         .variant("class");
     let e2_1 = replica_2
@@ -639,32 +669,24 @@ fn divergent_refs() {
         )))
         .unwrap();
 
-    let translated_e0_1_id = e0_1
-        .event()
-        .id()
-        .clone()
-        .internalize(replica_6.tcsb().interner());
-    let translated_e6_1_id = e6_1
-        .event()
-        .id()
-        .clone()
-        .internalize(replica_0.tcsb().interner());
-    assert!(translated_e6_1_id.origin_id() == "6");
-    assert!(translated_e0_1_id.origin_id() == "0");
+    let e0_1_id = e0_1.event().id().clone();
+    let e6_1_id = e6_1.event().id().clone();
+    assert!(e6_1_id.origin_id().as_ref() == "6");
+    assert!(e0_1_id.origin_id().as_ref() == "0");
 
     let attribute_id_path = ObjectPath::new("class_hierarchy")
         .field("package")
         .field("content")
-        .list_element(translated_e6_1_id.clone())
+        .list_element(e6_1_id.clone())
         .variant("classifier")
         .variant("class")
         .field("features")
-        .list_element(translated_e6_1_id.clone())
+        .list_element(e6_1_id.clone())
         .variant("attribute");
     let class_id_path = ObjectPath::new("class_hierarchy")
         .field("package")
         .field("content")
-        .list_element(translated_e0_1_id.clone())
+        .list_element(e0_1_id.clone())
         .variant("classifier")
         .variant("class");
     let e0_2 = replica_0
@@ -793,92 +815,92 @@ fn divergent_refs() {
     replica_7.receive(e6_4.clone());
 
     assert_eq!(
-        &replica_0.query(Read::new()).package,
-        &replica_1.query(Read::new()).package
+        &replica_0.query(&Read::<ClassHierarchyValue>::new()).package,
+        &replica_1.query(&Read::<ClassHierarchyValue>::new()).package
     );
     assert!(
         vf2::isomorphisms(
-            &Vf2GraphView(&replica_0.query(Read::new()).refs),
-            &Vf2GraphView(&replica_1.query(Read::new()).refs)
+            &Vf2GraphView(&replica_0.query(&Read::<ClassHierarchyValue>::new()).refs),
+            &Vf2GraphView(&replica_1.query(&Read::<ClassHierarchyValue>::new()).refs)
         )
         .default_eq()
         .first()
         .is_some()
     );
     assert_eq!(
-        &replica_1.query(Read::new()).package,
-        &replica_2.query(Read::new()).package
+        &replica_1.query(&Read::<ClassHierarchyValue>::new()).package,
+        &replica_2.query(&Read::<ClassHierarchyValue>::new()).package
     );
     assert!(
         vf2::isomorphisms(
-            &Vf2GraphView(&replica_1.query(Read::new()).refs),
-            &Vf2GraphView(&replica_2.query(Read::new()).refs)
+            &Vf2GraphView(&replica_1.query(&Read::<ClassHierarchyValue>::new()).refs),
+            &Vf2GraphView(&replica_2.query(&Read::<ClassHierarchyValue>::new()).refs)
         )
         .default_eq()
         .first()
         .is_some()
     );
     assert_eq!(
-        &replica_2.query(Read::new()).package,
-        &replica_3.query(Read::new()).package
+        &replica_2.query(&Read::<ClassHierarchyValue>::new()).package,
+        &replica_3.query(&Read::<ClassHierarchyValue>::new()).package
     );
 
     assert!(
         vf2::isomorphisms(
-            &Vf2GraphView(&replica_2.query(Read::new()).refs),
-            &Vf2GraphView(&replica_3.query(Read::new()).refs)
+            &Vf2GraphView(&replica_2.query(&Read::<ClassHierarchyValue>::new()).refs),
+            &Vf2GraphView(&replica_3.query(&Read::<ClassHierarchyValue>::new()).refs)
         )
         .default_eq()
         .first()
         .is_some()
     );
     assert_eq!(
-        &replica_3.query(Read::new()).package,
-        &replica_4.query(Read::new()).package
+        &replica_3.query(&Read::<ClassHierarchyValue>::new()).package,
+        &replica_4.query(&Read::<ClassHierarchyValue>::new()).package
     );
     assert!(
         vf2::isomorphisms(
-            &Vf2GraphView(&replica_3.query(Read::new()).refs),
-            &Vf2GraphView(&replica_4.query(Read::new()).refs)
+            &Vf2GraphView(&replica_3.query(&Read::<ClassHierarchyValue>::new()).refs),
+            &Vf2GraphView(&replica_4.query(&Read::<ClassHierarchyValue>::new()).refs)
         )
         .default_eq()
         .first()
         .is_some()
     );
     assert_eq!(
-        &replica_4.query(Read::new()).package,
-        &replica_5.query(Read::new()).package
+        &replica_4.query(&Read::<ClassHierarchyValue>::new()).package,
+        &replica_5.query(&Read::<ClassHierarchyValue>::new()).package
     );
     assert!(
         vf2::isomorphisms(
-            &Vf2GraphView(&replica_4.query(Read::new()).refs),
-            &Vf2GraphView(&replica_5.query(Read::new()).refs)
+            &Vf2GraphView(&replica_4.query(&Read::<ClassHierarchyValue>::new()).refs),
+            &Vf2GraphView(&replica_5.query(&Read::<ClassHierarchyValue>::new()).refs)
         )
         .default_eq()
         .first()
         .is_some()
     );
     assert_eq!(
-        &replica_5.query(Read::new()).package,
-        &replica_6.query(Read::new()).package
+        &replica_5.query(&Read::<ClassHierarchyValue>::new()).package,
+        &replica_6.query(&Read::<ClassHierarchyValue>::new()).package
     );
     assert!(
         vf2::isomorphisms(
-            &Vf2GraphView(&replica_5.query(Read::new()).refs),
-            &Vf2GraphView(&replica_6.query(Read::new()).refs)
+            &Vf2GraphView(&replica_5.query(&Read::<ClassHierarchyValue>::new()).refs),
+            &Vf2GraphView(&replica_6.query(&Read::<ClassHierarchyValue>::new()).refs)
         )
         .default_eq()
         .first()
         .is_some()
     );
     assert_eq!(
-        &replica_6.query(Read::new()).package,
-        &replica_7.query(Read::new()).package
+        &replica_6.query(&Read::<ClassHierarchyValue>::new()).package,
+        &replica_7.query(&Read::<ClassHierarchyValue>::new()).package
     );
     assert!(
         vf2::isomorphisms(
-            &Vf2GraphView(&replica_6.query(Read::new()).refs),
-            &Vf2GraphView(&replica_7.query(Read::new()).refs)
+            &Vf2GraphView(&replica_6.query(&Read::<ClassHierarchyValue>::new()).refs),
+            &Vf2GraphView(&replica_7.query(&Read::<ClassHierarchyValue>::new()).refs)
         )
         .default_eq()
         .first()
@@ -902,14 +924,30 @@ fn divergent_refs() {
         };
         is_valid
     }
-    assert!(is_valid(&replica_0.query(Read::new()).refs));
-    assert!(is_valid(&replica_1.query(Read::new()).refs));
-    assert!(is_valid(&replica_2.query(Read::new()).refs));
-    assert!(is_valid(&replica_3.query(Read::new()).refs));
-    assert!(is_valid(&replica_4.query(Read::new()).refs));
-    assert!(is_valid(&replica_5.query(Read::new()).refs));
-    assert!(is_valid(&replica_6.query(Read::new()).refs));
-    assert!(is_valid(&replica_7.query(Read::new()).refs));
+    assert!(is_valid(
+        &replica_0.query(&Read::<ClassHierarchyValue>::new()).refs
+    ));
+    assert!(is_valid(
+        &replica_1.query(&Read::<ClassHierarchyValue>::new()).refs
+    ));
+    assert!(is_valid(
+        &replica_2.query(&Read::<ClassHierarchyValue>::new()).refs
+    ));
+    assert!(is_valid(
+        &replica_3.query(&Read::<ClassHierarchyValue>::new()).refs
+    ));
+    assert!(is_valid(
+        &replica_4.query(&Read::<ClassHierarchyValue>::new()).refs
+    ));
+    assert!(is_valid(
+        &replica_5.query(&Read::<ClassHierarchyValue>::new()).refs
+    ));
+    assert!(is_valid(
+        &replica_6.query(&Read::<ClassHierarchyValue>::new()).refs
+    ));
+    assert!(is_valid(
+        &replica_7.query(&Read::<ClassHierarchyValue>::new()).refs
+    ));
 }
 
 #[test]
@@ -958,12 +996,18 @@ fn union_error() {
     replica_b.receive(a2);
 
     assert_eq!(
-        replica_a.query(Read::<ClassHierarchyValue>::new()).package,
-        replica_b.query(Read::<ClassHierarchyValue>::new()).package
+        replica_a.query(&Read::<ClassHierarchyValue>::new()).package,
+        replica_b.query(&Read::<ClassHierarchyValue>::new()).package
     );
 }
 
-/// digraph {  0 [ label="[Package(Content(Insert { pos: 0, op: StructuralFeature(Reference(IsContainer(Enable))) }))@(1:1)]"]  1 [ label="[Package(Content(Delete { pos: 0 }))@(0:1)]"]  2 [ label="[Package(Content(Update { pos: 0, op: StructuralFeature(Reference(IsContainer(Clear))) }))@(1:2)]"]  0 -> 1 [ ]  0 -> 2 [ ]}
+/// digraph {
+///     0 [ label="[Package(Content(Insert { pos: 0, op: StructuralFeature(Reference(IsContainer(Enable))) }))@(1:1)]"]
+///     1 [ label="[Package(Content(Delete { pos: 0 }))@(0:1)]"]
+///     2 [ label="[Package(Content(Update { pos: 0, op: StructuralFeature(Reference(IsContainer(Clear))) }))@(1:2)]"]
+///     0 -> 1 [ ]
+///     0 -> 2 [ ]
+/// }
 #[test]
 fn list_error() {
     let (mut replica_a, mut replica_b) = twins_log::<ClassHierarchyLog>();
@@ -1000,8 +1044,8 @@ fn list_error() {
     replica_a.receive(b2);
     replica_b.receive(a1);
 
-    let state_a = replica_a.query(Read::new());
-    let state_b = replica_b.query(Read::new());
+    let state_a = replica_a.query(&Read::<ClassHierarchyValue>::new());
+    let state_b = replica_b.query(&Read::<ClassHierarchyValue>::new());
 
     let is_isomorph = vf2::isomorphisms(&Vf2GraphView(&state_a.refs), &Vf2GraphView(&state_b.refs))
         .default_eq()
@@ -1030,7 +1074,7 @@ fn create_class_vertex() {
     assert_eq!(
         1,
         replica_a
-            .query(Read::<ClassHierarchyValue>::new())
+            .query(&Read::<ClassHierarchyValue>::new())
             .refs
             .node_count()
     );
@@ -1054,7 +1098,7 @@ fn create_attribute_vertex() {
     assert_eq!(
         1,
         replica_a
-            .query(Read::<ClassHierarchyValue>::new())
+            .query(&Read::<ClassHierarchyValue>::new())
             .refs
             .node_count()
     );
@@ -1083,14 +1127,14 @@ fn create_class_and_attribute_vertex() {
     assert_eq!(
         2,
         replica_a
-            .query(Read::<ClassHierarchyValue>::new())
+            .query(&Read::<ClassHierarchyValue>::new())
             .refs
             .node_count()
     );
     assert_eq!(
         2,
         replica_b
-            .query(Read::<ClassHierarchyValue>::new())
+            .query(&Read::<ClassHierarchyValue>::new())
             .refs
             .node_count()
     );
@@ -1104,7 +1148,7 @@ fn create_class_and_attribute_vertex() {
     assert_eq!(
         0,
         replica_b
-            .query(Read::<ClassHierarchyValue>::new())
+            .query(&Read::<ClassHierarchyValue>::new())
             .refs
             .node_count()
     );
@@ -1126,14 +1170,14 @@ fn create_class_and_attribute_vertex() {
     assert_eq!(
         1,
         replica_b
-            .query(Read::<ClassHierarchyValue>::new())
+            .query(&Read::<ClassHierarchyValue>::new())
             .refs
             .node_count()
     );
     assert_eq!(
         1,
         replica_a
-            .query(Read::<ClassHierarchyValue>::new())
+            .query(&Read::<ClassHierarchyValue>::new())
             .refs
             .node_count()
     );

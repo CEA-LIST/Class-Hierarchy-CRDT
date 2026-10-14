@@ -1,57 +1,45 @@
-use class_hierarchy::{package::ClassHierarchyLog, utils::graph_view::Vf2GraphView};
-
+#[cfg(feature = "fuzz")]
 #[test]
 #[ignore]
 fn fuzz() {
+    use std::num::NonZeroUsize;
+
+    use class_hierarchy::package::{ClassHierarchyLog, ClassHierarchyValue};
     use moirai_fuzz::{
-        config::{FuzzerConfig, RunConfig},
+        config::{ChurnConfig, FuzzerConfig, MetricsSampling, Predicate, RunConfig, SaveMode},
         fuzzer::fuzzer,
     };
+    use moirai_protocol::crdt::query::Read;
 
-    let run = RunConfig::new(0.6, 8, 1_000, None, None, false, false);
-    let runs = vec![run.clone(); 100];
+    let predicate = Predicate::new(Read::<ClassHierarchyValue>::new(), |a, b| {
+        let package = a.package == b.package;
+        if !package {
+            return false;
+        }
 
-    let config = FuzzerConfig::<ClassHierarchyLog>::new(
-        "class_hierarchy",
-        runs,
-        true,
-        |a, b| {
-            let package = a.package == b.package;
-            if !package {
-                println!("Package mismatch");
-                println!("----- Package A -----");
-                println!("{:#?}", a.package);
-                println!("----- Package B -----");
-                println!("{:#?}", b.package);
-                return false;
-            }
+        if a.refs.node_count() == 0 && b.refs.node_count() == 0 {
+            // If both graphs are empty, skip the isomorphism
+            return true;
+        } else {
+            use class_hierarchy::utils::graph_view::Vf2GraphView;
 
-            if a.refs.node_count() == 0 && b.refs.node_count() == 0 {
-                // If both graphs are empty, skip the isomorphism
-                return true;
-            } else {
-                let is_isomorph = vf2::isomorphisms(&Vf2GraphView(&a.refs), &Vf2GraphView(&b.refs))
-                    .default_eq()
-                    .first()
-                    .is_some();
-                if !is_isomorph {
-                    println!(
-                        "Graph isomorphism mismatch: nodes {} vs {}, edges {} vs {}",
-                        a.refs.node_count(),
-                        b.refs.node_count(),
-                        a.refs.edge_count(),
-                        b.refs.edge_count()
-                    );
-                    println!("----- Graph A -----");
-                    println!("{:#?}", a.refs);
-                    println!("----- Graph B -----");
-                    println!("{:#?}", b.refs);
-                }
-                is_isomorph
-            }
-        },
-        true,
+            vf2::isomorphisms(&Vf2GraphView(&a.refs), &Vf2GraphView(&b.refs))
+                .default_eq()
+                .first()
+                .is_some()
+        }
+    });
+
+    let run = RunConfig::new(ChurnConfig::new(0.4, 0.6), 8, 1_000, None, None).with_response_time(
+        MetricsSampling::every_replica(NonZeroUsize::new(1).unwrap()),
     );
 
-    fuzzer::<ClassHierarchyLog>(config);
+    let config = FuzzerConfig::<ClassHierarchyLog, Read<ClassHierarchyValue>>::new(
+        "json-model",
+        vec![run.clone(); 100],
+        predicate,
+    )
+    .save(SaveMode::Summary);
+
+    fuzzer::<ClassHierarchyLog, Read<ClassHierarchyValue>>(config);
 }

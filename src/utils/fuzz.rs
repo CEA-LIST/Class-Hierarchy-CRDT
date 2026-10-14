@@ -1,5 +1,9 @@
+use deepsize::{Context, DeepSizeOf};
 use moirai_crdt::list::nested_list::{NestedList, NestedListLog};
-use moirai_fuzz::op_generator::OpGeneratorNested;
+use moirai_fuzz::{
+    generator::command_generator::CommandGenerator,
+    observers::footprint::{FootprintNode, LogFootprint},
+};
 use moirai_protocol::{
     crdt::{eval::EvalNested, query::Read},
     state::log::{BoxedLog, IsLog},
@@ -16,18 +20,46 @@ use crate::{
     references::compute_arc_constraints,
 };
 
+impl DeepSizeOf for ClassHierarchy {
+    fn deep_size_of_children(&self, context: &mut Context) -> usize {
+        match self {
+            Self::Package(op) => op.deep_size_of_children(context),
+            Self::AddReference(op) | Self::RemoveReference(op) => op.deep_size_of_children(context),
+        }
+    }
+}
+
+impl DeepSizeOf for ClassHierarchyLog {
+    fn deep_size_of_children(&self, context: &mut Context) -> usize {
+        self.package_log().deep_size_of_children(context)
+            + self.reference_manager_log().deep_size_of_children(context)
+    }
+}
+
+impl LogFootprint for ClassHierarchyLog {
+    fn footprint(&self) -> FootprintNode {
+        FootprintNode::parent(
+            self,
+            vec![
+                FootprintNode::leaf(self.package_log()),
+                self.reference_manager_log().footprint(),
+            ],
+        )
+    }
+}
+
 fn generate_boxed_model_element_kind(
     log: &BoxedLog<ModelElementKindLog>,
     rng: &mut impl Rng,
 ) -> Box<ModelElementKind> {
-    log.generate(rng)
+    log.generate_command(rng)
 }
 
 fn generate_structural_feature_kind(
     log: &StructuralFeatureKindLog,
     rng: &mut impl Rng,
 ) -> StructuralFeatureKind {
-    log.generate(rng)
+    log.generate_command(rng)
 }
 
 fn generate_boxed_model_list(
@@ -41,7 +73,7 @@ fn generate_boxed_model_list(
         Delete,
     }
 
-    let positions = log.positions().execute_query(Read::new());
+    let positions = log.positions().execute_query(&Read::new());
     let choice = if positions.is_empty() {
         Choice::Insert
     } else {
@@ -91,7 +123,7 @@ fn generate_structural_feature_list(
         Delete,
     }
 
-    let positions = log.positions().execute_query(Read::new());
+    let positions = log.positions().execute_query(&Read::new());
     let choice = if positions.is_empty() {
         Choice::Insert
     } else {
@@ -126,8 +158,8 @@ fn generate_structural_feature_list(
     op
 }
 
-impl OpGeneratorNested for ClassHierarchyLog {
-    fn generate(&self, rng: &mut impl Rng) -> Self::Op {
+impl CommandGenerator for ClassHierarchyLog {
+    fn generate_command(&self, rng: &mut impl Rng) -> Self::Command {
         #[derive(Clone, Copy)]
         enum Choice {
             Package,
@@ -135,7 +167,7 @@ impl OpGeneratorNested for ClassHierarchyLog {
             RemoveReference,
         }
 
-        let refs = self.reference_manager_log().execute_query(Read::new());
+        let refs = self.reference_manager_log().execute_query(&Read::new());
         let constraints = compute_arc_constraints(&refs);
 
         let choice = if refs.node_count() < 2
@@ -156,7 +188,7 @@ impl OpGeneratorNested for ClassHierarchyLog {
         };
 
         match choice {
-            Choice::Package => ClassHierarchy::Package(self.package_log().generate(rng)),
+            Choice::Package => ClassHierarchy::Package(self.package_log().generate_command(rng)),
             Choice::AddReference => ClassHierarchy::AddReference(
                 constraints
                     .addable
@@ -175,8 +207,8 @@ impl OpGeneratorNested for ClassHierarchyLog {
     }
 }
 
-impl OpGeneratorNested for PackageLog {
-    fn generate(&self, rng: &mut impl Rng) -> Self::Op {
+impl CommandGenerator for PackageLog {
+    fn generate_command(&self, rng: &mut impl Rng) -> Self::Command {
         #[derive(Clone, Copy)]
         enum Choice {
             ModelElement,
@@ -186,7 +218,7 @@ impl OpGeneratorNested for PackageLog {
         let choice = if self
             .content()
             .positions()
-            .execute_query(Read::new())
+            .execute_query(&Read::new())
             .is_empty()
         {
             [Choice::ModelElement, Choice::Content][WeightedIndex::new([1, 4]).unwrap().sample(rng)]
@@ -196,32 +228,36 @@ impl OpGeneratorNested for PackageLog {
 
         match choice {
             Choice::ModelElement => {
-                Package::ModelElementSuper(self.model_element_super().generate(rng))
+                Package::ModelElementSuper(self.model_element_super().generate_command(rng))
             }
             Choice::Content => Package::Content(generate_boxed_model_list(self.content(), rng)),
         }
     }
 }
 
-impl OpGeneratorNested for ModelElementKindLog {
-    fn generate(&self, rng: &mut impl Rng) -> Self::Op {
+impl CommandGenerator for ModelElementKindLog {
+    fn generate_command(&self, rng: &mut impl Rng) -> Self::Command {
         match &self.child {
             ModelElementKindContainer::Unset => {
                 match [0_u8, 1, 2][WeightedIndex::new([6, 1, 3]).unwrap().sample(rng)] {
-                    0 => ModelElementKind::Classifier(ClassifierKindLog::default().generate(rng)),
-                    1 => ModelElementKind::Package(PackageLog::default().generate(rng)),
+                    0 => ModelElementKind::Classifier(
+                        ClassifierKindLog::default().generate_command(rng),
+                    ),
+                    1 => ModelElementKind::Package(PackageLog::default().generate_command(rng)),
                     _ => ModelElementKind::StructuralFeature(
-                        StructuralFeatureKindLog::default().generate(rng),
+                        StructuralFeatureKindLog::default().generate_command(rng),
                     ),
                 }
             }
             ModelElementKindContainer::Value(child) => match child.as_ref() {
                 ModelElementKindChild::Classifier(log) => {
-                    ModelElementKind::Classifier(log.generate(rng))
+                    ModelElementKind::Classifier(log.generate_command(rng))
                 }
-                ModelElementKindChild::Package(log) => ModelElementKind::Package(log.generate(rng)),
+                ModelElementKindChild::Package(log) => {
+                    ModelElementKind::Package(log.generate_command(rng))
+                }
                 ModelElementKindChild::StructuralFeature(log) => {
-                    ModelElementKind::StructuralFeature(log.generate(rng))
+                    ModelElementKind::StructuralFeature(log.generate_command(rng))
                 }
             },
             ModelElementKindContainer::Conflicts(children) => children
@@ -229,13 +265,13 @@ impl OpGeneratorNested for ModelElementKindLog {
                 .choose(rng)
                 .map(|child| match child {
                     ModelElementKindChild::Classifier(log) => {
-                        ModelElementKind::Classifier(log.generate(rng))
+                        ModelElementKind::Classifier(log.generate_command(rng))
                     }
                     ModelElementKindChild::Package(log) => {
-                        ModelElementKind::Package(log.generate(rng))
+                        ModelElementKind::Package(log.generate_command(rng))
                     }
                     ModelElementKindChild::StructuralFeature(log) => {
-                        ModelElementKind::StructuralFeature(log.generate(rng))
+                        ModelElementKind::StructuralFeature(log.generate_command(rng))
                     }
                 })
                 .unwrap(),
@@ -243,33 +279,37 @@ impl OpGeneratorNested for ModelElementKindLog {
     }
 }
 
-impl OpGeneratorNested for ModelElementLog {
-    fn generate(&self, rng: &mut impl Rng) -> Self::Op {
-        ModelElement::Name(self.name().generate(rng))
+impl CommandGenerator for ModelElementLog {
+    fn generate_command(&self, rng: &mut impl Rng) -> Self::Command {
+        ModelElement::Name(self.name().generate_command(rng))
     }
 }
 
-impl OpGeneratorNested for ClassifierKindLog {
-    fn generate(&self, rng: &mut impl Rng) -> Self::Op {
+impl CommandGenerator for ClassifierKindLog {
+    fn generate_command(&self, rng: &mut impl Rng) -> Self::Command {
         match &self.child {
             ClassifierKindContainer::Unset => {
                 if rng.random_bool(0.65) {
-                    ClassifierKind::Class(ClassLog::default().generate(rng))
+                    ClassifierKind::Class(ClassLog::default().generate_command(rng))
                 } else {
-                    ClassifierKind::DataType(DataTypeLog::default().generate(rng))
+                    ClassifierKind::DataType(DataTypeLog::default().generate_command(rng))
                 }
             }
             ClassifierKindContainer::Value(child) => match child.as_ref() {
-                ClassifierKindChild::Class(log) => ClassifierKind::Class(log.generate(rng)),
-                ClassifierKindChild::DataType(log) => ClassifierKind::DataType(log.generate(rng)),
+                ClassifierKindChild::Class(log) => ClassifierKind::Class(log.generate_command(rng)),
+                ClassifierKindChild::DataType(log) => {
+                    ClassifierKind::DataType(log.generate_command(rng))
+                }
             },
             ClassifierKindContainer::Conflicts(children) => children
                 .iter()
                 .choose(rng)
                 .map(|child| match child {
-                    ClassifierKindChild::Class(log) => ClassifierKind::Class(log.generate(rng)),
+                    ClassifierKindChild::Class(log) => {
+                        ClassifierKind::Class(log.generate_command(rng))
+                    }
                     ClassifierKindChild::DataType(log) => {
-                        ClassifierKind::DataType(log.generate(rng))
+                        ClassifierKind::DataType(log.generate_command(rng))
                     }
                 })
                 .unwrap(),
@@ -277,28 +317,28 @@ impl OpGeneratorNested for ClassifierKindLog {
     }
 }
 
-impl OpGeneratorNested for ClassifierLog {
-    fn generate(&self, rng: &mut impl Rng) -> Self::Op {
-        Classifier::ModelElementSuper(self.model_element_super().generate(rng))
+impl CommandGenerator for ClassifierLog {
+    fn generate_command(&self, rng: &mut impl Rng) -> Self::Command {
+        Classifier::ModelElementSuper(self.model_element_super().generate_command(rng))
     }
 }
 
-impl OpGeneratorNested for StructuralFeatureKindLog {
-    fn generate(&self, rng: &mut impl Rng) -> Self::Op {
+impl CommandGenerator for StructuralFeatureKindLog {
+    fn generate_command(&self, rng: &mut impl Rng) -> Self::Command {
         match &self.child {
             StructuralFeatureKindContainer::Unset => {
                 if rng.random_bool(0.65) {
-                    StructuralFeatureKind::Attribute(AttributeLog::default().generate(rng))
+                    StructuralFeatureKind::Attribute(AttributeLog::default().generate_command(rng))
                 } else {
-                    StructuralFeatureKind::Reference(ReferenceLog::default().generate(rng))
+                    StructuralFeatureKind::Reference(ReferenceLog::default().generate_command(rng))
                 }
             }
             StructuralFeatureKindContainer::Value(child) => match child.as_ref() {
                 StructuralFeatureKindChild::Attribute(log) => {
-                    StructuralFeatureKind::Attribute(log.generate(rng))
+                    StructuralFeatureKind::Attribute(log.generate_command(rng))
                 }
                 StructuralFeatureKindChild::Reference(log) => {
-                    StructuralFeatureKind::Reference(log.generate(rng))
+                    StructuralFeatureKind::Reference(log.generate_command(rng))
                 }
             },
             StructuralFeatureKindContainer::Conflicts(children) => children
@@ -306,10 +346,10 @@ impl OpGeneratorNested for StructuralFeatureKindLog {
                 .choose(rng)
                 .map(|child| match child {
                     StructuralFeatureKindChild::Attribute(log) => {
-                        StructuralFeatureKind::Attribute(log.generate(rng))
+                        StructuralFeatureKind::Attribute(log.generate_command(rng))
                     }
                     StructuralFeatureKindChild::Reference(log) => {
-                        StructuralFeatureKind::Reference(log.generate(rng))
+                        StructuralFeatureKind::Reference(log.generate_command(rng))
                     }
                 })
                 .unwrap(),
@@ -317,8 +357,8 @@ impl OpGeneratorNested for StructuralFeatureKindLog {
     }
 }
 
-impl OpGeneratorNested for StructuralFeatureLog {
-    fn generate(&self, rng: &mut impl Rng) -> Self::Op {
+impl CommandGenerator for StructuralFeatureLog {
+    fn generate_command(&self, rng: &mut impl Rng) -> Self::Command {
         #[derive(Clone, Copy)]
         enum Choice {
             ModelElement,
@@ -339,25 +379,27 @@ impl OpGeneratorNested for StructuralFeatureLog {
         .choose(rng)
         .unwrap()
         {
-            Choice::ModelElement => {
-                StructuralFeature::ModelElementSuper(self.model_element_super().generate(rng))
+            Choice::ModelElement => StructuralFeature::ModelElementSuper(
+                self.model_element_super().generate_command(rng),
+            ),
+            Choice::Lower => StructuralFeature::Lower(self.lower().generate_command(rng)),
+            Choice::Upper => StructuralFeature::Upper(self.upper().generate_command(rng)),
+            Choice::IsOrdered => {
+                StructuralFeature::IsOrdered(self.is_ordered().generate_command(rng))
             }
-            Choice::Lower => StructuralFeature::Lower(self.lower().generate(rng)),
-            Choice::Upper => StructuralFeature::Upper(self.upper().generate(rng)),
-            Choice::IsOrdered => StructuralFeature::IsOrdered(self.is_ordered().generate(rng)),
-            Choice::IsUnique => StructuralFeature::IsUnique(self.is_unique().generate(rng)),
+            Choice::IsUnique => StructuralFeature::IsUnique(self.is_unique().generate_command(rng)),
         }
     }
 }
 
-impl OpGeneratorNested for AttributeLog {
-    fn generate(&self, rng: &mut impl Rng) -> Self::Op {
-        Attribute::StructuralFeatureSuper(self.structural_feature_super().generate(rng))
+impl CommandGenerator for AttributeLog {
+    fn generate_command(&self, rng: &mut impl Rng) -> Self::Command {
+        Attribute::StructuralFeatureSuper(self.structural_feature_super().generate_command(rng))
     }
 }
 
-impl OpGeneratorNested for ReferenceLog {
-    fn generate(&self, rng: &mut impl Rng) -> Self::Op {
+impl CommandGenerator for ReferenceLog {
+    fn generate_command(&self, rng: &mut impl Rng) -> Self::Command {
         #[derive(Clone, Copy)]
         enum Choice {
             StructuralFeature,
@@ -369,16 +411,18 @@ impl OpGeneratorNested for ReferenceLog {
             .choose(rng)
             .unwrap()
         {
-            Choice::StructuralFeature => {
-                Reference::StructuralFeatureSuper(self.structural_feature_super().generate(rng))
+            Choice::StructuralFeature => Reference::StructuralFeatureSuper(
+                self.structural_feature_super().generate_command(rng),
+            ),
+            Choice::IsContainer => {
+                Reference::IsContainer(self.is_container().generate_command(rng))
             }
-            Choice::IsContainer => Reference::IsContainer(self.is_container().generate(rng)),
         }
     }
 }
 
-impl OpGeneratorNested for ClassLog {
-    fn generate(&self, rng: &mut impl Rng) -> Self::Op {
+impl CommandGenerator for ClassLog {
+    fn generate_command(&self, rng: &mut impl Rng) -> Self::Command {
         #[derive(Clone, Copy)]
         enum Choice {
             ClassifierKind,
@@ -389,8 +433,10 @@ impl OpGeneratorNested for ClassLog {
         match [Choice::ClassifierKind, Choice::IsAbstract, Choice::Features]
             [WeightedIndex::new([3, 3, 1]).unwrap().sample(rng)]
         {
-            Choice::ClassifierKind => Class::ClassifierSuper(self.classifier_super().generate(rng)),
-            Choice::IsAbstract => Class::IsAbstract(self.is_abstract().generate(rng)),
+            Choice::ClassifierKind => {
+                Class::ClassifierSuper(self.classifier_super().generate_command(rng))
+            }
+            Choice::IsAbstract => Class::IsAbstract(self.is_abstract().generate_command(rng)),
             Choice::Features => {
                 Class::Features(generate_structural_feature_list(self.features(), rng))
             }
@@ -398,9 +444,9 @@ impl OpGeneratorNested for ClassLog {
     }
 }
 
-impl OpGeneratorNested for DataTypeLog {
-    fn generate(&self, rng: &mut impl Rng) -> Self::Op {
-        DataType::ClassifierSuper(self.classifier_super().generate(rng))
+impl CommandGenerator for DataTypeLog {
+    fn generate_command(&self, rng: &mut impl Rng) -> Self::Command {
+        DataType::ClassifierSuper(self.classifier_super().generate_command(rng))
     }
 }
 
