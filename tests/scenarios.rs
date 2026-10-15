@@ -53,8 +53,6 @@ fn concurrent_assigments_distinct_values_same_feature() {
     replica_a.receive(event_b_1);
     replica_b.receive(event_a_3);
 
-    println!("Replica A state: {:#?}", replica_a.query(&Read::new()));
-
     let expected_value = package_value(vec![class_value(vec![StructuralFeatureKindValue::Value(
         Box::new(StructuralFeatureKindChildValue::Attribute(AttributeValue {
             structural_feature_super: StructuralFeatureValue {
@@ -190,8 +188,6 @@ fn concurrent_deletion_model_element_update_features() {
     //* CHECKING THE XMI */
     let xmi = String::from_utf8(replica_a.query(&ReadAsEcore::new())).unwrap();
 
-    println!("XMI: {}", xmi);
-
     assert!(xmi.contains(
         "features isOrdered=\"false\" isUnique=\"false\" lower=\"0\" name=\"\" upper=\"1\""
     ));
@@ -259,35 +255,15 @@ fn concurrent_addition_reference_delete_model_element() {
 
     //* INITIAL STATE *//
 
-    let event_a_1 = replica_a.send(new_class(0)).unwrap();
-    replica_b.receive(event_a_1.clone());
-    replica_c.receive(event_a_1);
-
-    let event_a_2 = replica_a.send(new_class(1)).unwrap();
-    replica_b.receive(event_a_2.clone());
-    replica_c.receive(event_a_2);
-
-    let event_a_3 = replica_a.send(new_reference(1, 0)).unwrap();
-    replica_b.receive(event_a_3.clone());
-    replica_c.receive(event_a_3);
+    for op in [new_class(0), new_class(1), new_reference(1, 0)] {
+        let event = replica_a.send(op).unwrap();
+        replica_b.receive(event.clone());
+        replica_c.receive(event);
+    }
 
     let value = replica_a.query(&Read::new());
-    let reference_id: ReferenceId = value
-        .refs
-        .node_weights()
-        .find_map(|n| match &n {
-            Instance::ReferenceId(reference_id) => Some(reference_id.clone()),
-            _ => None,
-        })
-        .unwrap();
-    let class_id = value
-        .refs
-        .node_weights()
-        .find_map(|n| match &n {
-            Instance::ClassId(class_id) => Some(class_id.clone()),
-            _ => None,
-        })
-        .unwrap();
+    let reference_id = reference_id(&value, 0);
+    let class_id = class_id(&value, 0);
 
     //* CONCURRENCY */
     let event_a_4 = replica_a
@@ -324,18 +300,13 @@ fn concurrent_addition_reference_delete_model_element() {
         value.refs.edge_weights().count()
     }
 
-    println!("Replica A state: {:#?}", value_a);
-
-    assert_eq!(count_classes(&value_a), 2);
-    assert_eq!(count_classes(&value_b), 2);
-    assert_eq!(count_classes(&value_c), 2);
-    assert_eq!(count_references(&value_a), 1);
-    assert_eq!(count_references(&value_b), 1);
-    assert_eq!(count_references(&value_c), 1);
+    for value in [&value_a, &value_b, &value_c] {
+        assert_eq!(count_classes(value), 2);
+        assert_eq!(count_references(value), 1);
+    }
 
     // //* CHECKING THE XMI */
     let xmi = String::from_utf8(replica_a.query(&ReadAsEcore::new())).unwrap();
-    println!("XMI: {}", xmi);
     // The supertype reference should be present in the XMI
     assert!(xmi.contains("typ=\"#"));
 }
@@ -357,21 +328,9 @@ fn concurrent_addition_references_exceed_multiplicities() {
     replica_b.receive(event_a_3);
 
     let value = replica_a.query(&Read::new());
-
-    let reference_id: ReferenceId = value
-        .refs
-        .node_weights()
-        .find_map(|n| match &n {
-            Instance::ReferenceId(reference_id) => Some(reference_id.clone()),
-            _ => None,
-        })
-        .unwrap();
-    let mut class_ids = value.refs.node_weights().filter_map(|n| match &n {
-        Instance::ClassId(class_id) => Some(class_id.clone()),
-        _ => None,
-    });
-    let class_1 = class_ids.nth(0).unwrap();
-    let class_2 = class_ids.nth(0).unwrap();
+    let reference_id = reference_id(&value, 0);
+    let class_1 = class_id(&value, 0);
+    let class_2 = class_id(&value, 1);
 
     //* CONCURRENCY */
     let event_a_4 = replica_a
@@ -515,4 +474,28 @@ fn class_value(features: Vec<StructuralFeatureKindValue>) -> Box<ModelElementKin
             }),
         ))),
     )))
+}
+
+fn class_id(value: &ClassHierarchyValue, idx: usize) -> ClassId {
+    value
+        .refs
+        .node_weights()
+        .filter_map(|n| match &n {
+            Instance::ClassId(class_id) => Some(class_id.clone()),
+            _ => None,
+        })
+        .nth(idx)
+        .unwrap()
+}
+
+fn reference_id(value: &ClassHierarchyValue, idx: usize) -> ReferenceId {
+    value
+        .refs
+        .node_weights()
+        .filter_map(|n| match &n {
+            Instance::ReferenceId(reference_id) => Some(reference_id.clone()),
+            _ => None,
+        })
+        .nth(idx)
+        .unwrap()
 }
