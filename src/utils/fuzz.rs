@@ -6,7 +6,8 @@ use moirai_fuzz::{
 };
 use moirai_protocol::{
     crdt::{eval::EvalNested, query::Read},
-    state::log::{BoxedLog, IsLog},
+    state::log::IsLog,
+    utils::boxer::Boxer,
 };
 use rand::{
     Rng, RngExt,
@@ -48,10 +49,7 @@ impl LogFootprint for ClassHierarchyLog {
     }
 }
 
-fn generate_boxed_model_element_kind(
-    log: &BoxedLog<ModelElementKindLog>,
-    rng: &mut impl Rng,
-) -> Box<ModelElementKind> {
+fn generate_model_element_kind(log: &ModelElementKindLog, rng: &mut impl Rng) -> ModelElementKind {
     log.generate_command(rng)
 }
 
@@ -62,10 +60,10 @@ fn generate_structural_feature_kind(
     log.generate_command(rng)
 }
 
-fn generate_boxed_model_list(
-    log: &NestedListLog<BoxedLog<ModelElementKindLog>>,
+fn generate_model_list(
+    log: &NestedListLog<ModelElementKindLog>,
     rng: &mut impl Rng,
-) -> NestedList<Box<ModelElementKind>> {
+) -> NestedList<ModelElementKind> {
     #[derive(Clone, Copy)]
     enum Choice {
         Insert,
@@ -84,8 +82,7 @@ fn generate_boxed_model_list(
     let op = match choice {
         Choice::Insert => {
             let pos = rng.random_range(0..=positions.len());
-            let op =
-                generate_boxed_model_element_kind(&BoxedLog::<ModelElementKindLog>::default(), rng);
+            let op = generate_model_element_kind(&ModelElementKindLog::default(), rng);
             NestedList::Insert { pos, op }
         }
         Choice::Update => {
@@ -94,12 +91,9 @@ fn generate_boxed_model_list(
             let op = log
                 .children()
                 .get_child(target_id)
-                .map(|child| generate_boxed_model_element_kind(child, rng))
+                .map(|child| generate_model_element_kind(child, rng))
                 .unwrap_or_else(|| {
-                    generate_boxed_model_element_kind(
-                        &BoxedLog::<ModelElementKindLog>::default(),
-                        rng,
-                    )
+                    generate_model_element_kind(&ModelElementKindLog::default(), rng)
                 });
             NestedList::Update { pos, op }
         }
@@ -230,7 +224,7 @@ impl CommandGenerator for PackageLog {
             Choice::ModelElement => {
                 Package::ModelElementSuper(self.model_element_super().generate_command(rng))
             }
-            Choice::Content => Package::Content(generate_boxed_model_list(self.content(), rng)),
+            Choice::Content => Package::Content(generate_model_list(self.content(), rng).boxer()),
         }
     }
 }
@@ -461,9 +455,10 @@ mod tests {
         let package = PackageLog::default();
         let mut rng = SmallRng::seed_from_u64(0);
 
-        let op = generate_boxed_model_list(package.content(), &mut rng);
+        let op = generate_model_list(package.content(), &mut rng);
 
         assert!(matches!(op, NestedList::Insert { .. }));
         assert!(package.content().is_enabled(&op).is_ok());
+        assert!(package.is_enabled(&Package::Content(op.boxer())).is_ok());
     }
 }

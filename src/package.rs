@@ -36,7 +36,7 @@ pub enum ClassHierarchyRejection {
 impl std::fmt::Display for ClassHierarchyRejection {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
-            Self::Package(error) => write!(f, "Package: {}", error),
+            Self::Package(error) => write!(f, "{}: {}", "Package", error),
             Self::AddReference(error) => write!(f, "AddReference: {}", error),
             Self::RemoveReference(error) => write!(f, "RemoveReference: {}", error),
         }

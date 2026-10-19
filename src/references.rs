@@ -3,6 +3,7 @@ mod __references {
     pub use moirai_macros::typed_graph;
     pub use moirai_protocol::state::object_path::ObjectPath;
 }
+
 pub fn instance_from_sink_kind(kind: &str, path: &__references::ObjectPath) -> Option<Instance> {
     match kind {
         "Attribute" => Some(Instance::AttributeId(AttributeId(path.clone()))),
@@ -12,6 +13,7 @@ pub fn instance_from_sink_kind(kind: &str, path: &__references::ObjectPath) -> O
         _ => None,
     }
 }
+
 pub fn instance_path(instance: &Instance) -> &__references::ObjectPath {
     match instance {
         Instance::AttributeId(id) => &id.0,
@@ -20,18 +22,24 @@ pub fn instance_path(instance: &Instance) -> &__references::ObjectPath {
         Instance::DataTypeId(id) => &id.0,
     }
 }
+
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 #[cfg_attr(feature = "test_utils", derive(deepsize::DeepSizeOf))]
 pub struct AttributeTypEdge;
+
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 #[cfg_attr(feature = "test_utils", derive(deepsize::DeepSizeOf))]
 pub struct ReferenceOppositeEdge;
+
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 #[cfg_attr(feature = "test_utils", derive(deepsize::DeepSizeOf))]
 pub struct ReferenceTypEdge;
+
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 #[cfg_attr(feature = "test_utils", derive(deepsize::DeepSizeOf))]
+
 pub struct ClassSupertypesEdge;
+
 __references::typed_graph! {
     types {
         graph = ReferenceManager,
@@ -52,11 +60,11 @@ __references::typed_graph! {
         ClassSupertypesEdge[0, *]
     },
     arcs {
-        AttributeToClass : AttributeId -> ClassId(AttributeTypEdge),
-        AttributeToDataType : AttributeId -> DataTypeId(AttributeTypEdge),
-        ReferenceToReference : ReferenceId -> ReferenceId(ReferenceOppositeEdge),
-        ReferenceToClass : ReferenceId -> ClassId(ReferenceTypEdge),
-        ReferenceToDataType : ReferenceId -> DataTypeId(ReferenceTypEdge),
-        ClassToClass : ClassId -> ClassId(ClassSupertypesEdge)
+        AttributeToClass: AttributeId -> ClassId(AttributeTypEdge),
+        AttributeToDataType: AttributeId -> DataTypeId(AttributeTypEdge),
+        ReferenceToReference: ReferenceId -> ReferenceId(ReferenceOppositeEdge),
+        ReferenceToClass: ReferenceId -> ClassId(ReferenceTypEdge),
+        ReferenceToDataType: ReferenceId -> DataTypeId(ReferenceTypEdge),
+        ClassToClass: ClassId -> ClassId(ClassSupertypesEdge)
     }
 }

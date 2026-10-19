@@ -102,7 +102,7 @@ fn visit_package(
     }
     {
         let value = xmi_read::<_, std::string::String>(((log).model_element_super()).name());
-        attrs.push_values("name", vec![(value).to_string()], true);
+        (&mut attrs).push_values("name", vec![(value).to_string()], true);
     }
     writer.element(element_name, &attrs, |writer| {
         let list_base_path = path.clone().field("content");
@@ -110,13 +110,7 @@ fn visit_package(
         for event_id in &positions {
             if let Some(child) = ((log).content()).children().get_child(event_id) {
                 let child_path = list_base_path.clone().list_element(event_id.clone());
-                visit_model_element_kind(
-                    writer,
-                    Some("content"),
-                    child_path,
-                    (child).inner(),
-                    refs,
-                );
+                visit_model_element_kind(writer, Some("content"), child_path, child, refs);
             }
         }
     });
@@ -138,25 +132,25 @@ fn visit_attribute(
         let value = xmi_read::<_, std::string::String>(
             (((log).structural_feature_super()).model_element_super()).name(),
         );
-        attrs.push_values("name", vec![(value).to_string()], true);
+        (&mut attrs).push_values("name", vec![(value).to_string()], true);
     }
     {
         let value = xmi_read::<_, i32>(((log).structural_feature_super()).lower());
-        attrs.push_values("lower", vec![(value).to_string()], true);
+        (&mut attrs).push_values("lower", vec![(value).to_string()], true);
     }
     {
         let value = xmi_read::<_, i32>(((log).structural_feature_super()).upper());
-        attrs.push_values("upper", vec![(value).to_string()], true);
+        (&mut attrs).push_values("upper", vec![(value).to_string()], true);
     }
     {
         let value = xmi_read::<_, bool>(((log).structural_feature_super()).is_ordered());
-        attrs.push_values("isOrdered", vec![(value).to_string()], true);
+        (&mut attrs).push_values("isOrdered", vec![(value).to_string()], true);
     }
     {
         let value = xmi_read::<_, bool>(((log).structural_feature_super()).is_unique());
-        attrs.push_values("isUnique", vec![(value).to_string()], true);
+        (&mut attrs).push_values("isUnique", vec![(value).to_string()], true);
     }
-    attrs.push_values("typ", refs.values(&path, "structural_feature::typ"), false);
+    (&mut attrs).push_values("typ", refs.values(&path, "structural_feature::typ"), false);
     writer.element(element_name, &attrs, |writer| {});
 }
 #[allow(dead_code, unused_variables)]
@@ -176,30 +170,30 @@ fn visit_reference(
         let value = xmi_read::<_, std::string::String>(
             (((log).structural_feature_super()).model_element_super()).name(),
         );
-        attrs.push_values("name", vec![(value).to_string()], true);
+        (&mut attrs).push_values("name", vec![(value).to_string()], true);
     }
     {
         let value = xmi_read::<_, i32>(((log).structural_feature_super()).lower());
-        attrs.push_values("lower", vec![(value).to_string()], true);
+        (&mut attrs).push_values("lower", vec![(value).to_string()], true);
     }
     {
         let value = xmi_read::<_, i32>(((log).structural_feature_super()).upper());
-        attrs.push_values("upper", vec![(value).to_string()], true);
+        (&mut attrs).push_values("upper", vec![(value).to_string()], true);
     }
     {
         let value = xmi_read::<_, bool>(((log).structural_feature_super()).is_ordered());
-        attrs.push_values("isOrdered", vec![(value).to_string()], true);
+        (&mut attrs).push_values("isOrdered", vec![(value).to_string()], true);
     }
     {
         let value = xmi_read::<_, bool>(((log).structural_feature_super()).is_unique());
-        attrs.push_values("isUnique", vec![(value).to_string()], true);
+        (&mut attrs).push_values("isUnique", vec![(value).to_string()], true);
     }
-    attrs.push_values("typ", refs.values(&path, "structural_feature::typ"), false);
+    (&mut attrs).push_values("typ", refs.values(&path, "structural_feature::typ"), false);
     {
         let value = xmi_read::<_, bool>((log).is_container());
-        attrs.push_values("isContainer", vec![(value).to_string()], true);
+        (&mut attrs).push_values("isContainer", vec![(value).to_string()], true);
     }
-    attrs.push_values("opposite", refs.values(&path, "reference::opposite"), false);
+    (&mut attrs).push_values("opposite", refs.values(&path, "reference::opposite"), false);
     writer.element(element_name, &attrs, |writer| {});
 }
 #[allow(dead_code, unused_variables)]
@@ -219,13 +213,13 @@ fn visit_class(
         let value = xmi_read::<_, std::string::String>(
             (((log).classifier_super()).model_element_super()).name(),
         );
-        attrs.push_values("name", vec![(value).to_string()], true);
+        (&mut attrs).push_values("name", vec![(value).to_string()], true);
     }
     {
         let value = xmi_read::<_, bool>((log).is_abstract());
-        attrs.push_values("isAbstract", vec![(value).to_string()], true);
+        (&mut attrs).push_values("isAbstract", vec![(value).to_string()], true);
     }
-    attrs.push_values("supertypes", refs.values(&path, "class::supertypes"), false);
+    (&mut attrs).push_values("supertypes", refs.values(&path, "class::supertypes"), false);
     writer.element(element_name, &attrs, |writer| {
         let list_base_path = path.clone().field("features");
         let positions =
@@ -255,7 +249,7 @@ fn visit_data_type(
         let value = xmi_read::<_, std::string::String>(
             (((log).classifier_super()).model_element_super()).name(),
         );
-        attrs.push_values("name", vec![(value).to_string()], true);
+        (&mut attrs).push_values("name", vec![(value).to_string()], true);
     }
     writer.element(element_name, &attrs, |writer| {});
 }

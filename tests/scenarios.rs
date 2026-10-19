@@ -451,7 +451,7 @@ fn remove_supertype(source: ClassId, target: ClassId) -> <ClassHierarchyLog as I
     }))
 }
 
-fn package_value(content: Vec<Box<ModelElementKindValue>>) -> PackageValue {
+fn package_value(content: Vec<ModelElementKindValue>) -> PackageValue {
     PackageValue {
         model_element_super: ModelElementValue {
             name: String::from(""),
@@ -460,19 +460,17 @@ fn package_value(content: Vec<Box<ModelElementKindValue>>) -> PackageValue {
     }
 }
 
-fn class_value(features: Vec<StructuralFeatureKindValue>) -> Box<ModelElementKindValue> {
-    Box::new(ModelElementKindValue::Value(Box::new(
-        ModelElementKindChildValue::Classifier(ClassifierKindValue::Value(Box::new(
-            ClassifierKindChildValue::Class(ClassValue {
-                is_abstract: false,
-                classifier_super: ClassifierValue {
-                    model_element_super: ModelElementValue {
-                        name: String::from(""),
-                    },
+fn class_value(features: Vec<StructuralFeatureKindValue>) -> ModelElementKindValue {
+    ModelElementKindValue::Value(Box::new(ModelElementKindChildValue::Classifier(
+        ClassifierKindValue::Value(Box::new(ClassifierKindChildValue::Class(ClassValue {
+            is_abstract: false,
+            classifier_super: ClassifierValue {
+                model_element_super: ModelElementValue {
+                    name: String::from(""),
                 },
-                features,
-            }),
-        ))),
+            },
+            features,
+        }))),
     )))
 }
 
